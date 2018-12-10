@@ -1,36 +1,29 @@
 <template>
-  <Toast value='true'>123</Toast>
+  <div>
+    <Video></Video>
+  </div>
 </template>
 
 <script>
-import { Toast } from 'vux'
+import Video from '@/components/Video'
+
 export default {
-  name: 'HelloWorld',
+  name: 'Home',
+  mounted() {
+    
+  },
   data () {
     return {
       msg: 'Welcome to Your Vue.js App'
     }
   },
   components: {
-    Toast
+    Video
   }
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-h1, h2 {
-  font-weight: normal;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
-}
+
 </style>
