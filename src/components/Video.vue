@@ -15,13 +15,15 @@ export default {
       live: false,
       width: '480',
       height: '320',
+      x5_type: 'h5',
+      x5_fullscreen: 'true',
       listener: function (msg) {
-        for(let i=0; i<10; i++) {
-          console.log();
-        }
-        console.log(msg);
+        // console.log(msg);
       }
     })
+    console.log(this.$utils.driverType());
+    console.log(navigator.userAgent);
+    console.log(navigator.userAgent.indexOf('Android') > -1 || navigator.userAgent.indexOf('Adr') > -1);
   },
   data () {
     return {
