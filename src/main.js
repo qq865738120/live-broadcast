@@ -7,10 +7,12 @@ import 'normalize.css'
 import 'lib-flexible/flexible'
 import './common/vux-component.js' //vux按需引入组件
 import utils from './common/utils.js' //全局引入自定义工具类
+import $ from 'jquery'
 
 Vue.config.productionTip = false
 
 Vue.prototype.$utils = utils;
+Vue.prototype.$ = $;
 
 /* eslint-disable no-new */
 new Vue({

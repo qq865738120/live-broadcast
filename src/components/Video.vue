@@ -1,6 +1,8 @@
 <template>
-  <div id="video-container" style="margin: 0px auto;">
-
+  <div id="video-container">
+    <div class="test">
+      666
+    </div>
   </div>
 </template>
 
@@ -18,12 +20,11 @@ export default {
       x5_type: 'h5',
       x5_fullscreen: 'true',
       listener: function (msg) {
-        // console.log(msg);
+        console.log(msg);
       }
     })
-    console.log(this.$utils.driverType());
-    console.log(navigator.userAgent);
-    console.log(navigator.userAgent.indexOf('Android') > -1 || navigator.userAgent.indexOf('Adr') > -1);
+    this.$('.vcp-player').css("background","red");
+    console.log();
   },
   data () {
     return {
@@ -32,11 +33,23 @@ export default {
   },
   components: {
 
+  },
+  methods: {
+    playcontr() {
+          console.log('666');
+      document.getElementById('videoALL');
+
+    }
   }
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
+  .test {
+    position: absolute;
+    top: 100px;
+    color: #fff;
+    z-index: 1
+  }
 </style>
