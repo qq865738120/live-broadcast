@@ -18,6 +18,7 @@ export default {
   mounted() {
     const that = this;
     let sureFullScreen = false; //是否需要进入全屏逻辑处理
+    let isPlay = false; //是否开始播放
     let player = new tcPlayer.TcPlayer.TcPlayer('video-container', {
       // mp4: 'http://vjs.zencdn.net/v/oceans.mp4',
       mp4: 'http://1256993030.vod2.myqcloud.com/d520582dvodtransgzp1256993030/7732bd367447398157015849771/v.f40.mp4',
@@ -33,6 +34,20 @@ export default {
       x5_fullscreen: 'true',
       listener: function (msg) {
         // console.log(msg);
+        if (msg.type == 'play') {
+          isPlay = true;
+          // that.$('.vcp-controls-panel').css('z-index', '1000');
+          // that.$('.vcp-bigplay').hide();
+          that.$('.vcp-bigplay').removeClass("iconfont icon-bofang-yuanshijituantubiao com-flex-center");
+          // alert('开始播放')
+          // document.getElementsByTagName('video')[0].webkitEnterFullscreen();
+
+          // document.getElementsByTagName('video')[0].webkitRequestFullscreen();
+          // document.getElementsByTagName('video')[0].webkitRequestFullScreen();
+        }
+        if (msg.type == 'pause') {
+          isPlay = false;
+        }
       }
     })
     this.$('.vcp-player').css("background","red");
@@ -59,14 +74,22 @@ export default {
       "z-index": "10000",
       "top": "1.86rem"
     })
+    this.$('.vcp-bigplay').css({
+      'height': '5.38rem',
+      'opacity': '1',
+      'font-size': '64px',
+      'color': '#f5f5f5',
+    })
+    this.$('.vcp-bigplay').addClass("iconfont icon-bofang-yuanshijituantubiao com-flex-center");
+    this.$('.vcp-controls-panel').css('z-index', '0');
 
     this.$('.vcp-player video').on("x5videoenterfullscreen", function() {
       console.log('进入同层全屏播放')
       that.$data.showTitle = true;
       that.$('.vcp-player video').css("object-position","center 1.44rem");
       that.$('.vcp-controls-panel').css('top', '5.93rem');
-      // that.$data.contentTop = '1.44rem'
       that.$data.videoBoxHeight = '6.84rem'
+      that.$('.vcp-controls-panel').css('z-index', '1000');
     })
     this.$('.vcp-player video').on("x5videoexitfullscreen", function() {
       console.log('退出同层全屏播放')
@@ -74,22 +97,35 @@ export default {
       that.$('.vcp-player video').css("object-position","top");
       that.$('.vcp-controls-panel').css('top', '4.49rem');
       that.$data.videoBoxHeight = '5.4rem'
+      that.$('.vcp-bigplay').addClass("iconfont icon-bofang-yuanshijituantubiao com-flex-center");
+      that.$('.vcp-controls-panel').css('z-index', '0');
       if (sureFullScreen) {
         that.$('.vcp-player video').show();
         player.fullscreen(true);
         sureFullScreen = false;
       }
     })
-    console.log(document.getElementsByTagName('video')[0].webkitExitFullscreen());
-    this.$('.vcp-fullscreen-toggle').on('click', function() {
-      console.log('0',player.fullscreen());
-      if(!player.fullscreen()) {
-        console.log('1',player.fullscreen());
+    /*
+    android兼容性处理
+    */
+    if (this.$utils.driverType() == 0) {
+      this.$('.vcp-fullscreen-toggle').on('click', function() { //安卓播放后全屏处理
         that.$('.vcp-player video').hide();
         sureFullScreen = true;
-        console.log('2',player.fullscreen());
-      }
-    })
+      })
+    }
+
+    /*
+    ios兼容性处理
+    */
+    if (this.$utils.driverType() == 1) {
+      this.$('.vcp-controls-panel').css('z-index', '1000');
+      this.$('.vcp-fullscreen-toggle').on('click', function() {
+        // alert('点击全屏')
+        // player.fullscreen(false);
+        document.getElementsByTagName('video')[0].webkitEnterFullScreen();
+      })
+    }
   },
   data () {
     return {

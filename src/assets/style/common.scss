@@ -3,3 +3,28 @@ html {
   width: 100%;
   height: 100%;
 }
+
+.com-flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@font-face {
+  font-family: 'iconfont';  /* project id 962415 */
+  src: url('//at.alicdn.com/t/font_962415_va2r509kas.eot');
+  src: url('//at.alicdn.com/t/font_962415_va2r509kas.eot?#iefix') format('embedded-opentype'),
+  url('//at.alicdn.com/t/font_962415_va2r509kas.woff') format('woff'),
+  url('//at.alicdn.com/t/font_962415_va2r509kas.ttf') format('truetype'),
+  url('//at.alicdn.com/t/font_962415_va2r509kas.svg#iconfont') format('svg');
+}
+
+.iconfont {
+  font-family:"iconfont" !important;
+  font-size:16px;
+  font-style:normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-bofang-yuanshijituantubiao:before { content: "\e60d"; }
