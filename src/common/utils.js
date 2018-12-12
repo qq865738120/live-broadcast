@@ -9,6 +9,17 @@ const driverType = function() {
   return ua.indexOf('Android') > -1 || ua.indexOf('Adr') > -1 ? 0 : (!!ua.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/) ? 1 : 2)
 }
 
+const exitFullscreen = function() {
+  if(document.exitFullscreen) {
+    document.exitFullscreen();
+  } else if(document.mozExitFullScreen) {
+    document.mozExitFullScreen();
+  } else if(document.webkitExitFullscreen) {
+    document.webkitExitFullscreen();
+  }
+}
+
 export default {
-  driverType
+  driverType,
+  exitFullscreen
 }
