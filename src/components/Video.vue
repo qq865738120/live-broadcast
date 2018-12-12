@@ -29,7 +29,7 @@ export default {
       autoplay: false,
       live: false,
       width: window.screen.width,
-      height: window.screen.height,
+      height: window.screen.height - 72,
       x5_type: 'h5',
       x5_fullscreen: 'true',
       listener: function (msg) {
@@ -50,15 +50,18 @@ export default {
         }
       }
     })
-    this.$('.vcp-player').css("background","red");
+
+    /*
+    播放器控件样式
+    */
+    this.$('.vcp-player').css("background","#f5f5f5");
+    this.$('.vcp-player video').css("background","#f5f5f5");
     this.$('.vcp-player video').css("object-position","top");
     this.$('.vcp-poster-pic').removeClass('default');
     this.$('.vcp-poster-pic').css({
       "position": "absolute",
       "width": "100%",
-      // "top": "1.44rem"
     });
-    // this.$('.vcp-controls-panel').css('top', '5.92rem');
     this.$('.vcp-controls-panel').css('top', '4.49rem');
     this.$('.vcp-controls-panel').height(controlsBarH);
     this.$('.vcp-playtoggle').width(controlsBarH);
@@ -90,6 +93,8 @@ export default {
       that.$('.vcp-controls-panel').css('top', '5.93rem');
       that.$data.videoBoxHeight = '6.84rem'
       that.$('.vcp-controls-panel').css('z-index', '1000');
+      that.$('.vcp-player').height(window.screen.height)
+      that.$('.vcp-player video').height(window.screen.height)
     })
     this.$('.vcp-player video').on("x5videoexitfullscreen", function() {
       console.log('退出同层全屏播放')
@@ -99,12 +104,17 @@ export default {
       that.$data.videoBoxHeight = '5.4rem'
       that.$('.vcp-bigplay').addClass("iconfont icon-bofang-yuanshijituantubiao com-flex-center");
       that.$('.vcp-controls-panel').css('z-index', '0');
+      that.$('.vcp-player').height(window.screen.height - 72)
+      that.$('.vcp-player video').height(window.screen.height - 72)
       if (sureFullScreen) {
-        that.$('.vcp-player video').show();
-        player.fullscreen(true);
-        sureFullScreen = false;
+        setTimeout(function() {
+          that.$('.vcp-player video').show();
+          player.fullscreen(true);
+          sureFullScreen = false;
+        }, 100)
       }
     })
+
     /*
     android兼容性处理
     */
@@ -121,10 +131,10 @@ export default {
     if (this.$utils.driverType() == 1) {
       this.$('.vcp-controls-panel').css('z-index', '1000');
       this.$('.vcp-fullscreen-toggle').on('click', function() {
-        // alert('点击全屏')
-        // player.fullscreen(false);
         document.getElementsByTagName('video')[0].webkitEnterFullScreen();
       })
+      that.$('.vcp-player').height(window.screen.height - 82)
+      that.$('.vcp-player video').height(window.screen.height - 82)
     }
   },
   data () {
@@ -151,8 +161,6 @@ export default {
   #video-container {
     width: 100%;
     height: 5.4rem;
-    /* position: absolute;
-    top: 5.4rem; */
   }
   .title-bar {
     position: absolute;
@@ -170,7 +178,6 @@ export default {
 
   .content {
     position: relative;
-    /* top: 54px; */
     z-index: 100;
     background-color: #fff;
     width: 200px;
