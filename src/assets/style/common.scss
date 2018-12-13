@@ -1,15 +1,30 @@
+$--main-color: #ED7E00; //主题色
+
+$--color-333: #333333;
+$--color-666: #666666;
+$--color-666: #666666;
+$--color-E9: #E9E9E9;
+
 body,
 html {
   width: 100%;
   height: 100%;
 }
 
+/* 全局常用类 */
 .com-flex-center {
   display: flex;
   align-items: center;
   justify-content: center;
 }
+.com-over-length {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  overflow: hidden;
+}
 
+/* 阿里图标库引入 */
 @font-face {
   font-family: 'iconfont';  /* project id 962415 */
   src: url('//at.alicdn.com/t/font_962415_va2r509kas.eot');

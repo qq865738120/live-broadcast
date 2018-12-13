@@ -90,6 +90,7 @@ export default {
       that.$('.vcp-player').height(window.screen.height)
       that.$('.vcp-player video').height(window.screen.height)
       that.$data.contentHeight = window.screen.height / 37.5 - 6.05 + 'rem'
+      that.$emit('x5-enter-fullscreen')
     })
     this.$('.vcp-player video').on("x5videoexitfullscreen", function() {
       console.log('退出同层全屏播放')
@@ -109,6 +110,7 @@ export default {
         }, 100)
       }
       that.$data.contentHeight = window.screen.height / 37.5 - 6.7 + 'rem'
+      that.$emit('x5-exit-fullscreen')
     })
 
     /*
@@ -133,9 +135,11 @@ export default {
       that.$('.vcp-player video').height(window.screen.height - 142)
     }
   },
+  props: {
+    title: String
+  },
   data () {
     return {
-      title: '标题',
       showTitle: false,
       contentTop: '',
       videoBoxHeight: '5.4rem',
