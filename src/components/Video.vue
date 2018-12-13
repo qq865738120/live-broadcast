@@ -2,8 +2,8 @@
   <div>
     <div class="title-bar" v-if="showTitle">{{ title }}</div>
     <div id="video-container" :style="{ height: videoBoxHeight }"></div>
-    <div class="content" @click='test' :style="{ top: contentTop }">
-      666
+    <div class="content" :style="{ top: contentTop, height: contentHeight }">
+      <slot></slot>
     </div>
   </div>
 </template>
@@ -36,14 +36,7 @@ export default {
         // console.log(msg);
         if (msg.type == 'play') {
           isPlay = true;
-          // that.$('.vcp-controls-panel').css('z-index', '1000');
-          // that.$('.vcp-bigplay').hide();
           that.$('.vcp-bigplay').removeClass("iconfont icon-bofang-yuanshijituantubiao com-flex-center");
-          // alert('开始播放')
-          // document.getElementsByTagName('video')[0].webkitEnterFullscreen();
-
-          // document.getElementsByTagName('video')[0].webkitRequestFullscreen();
-          // document.getElementsByTagName('video')[0].webkitRequestFullScreen();
         }
         if (msg.type == 'pause') {
           isPlay = false;
@@ -86,6 +79,7 @@ export default {
     this.$('.vcp-bigplay').addClass("iconfont icon-bofang-yuanshijituantubiao com-flex-center");
     this.$('.vcp-controls-panel').css('z-index', '0');
 
+    /* 安卓同层播放监听 */
     this.$('.vcp-player video').on("x5videoenterfullscreen", function() {
       console.log('进入同层全屏播放')
       that.$data.showTitle = true;
@@ -95,6 +89,7 @@ export default {
       that.$('.vcp-controls-panel').css('z-index', '1000');
       that.$('.vcp-player').height(window.screen.height)
       that.$('.vcp-player video').height(window.screen.height)
+      that.$data.contentHeight = window.screen.height / 37.5 - 6.05 + 'rem'
     })
     this.$('.vcp-player video').on("x5videoexitfullscreen", function() {
       console.log('退出同层全屏播放')
@@ -113,6 +108,7 @@ export default {
           sureFullScreen = false;
         }, 100)
       }
+      that.$data.contentHeight = window.screen.height / 37.5 - 6.7 + 'rem'
     })
 
     /*
@@ -133,8 +129,8 @@ export default {
       this.$('.vcp-fullscreen-toggle').on('click', function() {
         document.getElementsByTagName('video')[0].webkitEnterFullScreen();
       })
-      that.$('.vcp-player').height(window.screen.height - 82)
-      that.$('.vcp-player video').height(window.screen.height - 82)
+      that.$('.vcp-player').height(window.screen.height - 142)
+      that.$('.vcp-player video').height(window.screen.height - 142)
     }
   },
   data () {
@@ -142,16 +138,15 @@ export default {
       title: '标题',
       showTitle: false,
       contentTop: '',
-      videoBoxHeight: '5.4rem'
+      videoBoxHeight: '5.4rem',
+      contentHeight: window.screen.height / 37.5 - 6.7 + 'rem'
     }
   },
   components: {
 
   },
   methods: {
-    test() {
-      console.log(this.$data.showTitle);
-    }
+
   }
 }
 </script>
@@ -174,13 +169,9 @@ export default {
     text-align: center;
     line-height: 64px;
   }
-
-
   .content {
     position: relative;
-    z-index: 100;
-    background-color: #fff;
-    width: 200px;
-    height: 100px;
+    background-color: red;
+    width: 100%;
   }
 </style>
