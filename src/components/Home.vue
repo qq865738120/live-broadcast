@@ -15,7 +15,7 @@
       <!-- tab栏结束 -->
 
       <!-- tab内容开始 -->
-      <Swiper v-model="itemIndex" :min-moving-distance="30" :style="{height: swiperHeight}" :show-dots="false">
+      <Swiper v-model="itemIndex" :min-moving-distance="80" :style="{height: swiperHeight}" :show-dots="false">
         <SwiperItem v-for="(item, index) in tabItems" :key="item.id">
           <div class="swiper-content">
             <template v-if="item.typeId == 1">
@@ -134,12 +134,9 @@ export default {
       console.log(index);
     },
     x5EnterFullscreen() { //安卓机进入x5同层播放触发事件函数
-      console.log(methods.setSwiperHeight);
-
       methods.setSwiperHeight('7.33rem', '8.53rem');
     },
     x5ExitFullscreen() { //安卓机退出x5同层播放触发事件函数
-      console.log("456");
       methods.setSwiperHeight('6.78rem', '7.98rem');
     },
     /*
