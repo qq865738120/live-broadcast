@@ -9,10 +9,7 @@ import {
   SwiperItem,
   XInput,
   Group,
-  XButton,
-  Flexbox,
-  FlexboxItem,
-  XImg
+  XButton
 } from 'vux'
 Vue.component('Toast', Toast)
 Vue.component('Tab', Tab)
@@ -23,6 +20,3 @@ Vue.component('SwiperItem', SwiperItem)
 Vue.component('XInput', XInput)
 Vue.component('Group', Group)
 Vue.component('XButton', XButton)
-Vue.component('Flexbox', Flexbox)
-Vue.component('FlexboxItem', FlexboxItem)
-Vue.component('XImg', XImg)

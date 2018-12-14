@@ -1,28 +1,82 @@
 <template>
   <div class="root">
-      <div style="width: 1rem">
-        <XImg class="header-icon" src="http://www.jituwang.com/uploads/allimg/151003/258203-1510030RP894.jpg"></XImg>
+      <div>
+        <img class="header-icon" :src="icon"></XImg>
       </div>
-      <div style="width: 8rem;margin-left: 1rem;">
-        2223
+      <div class="left">
+        <div class="left-top">
+          <span :class="isMaster ? 'iconfont icon-zhibo' : ''">{{ title }}</span>
+          <span>{{ time }}</span>
+        </div>
+        <p>{{ message }}</p>
+        <img class="message-img" :src="image"></img>
       </div>
+
   </div>
 </template>
 
 <script>
   export default {
-
+    props: {
+      title: String,
+      time: String,
+      message: String,
+      icon: String,
+      image: String,
+      isMaster: Boolean //是否展示主播图标
+    },
+    methods: {
+      success(src, ele) {
+        console.log(src, ele);
+      },
+      err(src, msg) {
+        console.log(src, msg);
+      }
+    }
   }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+  @import '@/assets/style/common.scss';
+
   .root {
     display: flex;
     justify-content: flex-start;
+    padding: 16px 15px;
+    background-color: white;
+    margin-bottom: 1px;
+    box-sizing: border-box;
   }
   .header-icon {
-    width: 1rem;
-    height: 1rem;
+    width: 45px;
     border-radius: 50%;
+  }
+  .left {
+    width: 8rem;
+    margin-left: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+  }
+  .left-top {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+  .left-top>span {
+    font-size: 14px;
+    color: $--color-666;
+  }
+  .left>p {
+    font-size: 16px;
+    color: $--color-333;
+    margin-block-start: 10px;
+    margin-block-end: 14px;
+  }
+  .message-img {
+    border-radius: 3px;
+    max-width: 100%;
   }
 </style>

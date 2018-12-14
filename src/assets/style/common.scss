@@ -39,11 +39,11 @@ html {
 /* 阿里图标库引入 */
 @font-face {
   font-family: 'iconfont';  /* project id 962415 */
-  src: url('//at.alicdn.com/t/font_962415_0n0fyeww2f8o.eot');
-  src: url('//at.alicdn.com/t/font_962415_0n0fyeww2f8o.eot?#iefix') format('embedded-opentype'),
-  url('//at.alicdn.com/t/font_962415_0n0fyeww2f8o.woff') format('woff'),
-  url('//at.alicdn.com/t/font_962415_0n0fyeww2f8o.ttf') format('truetype'),
-  url('//at.alicdn.com/t/font_962415_0n0fyeww2f8o.svg#iconfont') format('svg');
+  src: url('//at.alicdn.com/t/font_962415_irmb3643qrl.eot');
+  src: url('//at.alicdn.com/t/font_962415_irmb3643qrl.eot?#iefix') format('embedded-opentype'),
+  url('//at.alicdn.com/t/font_962415_irmb3643qrl.woff') format('woff'),
+  url('//at.alicdn.com/t/font_962415_irmb3643qrl.ttf') format('truetype'),
+  url('//at.alicdn.com/t/font_962415_irmb3643qrl.svg#iconfont') format('svg');
 }
 
 .iconfont {
@@ -56,3 +56,4 @@ html {
 
 .icon-bofang-yuanshijituantubiao:before { content: "\e60d"; }
 .icon-fenxiang:before { content: "\e6a4"; }
+.icon-zhibo:after { content: "\e600"; color: $--main-color; font-size: 26px; }
