@@ -1,17 +1,47 @@
 <template>
   <div>
     <Video title="标题1" @x5-enter-fullscreen="x5EnterFullscreen" @x5-exit-fullscreen="x5ExitFullscreen">
+
+      <!-- 广告条开始 -->
       <div class="ad-bar" v-if="showAdBar">
         <img src="https://goss1.vcg.com/creative/vcg/800/version23/VCG21gic6409708.jpg" />
       </div>
+      <!-- 广告条结束 -->
+
+      <!-- tab栏开始 -->
       <Tab :line-width=2 active-color='#ED7E00' v-model="itemIndex">
         <TabItem :selected="itemIndex === item.id" v-for="(item, index) in tabItems" @click="itemIndex = item.id" :key="item.id">{{item.text}}</TabItem>
       </Tab>
+      <!-- tab栏结束 -->
+
+      <!-- tab内容开始 -->
       <Swiper v-model="itemIndex" :min-moving-distance="30" :style="{height: swiperHeight}" :show-dots="false">
         <SwiperItem v-for="(item, index) in tabItems" :key="item.id">
-          <div class="tab-swiper vux-center">{{item.text}} Container</div>
+          <div class="swiper-content">
+            <template v-if="item.typeId == 1">
+              <ListPullLoading :options="listPullLoadingOpt" style="heigth: 100%">
+                <template slot="list">
+                  <InteractionList></InteractionList>
+                </template>
+              </ListPullLoading>
+            </template>
+            <template v-else-if="item.typeId == 5">
+              <div>
+                成交
+              </div>
+            </template>
+            <template v-else="">
+              <div>
+                其他
+              </div>
+            </template>
+
+          </div>
         </SwiperItem>
       </Swiper>
+      <!-- tab内容结束 -->
+
+      <!-- 底部菜单开始 -->
       <div class="bottom-bar">
         <!-- <Group gutter="0" class="input" :style="{width: inputWidth}">
           <XInput type="text" :placeholder="placeholder"></XInput>
@@ -27,12 +57,15 @@
           <span>分享</span>
         </div>
       </div>
+      <!-- 底部菜单结束 -->
+
     </Video>
   </div>
 </template>
 
 <script>
 import Video from '@/components/Video'
+import InteractionList from '@/components/InteractionList'
 import methods from '@/common/home.js'
 
 export default {
@@ -45,20 +78,29 @@ export default {
     return {
       itemIndex: 0, //tab栏索引，切换tabItem
       tabItems: [ //tab栏列表项数据
-        { id: 0, text: '互动' },
-        { id: 1, text: '详情' },
-        { id: 2, text: '成交' },
-        { id: 3, text: '简介' },
-        { id: 4, text: '自定义' },
+        { id: 0, typeId: '1', text: '互动' },
+        { id: 1, typeId: '3', text: '详情' },
+        { id: 2, typeId: '5', text: '成交' },
+        { id: 3, typeId: '2', text: '简介' },
+        { id: 4, typeId: '10', text: '自定义' },
       ],
       swiperHeight: '', //swiper高度
       showAdBar: false, //是否展示广告条
       inputWord: "请输入内容213", //输入框占位符
-      inputWidth: "2.5rem" //输入框宽度
+      inputWidth: "2.5rem", //输入框宽度
+      listPullLoadingOpt: { //上拉下拉列表组件选项配置
+        auto: true,
+				parameters: {typeId: null},
+				down: {
+					offset: 50
+				},
+				api: this.queryInteractionList
+			},
     }
   },
   components: {
-    Video
+    Video,
+    InteractionList
   },
   methods: {
     switchTabBody(index) {
@@ -72,6 +114,17 @@ export default {
     x5ExitFullscreen() { //安卓机退出x5同层播放触发事件函数
       console.log("456");
       methods.setSwiperHeight('6.78rem', '7.98rem');
+    },
+    /*
+    查询互动信息
+    参数：parameters 请求接口需要的参数
+         isLoadingMore 是否正在加载
+    */
+    queryInteractionList(parameters, isLoadingMore) {
+      let that = this;
+      return new Promise((resolve, reject) => {
+
+      })
     }
   }
 }
@@ -121,5 +174,10 @@ export default {
   }
   .bottom-bar-right span {
     font-size: 11px;
+  }
+  .swiper-content {
+    height: 100%;
+    padding: 0 15px;
+    background-color: $--color-F9;
   }
 </style>
