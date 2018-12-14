@@ -2,13 +2,15 @@ $--main-color: #ED7E00; //主题色
 
 $--color-333: #333333;
 $--color-666: #666666;
-$--color-666: #666666;
 $--color-E9: #E9E9E9;
 
 body,
 html {
   width: 100%;
   height: 100%;
+}
+* {
+  -webkit-overflow-scrolling: touch;
 }
 
 /* 全局常用类 */
@@ -23,15 +25,24 @@ html {
   -webkit-line-clamp: 1;
   overflow: hidden;
 }
+.vux-slider > .vux-swiper {
+  height: 100% !important;
+}
+.com-icon-button {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  flex-direction: column;
+}
 
 /* 阿里图标库引入 */
 @font-face {
   font-family: 'iconfont';  /* project id 962415 */
-  src: url('//at.alicdn.com/t/font_962415_va2r509kas.eot');
-  src: url('//at.alicdn.com/t/font_962415_va2r509kas.eot?#iefix') format('embedded-opentype'),
-  url('//at.alicdn.com/t/font_962415_va2r509kas.woff') format('woff'),
-  url('//at.alicdn.com/t/font_962415_va2r509kas.ttf') format('truetype'),
-  url('//at.alicdn.com/t/font_962415_va2r509kas.svg#iconfont') format('svg');
+  src: url('//at.alicdn.com/t/font_962415_0n0fyeww2f8o.eot');
+  src: url('//at.alicdn.com/t/font_962415_0n0fyeww2f8o.eot?#iefix') format('embedded-opentype'),
+  url('//at.alicdn.com/t/font_962415_0n0fyeww2f8o.woff') format('woff'),
+  url('//at.alicdn.com/t/font_962415_0n0fyeww2f8o.ttf') format('truetype'),
+  url('//at.alicdn.com/t/font_962415_0n0fyeww2f8o.svg#iconfont') format('svg');
 }
 
 .iconfont {
@@ -43,3 +54,4 @@ html {
 }
 
 .icon-bofang-yuanshijituantubiao:before { content: "\e60d"; }
+.icon-fenxiang:before { content: "\e6a4"; }

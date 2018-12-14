@@ -8,7 +8,9 @@ import {
   Swiper,
   SwiperItem,
   XInput,
-  Group
+  Group,
+  XButton,
+  Scroller,
 } from 'vux'
 Vue.component('Toast', Toast)
 Vue.component('Tab', Tab)
@@ -18,3 +20,5 @@ Vue.component('Swiper', Swiper)
 Vue.component('SwiperItem', SwiperItem)
 Vue.component('XInput', XInput)
 Vue.component('Group', Group)
+Vue.component('XButton', XButton)
+Vue.component('Scroller', Scroller)

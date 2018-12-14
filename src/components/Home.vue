@@ -21,6 +21,11 @@
             {{ inputWord }}
           </span>
         </div>
+        <XButton action-type="button" :gradients="['#ED7E00', '#ED7E00']">立即购买</XButton>
+        <div class="com-icon-button bottom-bar-right">
+          <div class="iconfont icon-fenxiang"></div>
+          <span>分享</span>
+        </div>
       </div>
     </Video>
   </div>
@@ -34,6 +39,7 @@ export default {
   name: 'Home',
   mounted() {
     methods.init(this);
+
   },
   data () {
     return {
@@ -48,7 +54,7 @@ export default {
       swiperHeight: '', //swiper高度
       showAdBar: false, //是否展示广告条
       inputWord: "请输入内容213", //输入框占位符
-      inputWidth: "3.2rem" //输入框宽度
+      inputWidth: "2.5rem" //输入框宽度
     }
   },
   components: {
@@ -86,6 +92,7 @@ export default {
   .bottom-bar {
     width: 100%;
     height: 46px;
+    padding: 6px 2px;
     background-color: white;
     border-top: 1px solid $--color-E9;
     display: flex;
@@ -102,5 +109,17 @@ export default {
     padding: 4px 8px;
     border: 1px solid $--color-E9;
     border-radius: 10px;
+    line-height: 19px;
+  }
+  .bottom-bar-right {
+    width: 120px;
+    height: 100%;
+    color: $--color-666;
+  }
+  .bottom-bar-right div {
+    margin-bottom: 4px;
+  }
+  .bottom-bar-right span {
+    font-size: 11px;
   }
 </style>
