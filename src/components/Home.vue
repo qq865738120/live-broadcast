@@ -143,8 +143,18 @@ export default {
     test() {
       console.log('test');
     },
-    loadingHistoryInteraction() {
+    async loadingHistoryInteraction() {
       console.log('loading');
+      let that = this;
+      await methods.getInteractionHistoryList({
+        curMinId: that.$store.state.minInteractionId,
+        rows: 2,
+        liveId: that.$store.state.liveTitleId
+      });
+      this.$nextTick(() => {
+        this.$refs.scrollerEvent[0].donePulldown()
+        console.log(that.$store.state.minInteractionId);
+      })
     }
     /*
     查询互动信息

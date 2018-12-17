@@ -51,9 +51,11 @@ const setSwiperHeight = function(height1, height2) {
 */
 const getInteractionList = function(parameter) {
   context.$axios.get('/api/newmedia/mobile/liveMessage/getLeaveMessageNewPass.action', { params: parameter }).then(res => {
-    console.log('互动列表', res);
+    console.log('互动列表', res.data);
     if (res.data.status == 'Y') {
       context.interactionList = _formateInteractionList(res.data.rows);
+      context.$store.commit('setMinInteractionId', res.data.rows[0].id);
+      context.$store.commit('setMaxInteractionId', res.data.rows[res.data.rows.length - 1].id);
     } else {
       context.$vux.toast.show({
         text: '互动消息加载失败',
@@ -63,12 +65,28 @@ const getInteractionList = function(parameter) {
   })
 }
 
+/*
+获取互动列表历史信息
+参数：parameter Object 接口所需参数
+*/
 const getInteractionHistoryList = function(parameter) {
-  context.$axios.get('/api/newmedia/mobile/liveMessage/getLeaveMessageOldPass.action', { params: parameter })
+  return new Promise(resolve => {
+    context.$axios.get('/api/newmedia/mobile/liveMessage/getLeaveMessageOldPass.action', { params: parameter }).then(res => {
+      console.log('互动列表历史', res.data);
+      if (res.data.status == 'Y') {
+        let arr = _formateInteractionList(res.data.rows);
+        arr.push(...context.interactionList);
+        context.interactionList = arr;
+        context.$store.commit('setMinInteractionId', arr[0].id);
+      }
+      resolve(res.data)
+    })
+  })
 }
 
 export default {
   init,
   setSwiperHeight,
-  getInteractionList
+  getInteractionList,
+  getInteractionHistoryList
 }
