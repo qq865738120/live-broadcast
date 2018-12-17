@@ -1,7 +1,6 @@
 <template>
   <div>
     <Video title="标题1" @x5-enter-fullscreen="x5EnterFullscreen" @x5-exit-fullscreen="x5ExitFullscreen">
-
       <!-- 广告条开始 -->
       <div class="ad-bar" v-if="showAdBar">
         <img src="https://goss1.vcg.com/creative/vcg/800/version23/VCG21gic6409708.jpg" />
@@ -19,8 +18,14 @@
         <SwiperItem v-for="(item, index) in tabItems" :key="item.id">
           <div class="swiper-content">
             <template v-if="item.typeId == 1">
-              <ListPullLoading :options="listPullLoadingOpt" style="heigth: 100%">
-                <template slot="list">
+              <!-- <ListPullLoading :options="listPullLoadingOpt" style="heigth: 100%" @scroll="test"> -->
+              <Scroller
+                lock-x height="7.98rem"
+                ref="scrollerEvent"
+                use-pulldown
+                :pulldown-config="pullupConfig"
+                @on-pulldown-loading="loadingHistoryInteraction">
+                <div>
                   <InteractionList
                     v-for="item in interactionList"
                     :key="item.id"
@@ -30,8 +35,10 @@
                     :icon="item.icon"
                     :image="item.image"
                     :isMaster="item.isMaster"></InteractionList>
-                </template>
-              </ListPullLoading>
+                    <!-- <p v-for="(item, index) in [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]">{{ index }}</p> -->
+                </div>
+              </Scroller>
+              <!-- </ListPullLoading> -->
             </template>
             <template v-else-if="item.typeId == 5">
               <div>
@@ -68,6 +75,7 @@
       <!-- 底部菜单结束 -->
 
     </Video>
+    <Toast v-model="toastShow" :time="2600" text="123"></Toast>
   </div>
 </template>
 
@@ -80,7 +88,6 @@ export default {
   name: 'Home',
   mounted() {
     methods.init(this);
-
   },
   data () {
     return {
@@ -96,33 +103,27 @@ export default {
       showAdBar: false, //是否展示广告条
       inputWord: "请输入内容213", //输入框占位符
       inputWidth: "2.5rem", //输入框宽度
-      listPullLoadingOpt: { //上拉下拉列表组件选项配置
-        auto: true,
-        isShowToTop: false,
-				parameters: {typeId: null},
-				down: {
-					offset: 50
-				},
-				api: this.queryInteractionList
-			},
+      // listPullLoadingOpt: { //上拉下拉列表组件选项配置
+      //   auto: true,
+      //   isShowToTop: false,
+			// 	parameters: {typeId: null},
+      //   imgResize: false,
+			// 	api: this.queryInteractionList,
+      //   parameters: {
+      // 		maxResultCount: 10, //每次分页数据加载多少条
+      // 		skipCount: 0 //每次数据偏移
+      // 	} // 数据查询参数
+			// },
       interactionList: [ //互动列表数据
-        { id: 0, title: '标题啊标题啊0', time: '1小时', message: '这是一条消息这是一条消息这是一条消息', isMaster: false, icon: 'http://img2.imgtn.bdimg.com/it/u=3197537752,2095789724&fm=26&gp=0.jpg', image: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1544776923060&di=31b3a9fd116050fa5baf6dfbe7231233&imgtype=0&src=http%3A%2F%2Fh.hiphotos.baidu.com%2Fimage%2Fpic%2Fitem%2Ff2deb48f8c5494eec7036a5f20f5e0fe99257e56.jpg' }
+        { id: 0, title: '标题啊标题啊0', time: '1小时', message: '这是一条消息这是一条消息这是一条消息', isMaster: false, icon: 'http://img2.imgtn.bdimg.com/it/u=3197537752,2095789724&fm=26&gp=0.jpg', image: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1544776923060&di=31b3a9fd116050fa5baf6dfbe7231233&imgtype=0&src=http%3A%2F%2Fh.hiphotos.baidu.com%2Fimage%2Fpic%2Fitem%2Ff2deb48f8c5494eec7036a5f20f5e0fe99257e56.jpg' },
+        { id: 1, title: '标题啊标题啊0', time: '1小时', message: '这是一条消息这是一条消息这是一条消息', isMaster: false, icon: 'http://img2.imgtn.bdimg.com/it/u=3197537752,2095789724&fm=26&gp=0.jpg', image: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1544776923060&di=31b3a9fd116050fa5baf6dfbe7231233&imgtype=0&src=http%3A%2F%2Fh.hiphotos.baidu.com%2Fimage%2Fpic%2Fitem%2Ff2deb48f8c5494eec7036a5f20f5e0fe99257e56.jpg' }
       ],
-      testAllData: [
-        { id: 1, title: '标题啊标题啊1', time: '1小时', message: '这是一条消息这是一条消息这是一条消息', isMaster: true, icon: 'http://img2.imgtn.bdimg.com/it/u=3197537752,2095789724&fm=26&gp=0.jpg', image: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1544776923060&di=31b3a9fd116050fa5baf6dfbe7231233&imgtype=0&src=http%3A%2F%2Fh.hiphotos.baidu.com%2Fimage%2Fpic%2Fitem%2Ff2deb48f8c5494eec7036a5f20f5e0fe99257e56.jpg' },
-        { id: 2, title: '标题啊标题啊2', time: '1小时', message: '这是一条消息这是一条消息这是一条消息', isMaster: false, icon: 'http://img2.imgtn.bdimg.com/it/u=3197537752,2095789724&fm=26&gp=0.jpg', image: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1544776923060&di=31b3a9fd116050fa5baf6dfbe7231233&imgtype=0&src=http%3A%2F%2Fh.hiphotos.baidu.com%2Fimage%2Fpic%2Fitem%2Ff2deb48f8c5494eec7036a5f20f5e0fe99257e56.jpg' },
-        { id: 3, title: '标题啊标题啊3', time: '1小时', message: '这是一条消息这是一条消息这是一条消息', isMaster: true, icon: 'http://img2.imgtn.bdimg.com/it/u=3197537752,2095789724&fm=26&gp=0.jpg', image: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1544776923060&di=31b3a9fd116050fa5baf6dfbe7231233&imgtype=0&src=http%3A%2F%2Fh.hiphotos.baidu.com%2Fimage%2Fpic%2Fitem%2Ff2deb48f8c5494eec7036a5f20f5e0fe99257e56.jpg' },
-        { id: 4, title: '标题啊标题啊4', time: '1小时', message: '这是一条消息这是一条消息这是一条消息', isMaster: false, icon: 'http://img2.imgtn.bdimg.com/it/u=3197537752,2095789724&fm=26&gp=0.jpg', image: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1544776923060&di=31b3a9fd116050fa5baf6dfbe7231233&imgtype=0&src=http%3A%2F%2Fh.hiphotos.baidu.com%2Fimage%2Fpic%2Fitem%2Ff2deb48f8c5494eec7036a5f20f5e0fe99257e56.jpg' },
-        { id: 5, title: '标题啊标题啊5', time: '1小时', message: '这是一条消息这是一条消息这是一条消息', isMaster: false, icon: 'http://img2.imgtn.bdimg.com/it/u=3197537752,2095789724&fm=26&gp=0.jpg' },
-        { id: 6, title: '标题啊标题啊6', time: '1小时', message: '这是一条消息这是一条消息这是一条消息', isMaster: false, icon: 'http://img2.imgtn.bdimg.com/it/u=3197537752,2095789724&fm=26&gp=0.jpg', image: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1544776923060&di=31b3a9fd116050fa5baf6dfbe7231233&imgtype=0&src=http%3A%2F%2Fh.hiphotos.baidu.com%2Fimage%2Fpic%2Fitem%2Ff2deb48f8c5494eec7036a5f20f5e0fe99257e56.jpg' },
-        { id: 7, title: '标题啊标题啊7', time: '1小时', message: '这是一条消息这是一条消息这是一条消息', isMaster: false, icon: 'http://img2.imgtn.bdimg.com/it/u=3197537752,2095789724&fm=26&gp=0.jpg', image: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1544776923060&di=31b3a9fd116050fa5baf6dfbe7231233&imgtype=0&src=http%3A%2F%2Fh.hiphotos.baidu.com%2Fimage%2Fpic%2Fitem%2Ff2deb48f8c5494eec7036a5f20f5e0fe99257e56.jpg' },
-        { id: 8, title: '标题啊标题啊8', time: '1小时', message: '这是一条消息这是一条消息这是一条消息', isMaster: false, icon: 'http://img2.imgtn.bdimg.com/it/u=3197537752,2095789724&fm=26&gp=0.jpg', image: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1544776923060&di=31b3a9fd116050fa5baf6dfbe7231233&imgtype=0&src=http%3A%2F%2Fh.hiphotos.baidu.com%2Fimage%2Fpic%2Fitem%2Ff2deb48f8c5494eec7036a5f20f5e0fe99257e56.jpg' },
-        { id: 9, title: '标题啊标题啊9', time: '1小时', message: '这是一条消息这是一条消息这是一条消息', isMaster: false, icon: 'http://img2.imgtn.bdimg.com/it/u=3197537752,2095789724&fm=26&gp=0.jpg', image: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1544776923060&di=31b3a9fd116050fa5baf6dfbe7231233&imgtype=0&src=http%3A%2F%2Fh.hiphotos.baidu.com%2Fimage%2Fpic%2Fitem%2Ff2deb48f8c5494eec7036a5f20f5e0fe99257e56.jpg' },
-        { id: 10, title: '标题啊标题啊10', time: '1小时', message: '这是一条消息这是一条消息这是一条消息', isMaster: false, icon: 'http://img2.imgtn.bdimg.com/it/u=3197537752,2095789724&fm=26&gp=0.jpg', image: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1544776923060&di=31b3a9fd116050fa5baf6dfbe7231233&imgtype=0&src=http%3A%2F%2Fh.hiphotos.baidu.com%2Fimage%2Fpic%2Fitem%2Ff2deb48f8c5494eec7036a5f20f5e0fe99257e56.jpg' },
-        { id: 11, title: '标题啊标题啊11', time: '1小时', message: '这是一条消息这是一条消息这是一条消息', isMaster: false, icon: 'http://img2.imgtn.bdimg.com/it/u=3197537752,2095789724&fm=26&gp=0.jpg', image: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1544776923060&di=31b3a9fd116050fa5baf6dfbe7231233&imgtype=0&src=http%3A%2F%2Fh.hiphotos.baidu.com%2Fimage%2Fpic%2Fitem%2Ff2deb48f8c5494eec7036a5f20f5e0fe99257e56.jpg' },
-        { id: 12, title: '标题啊标题啊12', time: '1小时', message: '这是一条消息这是一条消息这是一条消息', isMaster: false, icon: 'http://img2.imgtn.bdimg.com/it/u=3197537752,2095789724&fm=26&gp=0.jpg', image: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1544776923060&di=31b3a9fd116050fa5baf6dfbe7231233&imgtype=0&src=http%3A%2F%2Fh.hiphotos.baidu.com%2Fimage%2Fpic%2Fitem%2Ff2deb48f8c5494eec7036a5f20f5e0fe99257e56.jpg' },
-        { id: 13, title: '标题啊标题啊13', time: '1小时', message: '这是一条消息这是一条消息这是一条消息', isMaster: false, icon: 'http://img2.imgtn.bdimg.com/it/u=3197537752,2095789724&fm=26&gp=0.jpg', image: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1544776923060&di=31b3a9fd116050fa5baf6dfbe7231233&imgtype=0&src=http%3A%2F%2Fh.hiphotos.baidu.com%2Fimage%2Fpic%2Fitem%2Ff2deb48f8c5494eec7036a5f20f5e0fe99257e56.jpg' },
-      ]
+      pullupConfig: { //Scroll组件上拉配置
+        downContent: '下拉加载',
+        upContent: '释放刷新',
+        loadingContent: '加载中...',
+      },
+      toastShow: false
     }
   },
   components: {
@@ -139,25 +140,33 @@ export default {
     x5ExitFullscreen() { //安卓机退出x5同层播放触发事件函数
       methods.setSwiperHeight('6.78rem', '7.98rem');
     },
+    test() {
+      console.log('test');
+    },
+    loadingHistoryInteraction() {
+      console.log('loading');
+    }
     /*
     查询互动信息
     参数：parameters 请求接口需要的参数
          isLoadingMore 是否正在加载
     */
-    queryInteractionList(parameters, isLoadingMore) {
-      let _this = this;
-      return new Promise((resolve, reject) => {
-        setTimeout(function() {
-          let end = (_this.testAllData.length > parameters.skipCount + parameters.maxResultCount) ? parameters.skipCount + parameters.maxResultCount:_this.testAllData.length;
-						if(isLoadingMore) {
-							_this.interactionList.push(..._this.testAllData.slice(parameters.skipCount, end));
-						} else {
-							_this.interactionList = _this.testAllData.slice(parameters.skipCount, end);
-						}
-						resolve(end - parameters.skipCount);
-        }, 500)
-      })
-    }
+    // queryInteractionList(parameters, isLoadingMore) {
+    //   let _this = this;
+    //   return new Promise((resolve, reject) => {
+    //     setTimeout(function() {
+    //       console.log(isLoadingMore);
+    //       let end = (_this.testAllData.length > parameters.skipCount + parameters.maxResultCount) ? parameters.skipCount + parameters.maxResultCount:_this.testAllData.length;
+		// 			if(isLoadingMore) {
+		// 				_this.interactionList.push(..._this.testAllData.slice(parameters.skipCount, end));
+		// 			} else {
+		// 				_this.interactionList = _this.testAllData.slice(parameters.skipCount, end);
+		// 			}
+		// 			resolve(end - parameters.skipCount);
+    //     }, 2000)
+    //     this.$axios.get('/api/newmedia/mobile/liveMessage/getLeaveMessagePass.action?page=1&rows=8&liveId=143')
+    //   })
+    // }
   }
 }
 </script>
@@ -210,5 +219,8 @@ export default {
   .swiper-content {
     height: 100%;
     background-color: $--color-F9;
+  }
+  .pull-up-tips {
+    display: none;
   }
 </style>

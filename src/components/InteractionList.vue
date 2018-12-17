@@ -1,7 +1,7 @@
 <template>
   <div class="root">
       <div>
-        <img class="header-icon" :src="icon"></XImg>
+        <img class="header-icon" v-if="icon != undefined && icon != ''" v-lazy="icon"></XImg>
       </div>
       <div class="left">
         <div class="left-top">
@@ -9,7 +9,7 @@
           <span>{{ time }}</span>
         </div>
         <p>{{ message }}</p>
-        <img class="message-img" :src="image"></img>
+        <img class="message-img" v-if="image != undefined && image != ''" v-lazy="image"></img>
       </div>
 
   </div>
@@ -66,7 +66,7 @@
     align-items: baseline;
   }
   .left-top>span {
-    font-size: 14px;
+    font-size: 12px;
     color: $--color-666;
   }
   .left>p {

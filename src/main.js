@@ -1,9 +1,11 @@
 // The Vue build version to load with the `import` command
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
-import './store/index.js' //引入vuex
 import App from './App'
 import router from './router'
+import store from './store' //引入vuex
+import axios from 'axios' //引入axios
+import Qs from 'qs' //配合axios使用
 import 'normalize.css'
 import '@/assets/style/common.scss'
 import 'lib-flexible/flexible'
@@ -16,12 +18,22 @@ import VueLazyload from 'vue-lazyload' //图片懒加载插件
 
 Vue.config.productionTip = false
 
+Vue.prototype.$axios = axios.create({
+  // baseURL: 'http://fm.soukong.cn',
+  timeout: 10000,
+  headers: {
+    'Content-Type': 'application/x-www-form-urlencoded'
+  }
+});
+Vue.prototype.$qs = Qs;
 Vue.prototype.$utils = utils;
 Vue.prototype.$ = $;
 
 Vue.component('ListPullLoading', listPullLoading)
 
 Vue.use(VueLazyload, {
+  attempt: 1,
+  lazyComponent: true,
   error: 'http://q.img.soukong.cn/timg.jpg',
   loading: 'http://q.img.soukong.cn/timg.jpg',
 })
@@ -30,6 +42,22 @@ Vue.use(VueLazyload, {
 new Vue({
   el: '#app',
   router,
+  store,
   components: { App },
-  template: `<App/>`
+  template: `<App/>`,
+  created() {
+    this.init();
+  },
+  methods: {
+    /* 初始化函数 */
+    init() {
+      let liveTitleId = this.$utils.getParam('liveTitleId');
+      this.$store.commit('setLiveTitleId', this.$utils.getParam('liveTitleId'));
+      this.$store.commit('setOpenId', this.$utils.getParam('openId'));
+      this.$store.commit('setCmpyId', this.$utils.getParam('cmpyId'));
+      console.log('liveTitleId =', this.$store.state.liveTitleId);
+      console.log('openId =', this.$store.state.openId);
+      console.log('cmpyId =', this.$store.state.cmpyId);
+    }
+  }
 })

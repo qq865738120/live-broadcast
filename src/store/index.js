@@ -5,11 +5,27 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    count: 0
+    liveTitleId: '',
+    openId: '',
+    cmpyId: '',
+    maxInteractionId: '', //最大互动消息id
+    minInteractionId: '' //最小互动消息id
   },
   mutations: {
-    increment (state) {
-      state.count++
+    setLiveTitleId(state, value) {
+      state.liveTitleId = value
+    },
+    setOpenId(state, value) {
+      state.openId = value
+    },
+    setCmpyId(state, value) {
+      state.cmpyId = value
+    },
+    setMaxInteractionId(state, value) {
+      state.maxInteractionId = value;
+    },
+    setMinInteractionId(state, value) {
+      state.minInteractionId = value;
     }
   }
 })
