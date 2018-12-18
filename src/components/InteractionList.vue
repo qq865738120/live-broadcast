@@ -11,7 +11,6 @@
         <p>{{ message }}</p>
         <img class="message-img" v-if="image != undefined && image != ''" v-lazy="image"></img>
       </div>
-
   </div>
 </template>
 

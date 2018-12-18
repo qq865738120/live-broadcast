@@ -79,6 +79,14 @@
       </transition>
       <!-- 消息输入框结束 -->
 
+      <!-- 产品提交订单开始 -->
+      <transition
+        enter-active-class="animated slideInUp faster"
+        leave-active-class="animated slideOutDown faster">
+        <ProductOrder></ProductOrder>
+      </transition>
+      <!-- 产品提交订单结束 -->
+
     </Video>
   </div>
 </template>
@@ -87,6 +95,7 @@
 import Video from '@/components/Video'
 import InteractionList from '@/components/InteractionList'
 import MessageInputBar from '@/components/MessageInputBar'
+import ProductOrder from '@/components/ProductOrder'
 import methods from '@/common/home.js'
 
 export default {
@@ -122,7 +131,8 @@ export default {
   components: {
     Video,
     InteractionList,
-    MessageInputBar
+    MessageInputBar,
+    ProductOrder
   },
   methods: {
     switchTabBody(index) {
