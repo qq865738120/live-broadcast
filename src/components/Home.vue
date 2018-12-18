@@ -18,7 +18,6 @@
         <SwiperItem v-for="(item, index) in tabItems" :key="item.id">
           <div class="swiper-content">
             <template v-if="item.typeId == 1">
-              <!-- <ListPullLoading :options="listPullLoadingOpt" style="heigth: 100%" @scroll="test"> -->
               <Scroller
                 lock-x height="7.98rem"
                 ref="scrollerEvent"
@@ -35,10 +34,8 @@
                     :icon="item.icon"
                     :image="item.image"
                     :isMaster="item.isMaster"></InteractionList>
-                    <!-- <p v-for="(item, index) in [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]">{{ index }}</p> -->
                 </div>
               </Scroller>
-              <!-- </ListPullLoading> -->
             </template>
             <template v-else-if="item.typeId == 5">
               <div>
@@ -58,9 +55,6 @@
 
       <!-- 底部菜单开始 -->
       <div class="bottom-bar">
-        <!-- <Group gutter="0" class="input" :style="{width: inputWidth}">
-          <XInput type="text" :placeholder="placeholder"></XInput>
-        </Group> -->
         <div class="input">
           <span class="com-over-length" :style="{width: inputWidth}">
             {{ inputWord }}
@@ -74,6 +68,12 @@
       </div>
       <!-- 底部菜单结束 -->
 
+      <!-- 消息输入框开始 -->
+      <div class="message-input">
+        <MessageInputBar></MessageInputBar>
+      </div>
+      <!-- 消息输入框结束 -->
+
     </Video>
     <Toast v-model="toastShow" :time="2600" text="123"></Toast>
   </div>
@@ -82,12 +82,14 @@
 <script>
 import Video from '@/components/Video'
 import InteractionList from '@/components/InteractionList'
+import MessageInputBar from '@/components/MessageInputBar'
 import methods from '@/common/home.js'
 
 export default {
   name: 'Home',
   mounted() {
     methods.init(this);
+    console.log(this.$refs);
   },
   data () {
     return {
@@ -103,20 +105,9 @@ export default {
       showAdBar: false, //是否展示广告条
       inputWord: "请输入内容213", //输入框占位符
       inputWidth: "2.5rem", //输入框宽度
-      // listPullLoadingOpt: { //上拉下拉列表组件选项配置
-      //   auto: true,
-      //   isShowToTop: false,
-			// 	parameters: {typeId: null},
-      //   imgResize: false,
-			// 	api: this.queryInteractionList,
-      //   parameters: {
-      // 		maxResultCount: 10, //每次分页数据加载多少条
-      // 		skipCount: 0 //每次数据偏移
-      // 	} // 数据查询参数
-			// },
       interactionList: [ //互动列表数据
-        { id: 0, title: '标题啊标题啊0', time: '1小时', message: '这是一条消息这是一条消息这是一条消息', isMaster: false, icon: 'http://img2.imgtn.bdimg.com/it/u=3197537752,2095789724&fm=26&gp=0.jpg', image: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1544776923060&di=31b3a9fd116050fa5baf6dfbe7231233&imgtype=0&src=http%3A%2F%2Fh.hiphotos.baidu.com%2Fimage%2Fpic%2Fitem%2Ff2deb48f8c5494eec7036a5f20f5e0fe99257e56.jpg' },
-        { id: 1, title: '标题啊标题啊0', time: '1小时', message: '这是一条消息这是一条消息这是一条消息', isMaster: false, icon: 'http://img2.imgtn.bdimg.com/it/u=3197537752,2095789724&fm=26&gp=0.jpg', image: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1544776923060&di=31b3a9fd116050fa5baf6dfbe7231233&imgtype=0&src=http%3A%2F%2Fh.hiphotos.baidu.com%2Fimage%2Fpic%2Fitem%2Ff2deb48f8c5494eec7036a5f20f5e0fe99257e56.jpg' }
+        // { id: 0, title: '标题啊标题啊0', time: '1小时', message: '这是一条消息这是一条消息这是一条消息', isMaster: false, icon: 'http://img2.imgtn.bdimg.com/it/u=3197537752,2095789724&fm=26&gp=0.jpg', image: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1544776923060&di=31b3a9fd116050fa5baf6dfbe7231233&imgtype=0&src=http%3A%2F%2Fh.hiphotos.baidu.com%2Fimage%2Fpic%2Fitem%2Ff2deb48f8c5494eec7036a5f20f5e0fe99257e56.jpg' },
+        // { id: 1, title: '标题啊标题啊0', time: '1小时', message: '这是一条消息这是一条消息这是一条消息', isMaster: false, icon: 'http://img2.imgtn.bdimg.com/it/u=3197537752,2095789724&fm=26&gp=0.jpg', image: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1544776923060&di=31b3a9fd116050fa5baf6dfbe7231233&imgtype=0&src=http%3A%2F%2Fh.hiphotos.baidu.com%2Fimage%2Fpic%2Fitem%2Ff2deb48f8c5494eec7036a5f20f5e0fe99257e56.jpg' }
       ],
       pullupConfig: { //Scroll组件上拉配置
         downContent: '下拉加载',
@@ -128,7 +119,8 @@ export default {
   },
   components: {
     Video,
-    InteractionList
+    InteractionList,
+    MessageInputBar
   },
   methods: {
     switchTabBody(index) {
@@ -143,8 +135,7 @@ export default {
     test() {
       console.log('test');
     },
-    async loadingHistoryInteraction() {
-      console.log('loading');
+    async loadingHistoryInteraction() { //下拉更新历史记录事件函数
       let that = this;
       await methods.getInteractionHistoryList({
         curMinId: that.$store.state.minInteractionId,
@@ -152,31 +143,9 @@ export default {
         liveId: that.$store.state.liveTitleId
       });
       this.$nextTick(() => {
-        this.$refs.scrollerEvent[0].donePulldown()
-        console.log(that.$store.state.minInteractionId);
+        this.$refs.scrollerEvent[0].donePulldown(); //下拉刷新数据请求成功后需调用此函数刷新界面
       })
     }
-    /*
-    查询互动信息
-    参数：parameters 请求接口需要的参数
-         isLoadingMore 是否正在加载
-    */
-    // queryInteractionList(parameters, isLoadingMore) {
-    //   let _this = this;
-    //   return new Promise((resolve, reject) => {
-    //     setTimeout(function() {
-    //       console.log(isLoadingMore);
-    //       let end = (_this.testAllData.length > parameters.skipCount + parameters.maxResultCount) ? parameters.skipCount + parameters.maxResultCount:_this.testAllData.length;
-		// 			if(isLoadingMore) {
-		// 				_this.interactionList.push(..._this.testAllData.slice(parameters.skipCount, end));
-		// 			} else {
-		// 				_this.interactionList = _this.testAllData.slice(parameters.skipCount, end);
-		// 			}
-		// 			resolve(end - parameters.skipCount);
-    //     }, 2000)
-    //     this.$axios.get('/api/newmedia/mobile/liveMessage/getLeaveMessagePass.action?page=1&rows=8&liveId=143')
-    //   })
-    // }
   }
 }
 </script>
@@ -228,9 +197,14 @@ export default {
   }
   .swiper-content {
     height: 100%;
-    background-color: $--color-F9;
+    background-color: $--color-F5;
   }
   .pull-up-tips {
     display: none;
+  }
+  .message-input {
+    position: absolute;
+    top: 0px;
+    width: 100%;
   }
 </style>

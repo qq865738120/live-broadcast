@@ -9,7 +9,9 @@ export default new Vuex.Store({
     openId: '',
     cmpyId: '',
     maxInteractionId: '', //最大互动消息id
-    minInteractionId: '' //最小互动消息id
+    minInteractionId: '', //最小互动消息id
+    isRequestInteraction: false, //是否正在请求互动消息接口
+    valve: 2, //阈值
   },
   mutations: {
     setLiveTitleId(state, value) {
@@ -26,6 +28,12 @@ export default new Vuex.Store({
     },
     setMinInteractionId(state, value) {
       state.minInteractionId = value;
+    },
+    switchRequestInteraction(state) {
+      state.isRequestInteraction = !state.isRequestInteraction
+    },
+    setValve(state, value) {
+      state.value = value
     }
   }
 })
