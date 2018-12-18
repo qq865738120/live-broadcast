@@ -68,7 +68,7 @@ const _IntelligenceInteractionTimer = function(hasData) {
     if(!context.$store.state.isRequestInteraction) { //没有正在请求互动消息接口的操作则进行请求操作
       getInteractionList({
         curMaxId: context.$store.state.maxInteractionId,
-        rows: 2,
+        rows: 3,
         liveId: context.$store.state.liveTitleId
       })
     }
@@ -84,7 +84,7 @@ const init = function(that) {
   setSwiperHeight('6.78rem', '7.98rem');
   getInteractionList({
     curMaxId: "",
-    rows: 2,
+    rows: 4,
     liveId: context.$store.state.liveTitleId
   });
 }
@@ -141,9 +141,22 @@ const getInteractionHistoryList = function(parameter) {
   })
 }
 
+/*
+刷新互动消息列表
+tip：主要供外部组件刷新使用，内部直接使用getInteractionList方法
+*/
+const refreshInteraction = function() {
+  getInteractionList({
+    curMaxId: context.$store.state.maxInteractionId,
+    rows: 1,
+    liveId: context.$store.state.liveTitleId
+  })
+}
+
 export default {
   init,
   setSwiperHeight,
   getInteractionList,
-  getInteractionHistoryList
+  getInteractionHistoryList,
+  refreshInteraction
 }

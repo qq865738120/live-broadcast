@@ -1,19 +1,59 @@
 <template>
   <div class="root">
     <Group class="group">
-      <XInput class="input" title=""  :show-clear="false"></XInput>
+      <XInput v-model="message" class="input" title=""  :show-clear="false" ref="inputEvent"></XInput>
     </Group>
     <div class="bottom">
-      <XButton class="button" mini :gradients="['#AFA79F', '#AFA79F']">取消</XButton>
-      <XButton class="button" mini :gradients="['#ED7E00', '#ED7E00']">确定</XButton>
+      <XButton class="button" mini :gradients="['#AFA79F', '#AFA79F']" @click.native="onCancle">取消</XButton>
+      <XButton class="button" mini :gradients="['#ED7E00', '#ED7E00']" @click.native="onSend">发送</XButton>
     </div>
   </div>
 </template>
 
 <script>
+import methods from '@/common/home.js'
+
 export default {
   mounted() {
     this.$('.weui-cells').css('margin-top', '0');
+  },
+  data() {
+    return {
+      message: ''
+    }
+  },
+  methods: {
+    onCancle() {
+      this.$store.commit('switchInteractionInputing');
+    },
+    onSend() {
+      let that = this;
+      this.$axios.post("/api/newmedia/mobile/liveMessage/addLeaveMessage.action", that.$qs.stringify({
+        openId: that.$store.state.openId,
+        liveId: that.$store.state.liveTitleId,
+        content: that.message
+      })).then(res => {
+        console.log('消息发送结果', res.data);
+        if (res.data.status == 'Y') {
+          this.$vux.toast.show({
+            text: '发送成功!'
+          })
+          let timerId = setInterval(() => {
+            that.$store.commit('addInteractionTime'); //每次执行都将interactionTime自增一下
+            if(that.$store.state.interactionTime == 10) { //如果interactionTime等于10则将interactionTime置零并清除计时器
+              that.$store.commit('resetInteractionTime');
+              clearInterval(timerId);
+            }
+          }, 1000)
+        } else {
+          this.$vux.toast.show({
+            text: '发送失败T_T',
+            type: 'cancel'
+          })
+        }
+      })
+      this.$store.commit('switchInteractionInputing');
+    }
   }
 }
 </script>

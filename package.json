@@ -10,6 +10,7 @@
     "build": "node build/build.js"
   },
   "dependencies": {
+    "animate.css": "^3.7.0",
     "axios": "^0.18.0",
     "jquery": "^3.3.1",
     "less": "^3.9.0",
@@ -23,6 +24,7 @@
     "vue": "^2.5.2",
     "vue-lazyload": "^1.2.6",
     "vue-router": "^3.0.1",
+    "vue-wechat-title": "^2.0.5",
     "vuex": "^3.0.1",
     "vux": "^2.9.2"
   },

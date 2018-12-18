@@ -6,7 +6,8 @@ import router from './router'
 import store from './store' //引入vuex
 import axios from 'axios' //引入axios
 import Qs from 'qs' //配合axios使用
-import 'normalize.css'
+import 'normalize.css' //浏览器统一样式
+import 'animate.css'
 import '@/assets/style/common.scss'
 import 'lib-flexible/flexible'
 import './common/vux-component.js' //vux按需引入组件
@@ -37,6 +38,7 @@ Vue.use(VueLazyload, {
   error: 'http://q.img.soukong.cn/timg.jpg',
   loading: 'http://q.img.soukong.cn/timg.jpg',
 })
+Vue.use(require('vue-wechat-title')) //引入动态标题插件
 
 /* eslint-disable no-new */
 new Vue({
@@ -44,9 +46,10 @@ new Vue({
   router,
   store,
   components: { App },
-  template: `<App/>`,
+  template: `<App v-wechat-title="$store.state.title"/>`,
   created() {
     this.init();
+    this.initLive();
   },
   methods: {
     /* 初始化函数 */
@@ -58,6 +61,17 @@ new Vue({
       console.log('liveTitleId =', this.$store.state.liveTitleId);
       console.log('openId =', this.$store.state.openId);
       console.log('cmpyId =', this.$store.state.cmpyId);
+    },
+    initLive() { //初始化直播相关数据
+      let that = this;
+      this.$axios.get('/api/newmedia/mobile/live/getLive.action', { params: { liveTitleId: that.$utils.getParam('liveTitleId') } }).then(res => {
+        console.log('主页相关参数', res.data);
+        if (res.data.status == 'Y') {
+          this.$store.commit('setTitle', res.data.row.title);
+          this.$store.commit('setShopNumber', res.data.shopNumber);
+          this.$store.commit('setProductId', res.data.row.productId != undefined ? res.data.row.productId : '');
+        }
+      })
     }
   }
 })

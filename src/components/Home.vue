@@ -56,7 +56,7 @@
       <!-- 底部菜单开始 -->
       <div class="bottom-bar">
         <div class="input">
-          <span class="com-over-length" :style="{width: inputWidth}">
+          <span class="com-over-length" :style="{width: inputWidth}" @click="onInputClick">
             {{ inputWord }}
           </span>
         </div>
@@ -69,13 +69,17 @@
       <!-- 底部菜单结束 -->
 
       <!-- 消息输入框开始 -->
-      <div class="message-input">
-        <MessageInputBar></MessageInputBar>
-      </div>
+      <transition
+        enter-active-class="animated slideInUp faster"
+        leave-active-class="animated slideOutDown faster"
+        @enter="messageInputEnter">
+        <div class="message-input" v-show="$store.state.isInteractionInputing">
+          <MessageInputBar ref="messageBar"></MessageInputBar>
+        </div>
+      </transition>
       <!-- 消息输入框结束 -->
 
     </Video>
-    <Toast v-model="toastShow" :time="2600" text="123"></Toast>
   </div>
 </template>
 
@@ -89,7 +93,6 @@ export default {
   name: 'Home',
   mounted() {
     methods.init(this);
-    console.log(this.$refs);
   },
   data () {
     return {
@@ -114,7 +117,6 @@ export default {
         upContent: '释放刷新',
         loadingContent: '加载中...',
       },
-      toastShow: false
     }
   },
   components: {
@@ -132,19 +134,30 @@ export default {
     x5ExitFullscreen() { //安卓机退出x5同层播放触发事件函数
       methods.setSwiperHeight('6.78rem', '7.98rem');
     },
-    test() {
-      console.log('test');
-    },
     async loadingHistoryInteraction() { //下拉更新历史记录事件函数
       let that = this;
       await methods.getInteractionHistoryList({
         curMinId: that.$store.state.minInteractionId,
-        rows: 2,
+        rows: 20,
         liveId: that.$store.state.liveTitleId
       });
       this.$nextTick(() => {
         this.$refs.scrollerEvent[0].donePulldown(); //下拉刷新数据请求成功后需调用此函数刷新界面
       })
+    },
+    onInputClick() { //输入框点击事件
+      let that = this;
+      if (this.$store.state.interactionTime == 0) { //interactionTime为0则表示可以发送消息
+        this.$store.commit('switchInteractionInputing');
+      } else {
+        this.$vux.toast.show({
+          text: '休息一下，还差' + (10 - that.$store.state.interactionTime) + 's',
+          type: 'text'
+        })
+      }
+    },
+    messageInputEnter() { //消息输入框进入动画开始事件
+      this.$refs.messageBar.$refs.inputEvent.focus()
     }
   }
 }

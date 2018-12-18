@@ -8,10 +8,15 @@ export default new Vuex.Store({
     liveTitleId: '',
     openId: '',
     cmpyId: '',
+    title: '', //标题
+    shopNumber: '', //店铺号
+    productId: '', //产品id
     maxInteractionId: '', //最大互动消息id
     minInteractionId: '', //最小互动消息id
     isRequestInteraction: false, //是否正在请求互动消息接口
     valve: 2, //阈值
+    isInteractionInputing: false, //是否正在输入互动消息
+    interactionTime: 0, //发互动消息间隔时间，10秒发一次，等于0才可以发送
   },
   mutations: {
     setLiveTitleId(state, value) {
@@ -22,6 +27,15 @@ export default new Vuex.Store({
     },
     setCmpyId(state, value) {
       state.cmpyId = value
+    },
+    setTitle(state, value) {
+      state.title = value
+    },
+    setShopNumber(state, value) {
+      state.shopNumber = value;
+    },
+    setProductId(state, value) {
+      state.productId = value
     },
     setMaxInteractionId(state, value) {
       state.maxInteractionId = value;
@@ -34,6 +48,15 @@ export default new Vuex.Store({
     },
     setValve(state, value) {
       state.value = value
+    },
+    switchInteractionInputing(state) {
+      state.isInteractionInputing = !state.isInteractionInputing
+    },
+    addInteractionTime(state) {
+      state.interactionTime++
+    },
+    resetInteractionTime(state) {
+      state.interactionTime = 0
     }
   }
 })
