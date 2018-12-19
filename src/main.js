@@ -21,7 +21,7 @@ Vue.config.productionTip = false
 
 Vue.prototype.$axios = axios.create({
   // baseURL: 'http://fm.soukong.cn',
-  timeout: 10000,
+  timeout: 30000,
   headers: {
     'Content-Type': 'application/x-www-form-urlencoded'
   }

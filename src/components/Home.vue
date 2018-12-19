@@ -60,7 +60,7 @@
             {{ inputWord }}
           </span>
         </div>
-        <XButton action-type="button" :gradients="['#ED7E00', '#ED7E00']">立即购买</XButton>
+        <XButton action-type="button" :gradients="['#ED7E00', '#ED7E00']" @click.native="isShowProductOrder = true">立即购买</XButton>
         <div class="com-icon-button bottom-bar-right">
           <div class="iconfont icon-fenxiang"></div>
           <span>分享</span>
@@ -83,7 +83,7 @@
       <transition
         enter-active-class="animated slideInUp faster"
         leave-active-class="animated slideOutDown faster">
-        <ProductOrder></ProductOrder>
+        <ProductOrder v-show="isShowProductOrder" @on-close="isShowProductOrder = false"></ProductOrder>
       </transition>
       <!-- 产品提交订单结束 -->
 
@@ -126,6 +126,7 @@ export default {
         upContent: '释放刷新',
         loadingContent: '加载中...',
       },
+      isShowProductOrder: false //是否展示产品提交订单组件
     }
   },
   components: {

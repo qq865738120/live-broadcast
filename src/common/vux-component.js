@@ -13,7 +13,8 @@ import {
   XButton,
   Scroller,
   Checker,
-  CheckerItem
+  CheckerItem,
+  XNumber
 } from 'vux'
 Vue.component('Toast', Toast)
 Vue.component('Tab', Tab)
@@ -27,5 +28,6 @@ Vue.component('XButton', XButton)
 Vue.component('Scroller', Scroller)
 Vue.component('Checker', Checker)
 Vue.component('CheckerItem', CheckerItem)
+Vue.component('XNumber', XNumber)
 
 Vue.use(ToastPlugin,  {position: 'middle', width: '4rem'})
