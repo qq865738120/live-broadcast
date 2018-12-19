@@ -15,7 +15,10 @@ import {
   Checker,
   CheckerItem,
   XNumber,
-  Actionsheet
+  Actionsheet,
+  XDialog,
+  Qrcode,
+  Popup
 } from 'vux'
 Vue.component('Toast', Toast)
 Vue.component('Tab', Tab)
@@ -31,5 +34,8 @@ Vue.component('Checker', Checker)
 Vue.component('CheckerItem', CheckerItem)
 Vue.component('XNumber', XNumber)
 Vue.component('Actionsheet', Actionsheet)
+Vue.component('XDialog', XDialog)
+Vue.component('Qrcode', Qrcode)
+Vue.component('Popup', Popup)
 
 Vue.use(ToastPlugin,  {position: 'middle', width: '4rem'})

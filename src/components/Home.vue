@@ -89,6 +89,10 @@
       </transition>
       <!-- 产品提交订单结束 -->
 
+      <!-- 悬浮按钮开始 -->
+      <SuspensionButton></SuspensionButton>
+      <!-- 悬浮按钮结束 -->
+
     </Video>
   </div>
 </template>
@@ -98,6 +102,7 @@ import Video from '@/components/Video'
 import InteractionList from '@/components/InteractionList'
 import MessageInputBar from '@/components/MessageInputBar'
 import ProductOrder from '@/components/ProductOrder'
+import SuspensionButton from '@/components/SuspensionButton'
 import methods from '@/common/home.js'
 
 export default {
@@ -141,7 +146,8 @@ export default {
     Video,
     InteractionList,
     MessageInputBar,
-    ProductOrder
+    ProductOrder,
+    SuspensionButton
   },
   methods: {
     switchTabBody(index) {
@@ -179,10 +185,8 @@ export default {
       this.$refs.messageBar.$refs.inputEvent.focus()
     },
     onSheet(menuKey) { //分享按钮弹出框选择触发事件
+      console.log(this.$wx);
       console.log(menuKey);
-      if (menuKey == 'menu1') { //二维码分享
-
-      }
       switch(menuKey) {
         case 'menu1':
 

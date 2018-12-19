@@ -40,11 +40,11 @@ html {
 /* 阿里图标库引入 */
 @font-face {
   font-family: 'iconfont';  /* project id 962415 */
-  src: url('//at.alicdn.com/t/font_962415_flla53n8vp.eot');
-  src: url('//at.alicdn.com/t/font_962415_flla53n8vp.eot?#iefix') format('embedded-opentype'),
-  url('//at.alicdn.com/t/font_962415_flla53n8vp.woff') format('woff'),
-  url('//at.alicdn.com/t/font_962415_flla53n8vp.ttf') format('truetype'),
-  url('//at.alicdn.com/t/font_962415_flla53n8vp.svg#iconfont') format('svg');
+  src: url('//at.alicdn.com/t/font_962415_8h7t1rc6srs.eot');
+  src: url('//at.alicdn.com/t/font_962415_8h7t1rc6srs.eot?#iefix') format('embedded-opentype'),
+  url('//at.alicdn.com/t/font_962415_8h7t1rc6srs.woff') format('woff'),
+  url('//at.alicdn.com/t/font_962415_8h7t1rc6srs.ttf') format('truetype'),
+  url('//at.alicdn.com/t/font_962415_8h7t1rc6srs.svg#iconfont') format('svg');
 }
 
 .iconfont {
@@ -59,3 +59,4 @@ html {
 .icon-fenxiang:before { content: "\e6a4"; }
 .icon-zhibo:after { content: "\e600"; color: $--main-color; font-size: 26px; }
 .icon-plus-close:before { content: "\e711"; }
+.icon-jiantou:before { content: "\e60c"; }
