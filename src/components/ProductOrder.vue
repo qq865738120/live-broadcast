@@ -4,9 +4,9 @@
       <img v-lazy="headimg"/>
       <div class="head-right">
         <div>
-          <p>￥ 10.00</p>
-          <p>快递佣金：￥2.89</p>
-          <p>自提佣金：￥2.89</p>
+          <p>￥{{ checkerArr[check].price }}</p>
+          <p>快递佣金：￥{{ checkerArr[check].expressPrice }}</p>
+          <p>自提佣金：￥{{ checkerArr[check].autonomyPrice }}</p>
         </div>
         <div class="iconfont icon-plus-close colse-icon" @click="onCloseClick"></div>
       </div>
@@ -20,35 +20,75 @@
           default-item-class="checker-default"
           selected-item-class="checker-selected"
           :radio-required="true">
-          <CheckerItem class="checker-item" v-for="i in [1, 2, 3,4,5,6,7,8,9,10,11]" :key="i" :value="i">￥{{i*300}}</CheckerItem>
+          <CheckerItem class="checker-item" v-for="(item, index) in checkerArr" :key="item.id" :value="index">{{ item.value }}</CheckerItem>
         </Checker>
       </div>
-      <!-- <Cell title="购买数量">
-        <InlineXNumber v-model="number" :min="1" width="50px"></InlineXNumber>
-      </cell> -->
       <group class="number-group">
-        <x-number v-model="number" title="购买数量" :min="1"></x-number>
+        <x-number v-model="count" title="购买数量" :min="1"></x-number>
       </group>
-      <XButton class="button">确认订单</XButton>
+      <XButton class="button" @click.native="submit">确认订单</XButton>
     </div>
   </div>
 </template>
 
 <script>
-export default {
-  mounted() {
 
+let goodsName = '';
+let productID = '';
+
+export default {
+  async mounted() {
+    let that = this;
+        await this.$utils.waitTask(this, 'initFag'); //等待初始化任务完成后继续执行下面代码
+    let getProductDetail = {
+      ShopNumber: that.$store.state.shopNumber,
+      ProductID: that.$store.state.productId,
+      openId: that.$store.state.openId
+    }
+    this.$axios.get('/api/newmedia/mobile/shop/indexproduct/getCommodityDetails.action', { params: getProductDetail}).then(res => {
+      console.log('商品详情', res);
+      if (res.data.RES == '100') {
+        let data = res.data.DATA.Product;
+        goodsName = unescape(data.ProductName);
+        productID = data.ProductID
+        this.headimg = unescape(data.ImgList[0].ImgUrl);
+        let checkerArr = [];
+        for (let item of data.SkuList) {
+          if (item.ApproveStatus == 1) {
+            checkerArr.push({
+              id: item.SkuID,
+              value: item.SkuName,
+              price: item.Price,
+              expressPrice: item.Kdyj,
+              autonomyPrice: item.ztyj
+            })
+          }
+        }
+        this.checkerArr = checkerArr;
+      }
+    })
   },
   data() {
     return {
-      headimg: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1545144878044&di=8a12cc23f18730ff6079e1eeed31d9a1&imgtype=0&src=http%3A%2F%2Fe.hiphotos.baidu.com%2Fimage%2Fpic%2Fitem%2F4b90f603738da9774d57356cbd51f8198618e379.jpg',
-      check: 1,
-      number: 1,
+      headimg: '',
+      check: 0,
+      count: 1,
+      checkerArr: [
+        { id: '', value: '', price: '', expressPrice: '', autonomyPrice: '' }
+      ],
     }
   },
   methods: {
     onCloseClick() {
       this.$emit('on-close');
+    },
+    submit() {
+      let state = this.$store.state;
+      let currentCheck = this.checkerArr[this.check];
+      console.log(currentCheck);
+      let value = state.productId+"|"+currentCheck.id+"|"+goodsName+"|"+currentCheck.value+"|"+currentCheck.price +"|"+this.count+"|"+state.shopNumber+"|"+state.cmpyName+"|"+state.logoUrl+"|"+this.headimg;
+      localStorage.setItem("shop" + state.shopNumber + "^" + state.openId, value);
+      window.location.href = "/newmedia/pages/mobile/futureStore/sureOrder.html?ShopNumber="+state.shopNumber+"&openId="+state.openId+"&cmpyId="+state.cmpyId+"&ProductID="+productID;
     }
   }
 }

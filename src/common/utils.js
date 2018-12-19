@@ -26,7 +26,23 @@ function getParam(paramName) {
   return paramValue == "" && (paramValue = null), paramValue
 }
 
+/*
+等待某个任务执行完后继续执行后面的代码。需要在store中注册一个标志
+，并且需要使用异步函数或者是promise。
+*/
+function waitTask(context, valueName) {
+  return new Promise(function(resolve) {
+    const id = setInterval(() => {
+      if (context.$store.state[valueName]) {
+        clearInterval(id)
+        resolve()
+      }
+    }, 50);
+  })
+}
+
 export default {
   driverType,
-  getParam
+  getParam,
+  waitTask
 }

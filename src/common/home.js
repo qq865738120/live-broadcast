@@ -76,17 +76,45 @@ const _IntelligenceInteractionTimer = function(hasData) {
 }
 
 /*
+初始化直播相关数据
+*/
+const _liveInit = async function() {
+  await context.$axios.get('/api/newmedia/mobile/live/getLive.action', { params: { liveTitleId: context.$utils.getParam('liveTitleId') } }).then(res => {
+    console.log('主页相关参数', res.data);
+    if (res.data.status == 'Y') {
+      context.$store.commit('setTitle', res.data.row.title);
+      context.$store.commit('setShopNumber', res.data.shopNumber);
+      context.$store.commit('setProductId', res.data.row.productId != undefined ? res.data.row.productId : '');
+    }
+  })
+  await context.$axios.get('/api/newmedia/mobile/cmpySetting/selectCompanyInFo.action', { params: { cmpyId: context.$store.state.cmpyId } }).then(res => {
+    console.log('企业相关参数', res.data);
+    context.$store.commit('setCmpyName', res.data.cmpyName);
+    context.$store.commit('setLogoUrl', res.data.logoUrl);
+  })
+  context.$store.commit('switchInitFag');
+}
+
+/*
 初始化home页
 参数：that 页面this引用
 */
-const init = function(that) {
+const init = async function(that) {
   context = that;
+  await _liveInit();
   setSwiperHeight('6.78rem', '7.98rem');
   getInteractionList({
     curMaxId: "",
     rows: 4,
     liveId: context.$store.state.liveTitleId
   });
+  if (context.$store.state.productId == "") { //没有绑定产品
+    context.isShowBuyButton = false;
+    context.inputWidth = '7.4rem'
+  } else {
+    context.isShowBuyButton = true;
+    context.inputWidth = '2.5rem'
+  }
 }
 
 /*

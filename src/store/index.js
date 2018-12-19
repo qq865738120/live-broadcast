@@ -5,9 +5,12 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
+    initFag: false, //初始化完成标志，false表示未完成程序的初始化操作
     liveTitleId: '',
     openId: '',
-    cmpyId: '',
+    cmpyId: '', //企业id
+    cmpyName: '', //企业名称
+    logoUrl: '', //企业logUrl
     title: '', //标题
     shopNumber: '', //店铺号
     productId: '', //产品id
@@ -19,6 +22,9 @@ export default new Vuex.Store({
     interactionTime: 0, //发互动消息间隔时间，10秒发一次，等于0才可以发送
   },
   mutations: {
+    switchInitFag(state) {
+      state.initFag = !state.initFag;
+    },
     setLiveTitleId(state, value) {
       state.liveTitleId = value
     },
@@ -27,6 +33,12 @@ export default new Vuex.Store({
     },
     setCmpyId(state, value) {
       state.cmpyId = value
+    },
+    setCmpyName(state, value) {
+      state.cmpyName = value;
+    },
+    setLogoUrl(state, value) {
+      state.logoUrl = value
     },
     setTitle(state, value) {
       state.title = value

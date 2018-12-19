@@ -16,6 +16,7 @@ import $ from 'jquery'
 import { listPullLoading } from 'list-pull-loading' //一个第三方的上拉加载下拉刷新列表组件
 import "list-pull-loading/dist/list-pull-loading.css"
 import VueLazyload from 'vue-lazyload' //图片懒加载插件
+var wx = require('weixin-js-sdk'); //引入微信js-sdk
 
 Vue.config.productionTip = false
 
@@ -29,6 +30,7 @@ Vue.prototype.$axios = axios.create({
 Vue.prototype.$qs = Qs;
 Vue.prototype.$utils = utils;
 Vue.prototype.$ = $;
+Vue.prototype.$wx = wx;
 
 Vue.component('ListPullLoading', listPullLoading)
 
@@ -49,7 +51,6 @@ new Vue({
   template: `<App v-wechat-title="$store.state.title"/>`,
   created() {
     this.init();
-    this.initLive();
   },
   methods: {
     /* 初始化函数 */
@@ -62,16 +63,6 @@ new Vue({
       console.log('openId =', this.$store.state.openId);
       console.log('cmpyId =', this.$store.state.cmpyId);
     },
-    initLive() { //初始化直播相关数据
-      let that = this;
-      this.$axios.get('/api/newmedia/mobile/live/getLive.action', { params: { liveTitleId: that.$utils.getParam('liveTitleId') } }).then(res => {
-        console.log('主页相关参数', res.data);
-        if (res.data.status == 'Y') {
-          this.$store.commit('setTitle', res.data.row.title);
-          this.$store.commit('setShopNumber', res.data.shopNumber);
-          this.$store.commit('setProductId', res.data.row.productId != undefined ? res.data.row.productId : '');
-        }
-      })
-    }
+
   }
 })

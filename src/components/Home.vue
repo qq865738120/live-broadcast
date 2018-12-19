@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Video title="标题1" @x5-enter-fullscreen="x5EnterFullscreen" @x5-exit-fullscreen="x5ExitFullscreen">
+    <Video :title="$store.state.title" @x5-enter-fullscreen="x5EnterFullscreen" @x5-exit-fullscreen="x5ExitFullscreen">
       <!-- 广告条开始 -->
       <div class="ad-bar" v-if="showAdBar">
         <img src="https://goss1.vcg.com/creative/vcg/800/version23/VCG21gic6409708.jpg" />
@@ -19,7 +19,8 @@
           <div class="swiper-content">
             <template v-if="item.typeId == 1">
               <Scroller
-                lock-x height="7.98rem"
+                lock-x
+                height="100%"
                 ref="scrollerEvent"
                 use-pulldown
                 :pulldown-config="pullupConfig"
@@ -60,11 +61,12 @@
             {{ inputWord }}
           </span>
         </div>
-        <XButton action-type="button" :gradients="['#ED7E00', '#ED7E00']" @click.native="isShowProductOrder = true">立即购买</XButton>
-        <div class="com-icon-button bottom-bar-right">
+        <XButton action-type="button" :gradients="['#ED7E00', '#ED7E00']" v-if="isShowBuyButton"  @click.native="isShowProductOrder = true">立即购买</XButton>
+        <div class="com-icon-button bottom-bar-right" @click="isShowSheet = true">
           <div class="iconfont icon-fenxiang"></div>
           <span>分享</span>
         </div>
+        <Actionsheet v-model="isShowSheet" :menus="sheetMenus" @on-click-menu="onSheet"></Actionsheet>
       </div>
       <!-- 底部菜单结束 -->
 
@@ -100,7 +102,7 @@ import methods from '@/common/home.js'
 
 export default {
   name: 'Home',
-  mounted() {
+  created() {
     methods.init(this);
   },
   data () {
@@ -126,7 +128,13 @@ export default {
         upContent: '释放刷新',
         loadingContent: '加载中...',
       },
-      isShowProductOrder: false //是否展示产品提交订单组件
+      isShowProductOrder: false, //是否展示产品提交订单组件
+      isShowBuyButton: true, //是否显示立即购买按钮
+      isShowSheet: false,
+      sheetMenus: {
+        menu1: '分享二维码',
+        menu2: '分享链接',
+      }
     }
   },
   components: {
@@ -169,6 +177,19 @@ export default {
     },
     messageInputEnter() { //消息输入框进入动画开始事件
       this.$refs.messageBar.$refs.inputEvent.focus()
+    },
+    onSheet(menuKey) { //分享按钮弹出框选择触发事件
+      console.log(menuKey);
+      if (menuKey == 'menu1') { //二维码分享
+
+      }
+      switch(menuKey) {
+        case 'menu1':
+
+          break;
+        case 'menu2':
+          break;
+      }
     }
   }
 }
