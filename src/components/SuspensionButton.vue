@@ -1,11 +1,11 @@
 <template>
   <div class="root">
-    <img class="red-envelopes" v-lazy="redImg" />
+    <img class="red-envelopes" v-show="isShowRed" @click="onRed" v-lazy="redImg" />
 
     <transition
       enter-active-class="animated slideInUp faster"
       leave-active-class="animated slideOutDown faster">
-    <img class="button margin-top" v-show="isShowSub" @click="onLive" v-lazy="liveImg"/>
+      <img class="button margin-top" v-show="isShowSub" @click="onLive" v-lazy="liveImg"/>
     </transition>
 
     <transition
@@ -47,6 +47,11 @@
       <div class="submitButton com-flex-center" @click="submit">提交</div>
     </Popup>
 
+    <XDialog :dialog-style="{'background-color': 'transparent'}" v-model="showDialogRed" hide-on-blur>
+      <img class="redImgs" v-lazy="redImgs[redImgIndex]" />
+      <spn>{{ redImgIndex == 'fail' ? '很遗憾与红包擦肩而过' : (redImgIndex == 'success' ? '恭喜你获得一个包' : '红包已存入您的微信钱包') }}</spn>
+    </XDialog>
+
   </div>
 </template>
 
@@ -60,6 +65,17 @@ export default {
         that.qCode = res.data.data.qrcode;
       }
     })
+    setInterval(() => {
+      that.$axios.get('/api//newmedia/mobile/live/getRedActivity.action', { params: { liveTitelId: that.$store.state.liveTitleId } }).then((res) => {
+        console.log('获取红包', res.data);
+        if (res.data.status == '100') {
+           that.isShowRed = res.data.data.exist == 0 ? false : true;
+           if (res.data.data.exist != 0) {
+             that.$store.commit('setRedActivityId', res.data.data.redActivityId);
+           }
+        }
+      })
+    }, 6000)
   },
   data() {
     return {
@@ -69,14 +85,43 @@ export default {
       followImg: 'http://q.img.soukong.cn/saoyisao.png',
       qCode: '',
       isShowSub: false,
+      isShowRed: false,
       rotate: '0deg',
       showDialog: false,
       showPopup: false,
       name: '',
-      phone: ''
+      phone: '',
+      redImgs: {
+        success: 'http://q.img.soukong.cn/open_hb.png',
+        fail: 'http://q.img.soukong.cn/tanc.png',
+        show: 'http://q.img.soukong.cn/hb_chai.png'
+      },
+      redImgIndex: 'success',
+      showDialogRed: false,
     }
   },
   methods: {
+    onRed() {
+      let that = this;
+      this.$vux.loading.show({
+        text: 'Loading'
+      })
+      const data = {
+        openId: that.$store.state.openId,
+        redActivityId: that.$store.state.redActivityId
+      }
+      this.$axios.get('/api/newmedia/mobile/redpackageinfo/drawRedPackage.action', { params: data }).then(res => {
+        console.log('抢红包接口返回', res.data);
+        if (res.data.status == 100) { //抢到红包
+          that.redImgIndex = 'success'
+        } else { //没有抢到
+          that.redImgIndex = 'fail'
+        }
+        that.$vux.loading.hide()
+        that.showDialogRed = true;
+        console.log(that.redImgIndex);
+      })
+    },
     onButtonTap() {
       this.isShowSub = !this.isShowSub;
       this.rotate = this.rotate == '0deg' ? '180deg' : '0deg';
@@ -86,10 +131,8 @@ export default {
     },
     onPersonal() { //个人按钮
       let that = this;
-      let returnUrl = escape(`http://xmt.soukong.cn/newmedia/pages/mobile/MicroWebsite/PersonalCenter/personelIndex.html?cmpyId=${that.$store.state.cmpyId}`)
-      let redirectUri = escape(`http://xmt.soukong.cn/wechatservice/sns/sookingBaseSimpleAuthorize.action?returnUrl=${returnUrl}&cmpyId=${that.$store.state.cmpyId}`)
-      let url = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${that.$store.state.appid}&scope=snsapi_base&redirect_uri=${redirectUri}`
-      console.log(url);
+      let redirectUri = "http%3A%2F%2Fxmt.soukong.cn%2Fwechatservice%2Fsns%2FsookingBaseSimpleAuthorize.action%3FreturnUrl%3Dhttp%253A%252F%252Fxmt.soukong.cn%252Fnewmedia%252Fpages%252Fmobile%252FMicroWebsite%252FPersonalCenter%252FpersonelIndex.html%253FcmpyId%253D"+ that.$store.state.cmpyId +"%26cmpyId%3D" + that.$store.state.cmpyId
+      let url = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${that.$store.state.appid}&scope=snsapi_base&redirect_uri=${redirectUri}&response_type=code&state=1&connect_redirect=1#wechat_redirect`
       window.location.href = url;
     },
     onFollow() { //关注按钮
@@ -214,5 +257,9 @@ export default {
   color: white;
   background-color: $--main-color;
   font-size: 18px;
+}
+.redImgs {
+  width: 200px;
+  height: 250px;
 }
 </style>

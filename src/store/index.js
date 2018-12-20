@@ -22,6 +22,7 @@ export default new Vuex.Store({
     valve: 2, //阈值
     isInteractionInputing: false, //是否正在输入互动消息
     interactionTime: 0, //发互动消息间隔时间，10秒发一次，等于0才可以发送
+    redActivityId: '', //红包id
   },
   mutations: {
     switchInitFag(state) {
@@ -74,6 +75,9 @@ export default new Vuex.Store({
     },
     resetInteractionTime(state) {
       state.interactionTime = 0
+    },
+    setRedActivityId(state, value) {
+      state.redActivityId = value;
     }
   }
 })
