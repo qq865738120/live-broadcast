@@ -5,12 +5,14 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
+    appid: 'wxfb8665f40c96d92c',
     initFag: false, //初始化完成标志，false表示未完成程序的初始化操作
     liveTitleId: '',
     openId: '',
     cmpyId: '', //企业id
     cmpyName: '', //企业名称
     logoUrl: '', //企业logUrl
+    telephone: '', //企业电话
     title: '', //标题
     shopNumber: '', //店铺号
     productId: '', //产品id
@@ -39,6 +41,9 @@ export default new Vuex.Store({
     },
     setLogoUrl(state, value) {
       state.logoUrl = value
+    },
+    setTelephone(state, value) {
+      state.telephone = value;
     },
     setTitle(state, value) {
       state.title = value

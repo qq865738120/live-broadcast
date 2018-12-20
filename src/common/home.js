@@ -91,6 +91,7 @@ const _liveInit = async function() {
     console.log('企业相关参数', res.data);
     context.$store.commit('setCmpyName', res.data.cmpyName);
     context.$store.commit('setLogoUrl', res.data.logoUrl);
+    context.$store.commit('setTelephone', res.data.telephone);
   })
   context.$store.commit('switchInitFag');
 }

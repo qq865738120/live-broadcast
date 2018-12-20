@@ -23,46 +23,61 @@
     <transition
       enter-active-class="animated slideInUp faster"
       leave-active-class="animated slideOutDown faster">
-      <img class="button margin-top" v-show="isShowSub" @click="onPhone" v-lazy="phoneImg"/>
+      <a class="button margin-top phone-button" :href="'tel:' + $store.state.telephone" v-show="isShowSub" @click="onPhone"></a>
     </transition>
 
-    <div class="button margin-top com-flex-center iconfont icon-jiantou" :style="{ transform: 'rotate(' + rotate + ')' }" @click="onButtonTap"></div>
+    <div class="button base-botton margin-top com-flex-center iconfont icon-jiantou" :style="{ transform: 'rotate(' + rotate + ')' }" @click="onButtonTap"></div>
 
     <XDialog v-model="showDialog" hide-on-blur>
-      <Qrcode style="margin-top: 0.8rem" value="https://vux.li?x-page=demo_qrcode" type="img"></Qrcode>
+      <Qrcode style="margin-top: 0.8rem" :value="qCode" type="img"></Qrcode>
       <p class="tip">长按关注公众号，了解更多信息。</p>
     </XDialog>
 
     <Popup v-model="showPopup">
       <div class="popup-head">
-        <div class="iconfont icon-plus-close"></div>
+        <div class="iconfont icon-plus-close" @click="showPopup = !showPopup"></div>
       </div>
       <p class="popup-title">申请信息</p>
-      <div class="popup-input com-flex-center">
-        <input />
+      <div class="popup-input com-flex-center iconfont icon-yonghu">
+        <input v-model="name" placeholder="输入您的姓名" />
       </div>
+      <div class="popup-input last-popup-input com-flex-center iconfont icon-dianhua">
+        <input v-model="phone" placeholder="输入您的手机号" />
+      </div>
+      <div class="submitButton com-flex-center" @click="submit">提交</div>
     </Popup>
+
   </div>
 </template>
 
 <script>
 export default {
+  mounted() {
+    let that = this;
+    this.$axios.get('/api/newmedia/mobile/wechatAccount/getCmpyWechatQecode.action', { params: { cmpyId: that.$store.state.cmpyId } }).then(res => {
+      console.log('获取企业二维码', res.data);
+      if (res.data.status == '100') {
+        that.qCode = res.data.data.qrcode;
+      }
+    })
+  },
   data() {
     return {
-      redImg: 'https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=3381298564,3536276465&fm=26&gp=0.jpg',
-      liveImg: '',
-      personalImg: '',
-      followImg: '',
-      phoneImg: '',
+      redImg: 'http://q.img.soukong.cn/hongbao.gif',
+      liveImg: 'http://q.img.soukong.cn/afg.png',
+      personalImg: 'http://q.img.soukong.cn/af.png',
+      followImg: 'http://q.img.soukong.cn/saoyisao.png',
+      qCode: '',
       isShowSub: false,
       rotate: '0deg',
       showDialog: false,
       showPopup: false,
+      name: '',
+      phone: ''
     }
   },
   methods: {
     onButtonTap() {
-      console.log('666');
       this.isShowSub = !this.isShowSub;
       this.rotate = this.rotate == '0deg' ? '180deg' : '0deg';
     },
@@ -70,13 +85,47 @@ export default {
       this.showPopup = !this.showPopup;
     },
     onPersonal() { //个人按钮
-
+      let that = this;
+      let returnUrl = escape(`http://xmt.soukong.cn/newmedia/pages/mobile/MicroWebsite/PersonalCenter/personelIndex.html?cmpyId=${that.$store.state.cmpyId}`)
+      let redirectUri = escape(`http://xmt.soukong.cn/wechatservice/sns/sookingBaseSimpleAuthorize.action?returnUrl=${returnUrl}&cmpyId=${that.$store.state.cmpyId}`)
+      let url = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${that.$store.state.appid}&scope=snsapi_base&redirect_uri=${redirectUri}`
+      console.log(url);
+      window.location.href = url;
     },
     onFollow() { //关注按钮
       this.showDialog = !this.showDialog;
     },
     onPhone() { //电话按钮
 
+    },
+    submit() { //提交申请信息
+      let that = this;
+      if (this.name != "" && this.phone != "") {
+        const data = {
+          userName: that.name,
+          phone: that.phone,
+          liveTitelId: that.$store.state.liveTitleId
+        }
+        this.$axios.get('/api/newmedia/mobile/live/addApplyInfo.action', { params: data }).then((res) => {
+          console.log('提交申请直播', res.data);
+          if (res.data.status == '100') {
+            this.$vux.toast.show({
+              text: res.data.msg
+            })
+          } else {
+            this.$vux.toast.show({
+              text: res.data.msg,
+              type: 'cancel'
+            })
+          }
+          that.showPopup = false;
+        })
+      } else {
+        this.$vux.toast.show({
+          text: '请填写完整',
+          type: 'text'
+        })
+      }
     }
   }
 }
@@ -92,10 +141,13 @@ export default {
 .button {
   width: 43px;
   height: 43px;
-  background-color: $--main-color;
   border-radius: 100%;
   font-size: 26px;
   color: white;
+  transition: transform 0.4s;
+}
+.base-botton {
+  background-color: $--main-color;
 }
 .root {
   position: absolute;
@@ -136,12 +188,31 @@ export default {
   height: 44px;
   background: #F7F5F6;
   border-radius: 22px;
+  margin: 20px auto;
+  color: $--color-ccc;
+  font-size: 20px;
 }
-.popup-input input {
+.popup-input>input {
   width: 220px;
   height: 30px;
   border: 0;
   background: #F7F5F6;
   font-size: 14px;
+  color: $--color-333;
+  padding-left: 10px;
+}
+.last-popup-input {
+  margin-bottom: 30px;
+}
+.phone-button {
+  background-image: url(http://q.img.soukong.cn/fgsf.png);
+  background-size: 100%;
+}
+.submitButton {
+  width: 100%;
+  height: 50px;
+  color: white;
+  background-color: $--main-color;
+  font-size: 18px;
 }
 </style>
