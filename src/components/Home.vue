@@ -63,9 +63,26 @@
               </Scroller>
             </template>
             <template v-else="">
-              <div>
-                其他
-              </div>
+              <Scroller
+                lock-x
+                height="100%"
+                ref="scrollerEvent2">
+                <template v-if="item.typeId == 3">
+                  <div v-html='$store.state.productDetail'>
+                    详情
+                  </div>
+                </template>
+                <template v-if="item.typeId == 2">
+                  <div>
+                    简介
+                  </div>
+                </template>
+                <template v-if="item.typeId == 10">
+                  <div>
+                    自定义
+                  </div>
+                </template>
+              </Scroller>
             </template>
 
           </div>

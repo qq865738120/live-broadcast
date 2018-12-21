@@ -24,6 +24,8 @@ export default new Vuex.Store({
     interactionTime: 0, //发互动消息间隔时间，10秒发一次，等于0才可以发送
     redActivityId: '', //红包id
     orderPage: 1, //表示订单列表目前刷新到第几页
+    productDetail: '没有产品', //产品详情富文本
+    tapProp: '', //tab栏配置
   },
   mutations: {
     switchInitFag(state) {
@@ -85,6 +87,12 @@ export default new Vuex.Store({
     },
     resetOrderPage(state) {
       state.orderPage = 1
+    },
+    setProductDetail(state, value) {
+      state.productDetail = value;
+    },
+    setTapProp(state, value) {
+      state.tapProp = value;
     }
   }
 })

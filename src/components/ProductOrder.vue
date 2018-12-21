@@ -65,6 +65,7 @@ export default {
           }
         }
         this.checkerArr = checkerArr;
+        this.$store.commit('setProductDetail', unescape(data.FullDesc));
       }
     })
   },

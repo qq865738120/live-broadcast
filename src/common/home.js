@@ -93,7 +93,6 @@ const _liveInit = async function() {
     context.$store.commit('setLogoUrl', res.data.logoUrl);
     context.$store.commit('setTelephone', res.data.telephone);
   })
-  context.$store.commit('switchInitFag');
 }
 
 /*
@@ -104,16 +103,17 @@ const init = async function(that) {
   context = that;
   await _liveInit();
   setSwiperHeight('6.78rem', '7.98rem');
-  getInteractionList({
+  getInteractionList({ //获取互动列表
     curMaxId: "",
     rows: 4,
     liveId: context.$store.state.liveTitleId
   });
-  refreshOrder({
+  refreshOrder({ //获取成交订单列表
     autoObjectId: that.$store.state.liveTitleId,
     page: context.$store.state.orderPage,
     rows: 10
   }, true);
+  await getTab(); //获取tab栏配置信息
   if (context.$store.state.productId == "") { //没有绑定产品
     context.isShowBuyButton = false;
     context.inputWidth = '7.4rem'
@@ -121,6 +121,7 @@ const init = async function(that) {
     context.isShowBuyButton = true;
     context.inputWidth = '2.5rem'
   }
+  context.$store.commit('switchInitFag'); //将初始化标志置位true
 }
 
 /*
@@ -209,6 +210,23 @@ const refreshOrder = function(parameter, isReset) {
             money: item.amount
           })
         }
+      }
+      resolve();
+    })
+  })
+}
+
+/*
+获取tab栏配置信息，在其他组件中使用状态仓库中的配置变量tapProp时，如果是在组件created或者mounted中使用，
+则需要使用utils中的waitTask方法进行阻塞。传入initFag，因为该标志为true则表示所有初始化工作已经完成。
+*/
+const getTab = function() {
+  return new Promise(resolve => {
+    context.$axios.get('/api//newmedia/mobile/live/getLiveSwitch.action', { params: { liveTitleId: context.$store.state.liveTitleId } }).then(res => {
+      console.log('获取栏目配置', res.data);
+      if (res.data.status == 100) {
+        context.$store.commit('setTapProp', res.data.data); //将配置信息存入状态仓库，方便其他组件使用
+
       }
       resolve();
     })
