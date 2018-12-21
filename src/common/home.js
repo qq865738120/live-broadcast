@@ -202,7 +202,7 @@ const refreshOrder = function(parameter, isReset) {
         }
         for (let item of res.data.rows) {
           context.orderList.push({
-            src: item.headImg,
+            src: !item.headImg ? 'http://q.img.soukong.cn/af.png' : item.headImg,
             nickName: item.userName,
             time: item.createTime,
             count: item.quantity,
