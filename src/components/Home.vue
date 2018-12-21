@@ -39,9 +39,7 @@
               </Scroller>
             </template>
             <template v-else-if="item.typeId == 5">
-              <div>
-                成交
-              </div>
+              <OrderList></OrderList>
             </template>
             <template v-else="">
               <div>
@@ -103,6 +101,7 @@ import InteractionList from '@/components/InteractionList'
 import MessageInputBar from '@/components/MessageInputBar'
 import ProductOrder from '@/components/ProductOrder'
 import SuspensionButton from '@/components/SuspensionButton'
+import OrderList from '@/components/OrderList'
 import methods from '@/common/home.js'
 
 export default {
@@ -147,7 +146,8 @@ export default {
     InteractionList,
     MessageInputBar,
     ProductOrder,
-    SuspensionButton
+    SuspensionButton,
+    OrderList
   },
   methods: {
     switchTabBody(index) {

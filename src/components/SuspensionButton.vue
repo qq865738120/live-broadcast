@@ -48,8 +48,14 @@
     </Popup>
 
     <XDialog :dialog-style="{'background-color': 'transparent'}" v-model="showDialogRed" hide-on-blur>
-      <img class="redImgs" v-lazy="redImgs[redImgIndex]" />
-      <spn>{{ redImgIndex == 'fail' ? '很遗憾与红包擦肩而过' : (redImgIndex == 'success' ? '恭喜你获得一个包' : '红包已存入您的微信钱包') }}</spn>
+      <div class="red-dialog-div">
+        <img class="redImgs" v-show="redImgIndex != 'show'" v-lazy="redImgs[redImgIndex]" @click="onOpenRed" />
+        <span v-show="redImgIndex != 'show'">{{ redImgIndex == 'fail' ? '很遗憾与红包擦肩而过' : (redImgIndex == 'success' ? '恭喜你获得1个包' : '') }}</span>
+        <p class="amount" v-show="redImgIndex == 'show'">￥{{ amount }}</p>
+        <img class="redImgs" v-show="redImgIndex == 'show'" v-lazy="redImgs.show" />
+        <div v-show="redImgIndex == 'show'" class="continue-button" @click="showDialogRed = false">继续观看直播</div>
+        <p v-show="redImgIndex == 'show'" class="red-tip">红包已经存入您的微信钱包</p>
+      </div>
     </XDialog>
 
   </div>
@@ -92,12 +98,13 @@ export default {
       name: '',
       phone: '',
       redImgs: {
-        success: 'http://q.img.soukong.cn/open_hb.png',
+        success: 'http://q.img.soukong.cn/hb_chai_01.png',
         fail: 'http://q.img.soukong.cn/tanc.png',
-        show: 'http://q.img.soukong.cn/hb_chai.png'
+        show: 'http://q.img.soukong.cn/open_hb.png'
       },
       redImgIndex: 'success',
       showDialogRed: false,
+      amount: ''
     }
   },
   methods: {
@@ -113,7 +120,13 @@ export default {
       this.$axios.get('/api/newmedia/mobile/redpackageinfo/drawRedPackage.action', { params: data }).then(res => {
         console.log('抢红包接口返回', res.data);
         if (res.data.status == 100) { //抢到红包
-          that.redImgIndex = 'success'
+          if(res.data.recordStatus == 0) { //第一次抢
+            that.redImgIndex = 'success'
+            that.amount = res.data.data.amount;
+          } else { //重复抢
+            that.redImgIndex = 'fail'
+            that.isShowRed = false;
+          }
         } else { //没有抢到
           that.redImgIndex = 'fail'
         }
@@ -168,6 +181,11 @@ export default {
           text: '请填写完整',
           type: 'text'
         })
+      }
+    },
+    onOpenRed() {
+      if (this.redImgIndex == "success") {
+        this.redImgIndex = "show";
       }
     }
   }
@@ -261,5 +279,41 @@ export default {
 .redImgs {
   width: 200px;
   height: 250px;
+}
+.red-dialog-div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.red-dialog-div>span {
+  width: 150px;
+  position: relative;
+  top: -90px;
+  color: white;
+  font-size: 18px;
+}
+.amount {
+  color: #F04343;
+  font-size: 30px;
+  position: relative;
+  top: 82px;
+}
+.continue-button {
+  width: 125px;
+  height: 40px;
+  color: $--color-333;
+  background-color: #FFD902;
+  border-radius: 20px;
+  position: relative;
+  bottom: 105px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+}
+.red-tip {
+  color: white;
+  position: relative;
+  bottom: 100px;
 }
 </style>
