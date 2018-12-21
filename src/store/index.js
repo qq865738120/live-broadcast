@@ -23,6 +23,7 @@ export default new Vuex.Store({
     isInteractionInputing: false, //是否正在输入互动消息
     interactionTime: 0, //发互动消息间隔时间，10秒发一次，等于0才可以发送
     redActivityId: '', //红包id
+    orderPage: 1, //表示订单列表目前刷新到第几页
   },
   mutations: {
     switchInitFag(state) {
@@ -78,6 +79,12 @@ export default new Vuex.Store({
     },
     setRedActivityId(state, value) {
       state.redActivityId = value;
+    },
+    addOrderPage(state) {
+      state.orderPage++
+    },
+    resetOrderPage(state) {
+      state.orderPage = 1
     }
   }
 })

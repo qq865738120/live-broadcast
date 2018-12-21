@@ -109,6 +109,11 @@ const init = async function(that) {
     rows: 4,
     liveId: context.$store.state.liveTitleId
   });
+  refreshOrder({
+    autoObjectId: that.$store.state.liveTitleId,
+    page: context.$store.state.orderPage,
+    rows: 10
+  }, true);
   if (context.$store.state.productId == "") { //没有绑定产品
     context.isShowBuyButton = false;
     context.inputWidth = '7.4rem'
@@ -182,10 +187,39 @@ const refreshInteraction = function() {
   })
 }
 
+/*
+刷新订单列表
+参数：parameter 接口请求参数
+     isReset 是否重置列表中已有信息
+*/
+const refreshOrder = function(parameter, isReset) {
+  return new Promise(resolve => {
+    context.$axios.get('/api/newmedia/mobile/live/getOrderList.action', { params: parameter }).then(res => {
+      console.log('获取成交列表', res.data);
+      if (res.data.status == 'Y') {
+        if (isReset) {
+          context.orderList = new Array();
+        }
+        for (let item of res.data.rows) {
+          context.orderList.push({
+            src: item.headImg,
+            nickName: item.userName,
+            time: item.createTime,
+            count: item.quantity,
+            money: item.amount
+          })
+        }
+      }
+      resolve();
+    })
+  })
+}
+
 export default {
   init,
   setSwiperHeight,
   getInteractionList,
   getInteractionHistoryList,
-  refreshInteraction
+  refreshInteraction,
+  refreshOrder
 }

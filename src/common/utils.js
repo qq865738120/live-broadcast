@@ -41,8 +41,51 @@ function waitTask(context, valueName) {
   })
 }
 
+/*
+将字符串转换成Date对象，支持安卓和ios
+参数：str String 日期字符串
+返回：日期对象
+*/
+function string2Date(str) {
+  let arr = str.split(/[- : \/]/);
+  // let date = util.switchTime(new Date().getTime() - new Date(arr[0], arr[1] - 1, arr[2], arr[3], arr[4]).getTime());
+  return new Date(arr[0], arr[1] - 1, arr[2], arr[3], arr[4]);
+}
+
+/*
+计算两个时间的时间差
+参数：now Date 当前时间对象 old Date 历史时间对象
+返回：间隔时间戳，毫秒数
+*/
+function timeDifference(now, old) {
+  return now.getTime() - old.getTime();
+}
+
+/*
+将时间戳（两日期差）转换成日期数组
+参数：difference 时间差，毫秒数
+返回：日期数组
+*/
+function timeStemp2DateArr(difference) {
+  var years = Math.floor(difference / (365 * 24 * 3600 * 1000));
+  var leave4 = difference % (365 * 24 * 3600 * 1000);
+  var month = Math.floor(leave4 / (30 * 24 * 3600 * 1000));
+  var leave5 = leave4 % (30 * 24 * 3600 * 1000);
+  var days = Math.floor(leave5 / (24 * 3600 * 1000));
+  var leave1 = leave5 % (24 * 3600 * 1000);
+  var hours = Math.floor(leave1 / (3600 * 1000));
+  var leave2 = leave1 % (3600 * 1000)
+  var minutes = Math.floor(leave2 / (60 * 1000));
+  var leave3 = leave2 % (60 * 1000)
+  var seconds = Math.round(leave3 / 1000);
+  return [years, month, days, hours, minutes, seconds];
+}
+
 export default {
   driverType,
   getParam,
-  waitTask
+  waitTask,
+  string2Date,
+  timeDifference,
+  timeStemp2DateArr
 }

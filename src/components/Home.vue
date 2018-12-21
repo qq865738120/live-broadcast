@@ -23,7 +23,7 @@
                 height="100%"
                 ref="scrollerEvent"
                 use-pulldown
-                :pulldown-config="pullupConfig"
+                :pulldown-config="pulldownConfig"
                 @on-pulldown-loading="loadingHistoryInteraction">
                 <div>
                   <InteractionList
@@ -39,7 +39,28 @@
               </Scroller>
             </template>
             <template v-else-if="item.typeId == 5">
-              <OrderList></OrderList>
+              <Scroller
+                lock-x
+                height="100%"
+                ref="scrollerEvent2"
+                use-pulldown
+                :pulldown-config="pulldownConfig"
+                use-pullup
+                :pullup-config="pullupConfig"
+                @on-pulldown-loading="refreshOrder"
+                @on-pullup-loading="loadingMoreOrder">
+                <div>
+                  <OrderListItem
+                    v-for="(item, index) in orderList"
+                    :key="index"
+                    :src="item.src"
+                    :nickName="item.nickName"
+                    :time="item.time"
+                    :count="item.count"
+                    :money="item.money">
+                  </OrderListItem>
+                </div>
+              </Scroller>
             </template>
             <template v-else="">
               <div>
@@ -101,7 +122,7 @@ import InteractionList from '@/components/InteractionList'
 import MessageInputBar from '@/components/MessageInputBar'
 import ProductOrder from '@/components/ProductOrder'
 import SuspensionButton from '@/components/SuspensionButton'
-import OrderList from '@/components/OrderList'
+import OrderListItem from '@/components/OrderListItem'
 import methods from '@/common/home.js'
 
 export default {
@@ -128,6 +149,11 @@ export default {
         // { id: 1, title: '标题啊标题啊0', time: '1小时', message: '这是一条消息这是一条消息这是一条消息', isMaster: false, icon: 'http://img2.imgtn.bdimg.com/it/u=3197537752,2095789724&fm=26&gp=0.jpg', image: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1544776923060&di=31b3a9fd116050fa5baf6dfbe7231233&imgtype=0&src=http%3A%2F%2Fh.hiphotos.baidu.com%2Fimage%2Fpic%2Fitem%2Ff2deb48f8c5494eec7036a5f20f5e0fe99257e56.jpg' }
       ],
       pullupConfig: { //Scroll组件上拉配置
+        downContent: '释放刷新',
+        upContent: '上拉加载',
+        loadingContent: '加载中...',
+      },
+      pulldownConfig: { //Scroll组件上拉配置
         downContent: '下拉加载',
         upContent: '释放刷新',
         loadingContent: '加载中...',
@@ -138,7 +164,8 @@ export default {
       sheetMenus: {
         menu1: '分享二维码',
         menu2: '分享链接',
-      }
+      },
+      orderList: []
     }
   },
   components: {
@@ -147,7 +174,7 @@ export default {
     MessageInputBar,
     ProductOrder,
     SuspensionButton,
-    OrderList
+    OrderListItem
   },
   methods: {
     switchTabBody(index) {
@@ -194,6 +221,29 @@ export default {
         case 'menu2':
           break;
       }
+    },
+    async refreshOrder() { //刷新订单列表
+      let that = this;
+      await methods.refreshOrder({
+        autoObjectId: that.$store.state.liveTitleId,
+        page: that.$store.state.orderPage,
+        rows: 10
+      }, true);
+      this.$nextTick(() => {
+        this.$refs.scrollerEvent2[0].donePulldown(); //下拉刷新数据请求成功后需调用此函数刷新界面
+      })
+    },
+    async loadingMoreOrder() { //加载更多订单列表
+      let that = this;
+      that.$store.commit('addOrderPage');
+      await methods.refreshOrder({
+        autoObjectId: that.$store.state.liveTitleId,
+        page: that.$store.state.orderPage,
+        rows: 10
+      }, false);
+      this.$nextTick(() => {
+        this.$refs.scrollerEvent2[0].donePullup(); //下拉刷新数据请求成功后需调用此函数刷新界面
+      })
     }
   }
 }
