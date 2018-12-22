@@ -102,7 +102,6 @@ const _liveInit = async function() {
 const init = async function(that) {
   context = that;
   await _liveInit();
-  setSwiperHeight('6.78rem', '7.98rem');
   getInteractionList({ //获取互动列表
     curMaxId: "",
     rows: 4,
@@ -121,6 +120,7 @@ const init = async function(that) {
     context.isShowBuyButton = true;
     context.inputWidth = '2.5rem'
   }
+  setSwiperHeight('6.78rem', '7.98rem');
   context.$store.commit('switchInitFag'); //将初始化标志置位true
 }
 
@@ -130,6 +130,7 @@ const init = async function(that) {
 */
 const setSwiperHeight = function(height1, height2) {
   context.swiperHeight = context.showAdBar ? height1 : height2;
+  console.log('context.swiperHeight', context.swiperHeight);
 }
 
 /*
@@ -211,7 +212,7 @@ const refreshOrder = function(parameter, isReset) {
           })
         }
       }
-      resolve();
+      resolve(res.data);
     })
   })
 }
@@ -226,7 +227,21 @@ const getTab = function() {
       console.log('获取栏目配置', res.data);
       if (res.data.status == 100) {
         context.$store.commit('setTapProp', res.data.data); //将配置信息存入状态仓库，方便其他组件使用
-
+        const tabItem = [1, 2, 3, 5 ,10 ,11 ,12] //tab栏switchType
+        for (let item of res.data.data) {
+          for (let tab of tabItem) { //tab栏配置
+            if (item.switchType == tab && item.switchStatus == 1) {
+              context.tabItems.push({
+                id: item.id,
+                typeId: item.switchType,
+                text: item.switchName
+              })
+            }
+          }
+          if (item.switchType == 4 && item.switchStatus == 1) {
+            context.showAdBar = true
+          }
+        }
       }
       resolve();
     })

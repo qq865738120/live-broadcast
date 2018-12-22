@@ -8,7 +8,8 @@
 export default {
   name: 'App',
   created() {
-    
+    let that = this
+    this.$axios.get('/api/newmedia/mobile/live/addAccessTotal.action', { params: { liveTitleId: that.$store.state.liveTitleId } })
   }
 }
 </script>

@@ -65,8 +65,7 @@
             <template v-else="">
               <Scroller
                 lock-x
-                height="100%"
-                ref="scrollerEvent2">
+                height="100%">
                 <template v-if="item.typeId == 3">
                   <div v-html='$store.state.productDetail'>
                     详情
@@ -129,6 +128,10 @@
       <SuspensionButton></SuspensionButton>
       <!-- 悬浮按钮结束 -->
 
+      <!-- 视频中的悬浮按钮开始 -->
+      <div class="iconfont icon-home home-button com-flex-center" @click="goHome"></div>
+      <!-- 视频中的悬浮按钮结束 -->
+
     </Video>
   </div>
 </template>
@@ -151,11 +154,11 @@ export default {
     return {
       itemIndex: 0, //tab栏索引，切换tabItem
       tabItems: [ //tab栏列表项数据
-        { id: 0, typeId: '1', text: '互动' },
-        { id: 1, typeId: '3', text: '详情' },
-        { id: 2, typeId: '5', text: '成交' },
-        { id: 3, typeId: '2', text: '简介' },
-        { id: 4, typeId: '10', text: '自定义' },
+        // { id: 0, typeId: '1', text: '互动' },
+        // { id: 1, typeId: '3', text: '详情' },
+        // { id: 2, typeId: '5', text: '成交' },
+        // { id: 3, typeId: '2', text: '简介' },
+        // { id: 4, typeId: '10', text: '自定义' },
       ],
       swiperHeight: '', //swiper高度
       showAdBar: false, //是否展示广告条
@@ -197,12 +200,15 @@ export default {
     switchTabBody(index) {
       console.log(index);
     },
+
     x5EnterFullscreen() { //安卓机进入x5同层播放触发事件函数
       methods.setSwiperHeight('7.33rem', '8.53rem');
     },
+
     x5ExitFullscreen() { //安卓机退出x5同层播放触发事件函数
       methods.setSwiperHeight('6.78rem', '7.98rem');
     },
+
     async loadingHistoryInteraction() { //下拉更新历史记录事件函数
       let that = this;
       await methods.getInteractionHistoryList({
@@ -214,6 +220,7 @@ export default {
         this.$refs.scrollerEvent[0].donePulldown(); //下拉刷新数据请求成功后需调用此函数刷新界面
       })
     },
+
     onInputClick() { //输入框点击事件
       let that = this;
       if (this.$store.state.interactionTime == 0) { //interactionTime为0则表示可以发送消息
@@ -225,9 +232,11 @@ export default {
         })
       }
     },
+
     messageInputEnter() { //消息输入框进入动画开始事件
       this.$refs.messageBar.$refs.inputEvent.focus()
     },
+
     onSheet(menuKey) { //分享按钮弹出框选择触发事件
       console.log(this.$wx);
       console.log(menuKey);
@@ -239,6 +248,7 @@ export default {
           break;
       }
     },
+
     async refreshOrder() { //刷新订单列表
       let that = this;
       await methods.refreshOrder({
@@ -250,6 +260,7 @@ export default {
         this.$refs.scrollerEvent2[0].donePulldown(); //下拉刷新数据请求成功后需调用此函数刷新界面
       })
     },
+
     async loadingMoreOrder() { //加载更多订单列表
       let that = this;
       that.$store.commit('addOrderPage');
@@ -261,6 +272,10 @@ export default {
       this.$nextTick(() => {
         this.$refs.scrollerEvent2[0].donePullup(); //下拉刷新数据请求成功后需调用此函数刷新界面
       })
+    },
+
+    goHome() { //首页按钮事件
+      window.location.href = "/pages/mobile/MicroWebsite/Skinfirst/WebsiteIframe.html?cmpyId="+ this.$store.state.cmpyId +"&openId=" + this.$store.state.openId
     }
   }
 }
@@ -322,5 +337,16 @@ export default {
     position: absolute;
     top: 0px;
     width: 100%;
+  }
+  .home-button {
+    width: 32px;
+    height: 32px;
+    background-color: rgba(255, 255, 255, 0.5);
+    color: $--main-color;
+    position: absolute;
+    top: -190px;
+    left: 10px;
+    border-radius: 50%;
+    font-size: 18px;
   }
 </style>
