@@ -26,6 +26,9 @@ export default new Vuex.Store({
     orderPage: 1, //表示订单列表目前刷新到第几页
     productDetail: '没有产品', //产品详情富文本
     tapProp: '', //tab栏配置
+    isLive: '', //是否是直播
+    videoSource: '', //视频源
+    videoCoverpic: '', //视频首图
   },
   mutations: {
     switchInitFag(state) {
@@ -93,6 +96,15 @@ export default new Vuex.Store({
     },
     setTapProp(state, value) {
       state.tapProp = value;
+    },
+    setIsLive(state, value) {
+      state.isLive = value;
+    },
+    setVideoSource(state, value) {
+      state.videoSource = value
+    },
+    setVideoCoverpic(state, value) {
+      state.videoCoverpic = value;
     }
   }
 })

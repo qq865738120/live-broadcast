@@ -85,6 +85,9 @@ const _liveInit = async function() {
       context.$store.commit('setTitle', res.data.row.title);
       context.$store.commit('setShopNumber', res.data.shopNumber);
       context.$store.commit('setProductId', res.data.row.productId != undefined ? res.data.row.productId : '');
+      context.$store.commit('setIsLive', res.data.row.playback == 0 ? true : false);
+      context.$store.commit('setVideoSource', context.$store.state.isLive ? res.data.row.receiveHlsStreamUrl : !res.data.row.otherPalybackUrl ? res.data.row.palybackUrl : res.data.row.otherPalybackUrl);
+      context.$store.commit('setVideoCoverpic', res.data.row.logo);
     }
   })
   await context.$axios.get('/api/newmedia/mobile/cmpySetting/selectCompanyInFo.action', { params: { cmpyId: context.$store.state.cmpyId } }).then(res => {
@@ -96,7 +99,8 @@ const _liveInit = async function() {
 }
 
 /*
-初始化home页
+初始化home页，该函数为异步函数，严格按照初始化顺序执行，不得随意更换初始化顺序，
+否则会发生意外的结果
 参数：that 页面this引用
 */
 const init = async function(that) {
@@ -113,7 +117,10 @@ const init = async function(that) {
     page: context.$store.state.orderPage,
     rows: 10
   }, true);
-  await getTab(); //获取tab栏配置信息
+  await getTabProp(); //获取tab栏配置信息
+  if (context.showAdBar) { //如果需要显示广告条
+    context.adBar.content = getTabContent(context.adBarId);
+  }
   if (context.$store.state.productId == "") { //没有绑定产品
     context.isShowBuyButton = false;
     context.inputWidth = '7.4rem'
@@ -221,7 +228,7 @@ const refreshOrder = function(parameter, isReset) {
 获取tab栏配置信息，在其他组件中使用状态仓库中的配置变量tapProp时，如果是在组件created或者mounted中使用，
 则需要使用utils中的waitTask方法进行阻塞。传入initFag，因为该标志为true则表示所有初始化工作已经完成。
 */
-const getTab = function() {
+const getTabProp = function() {
   return new Promise(resolve => {
     context.$axios.get('/api//newmedia/mobile/live/getLiveSwitch.action', { params: { liveTitleId: context.$store.state.liveTitleId } }).then(res => {
       console.log('获取栏目配置', res.data);
@@ -238,8 +245,9 @@ const getTab = function() {
               })
             }
           }
-          if (item.switchType == 4 && item.switchStatus == 1) {
-            context.showAdBar = true
+          if (item.switchType == 4 && item.switchStatus == 1) { //广告条配置
+            context.adBar.showAdBar = true
+            context.adBar.adBarId = item.id
           }
         }
       }
@@ -248,12 +256,31 @@ const getTab = function() {
   })
 }
 
+/*
+获取直播访问人数
+*/
 const getLiveWatched = function() {
   return new Promise(resolve => {
     context.$axios.get('/api/newmedia/mobile/live/getAccessTotal.action', { params: { liveTitleId: context.$store.state.liveTitleId } }).then(res => {
       console.log('直播访问人数', res.data);
       if (res.data.status == 100) {
         context.watched = res.data.data.accessTotal;
+      }
+    })
+  })
+}
+
+/*
+获取广告、tab栏简介、tab栏自定义的内容
+参数：id 相应栏目的id
+返回：promise成功回调的参数为获取的内容，可直接填入页面
+*/
+const getTabContent = function(id) {
+  return new Promise(resolve => {
+    context.$axios.get('/newmedia/mobile/live/getLiveSwitchCountent.action', { params: { switchId: id } }).then(res => {
+      console.log('获取tab内容', res.data);
+      if (res.data.status == 100) {
+        resolve(res.data.data.content)
       }
     })
   })
@@ -266,5 +293,7 @@ export default {
   getInteractionHistoryList,
   refreshInteraction,
   refreshOrder,
-  getLiveWatched
+  getTabProp,
+  getLiveWatched,
+  getTabContent
 }

@@ -2,8 +2,8 @@
   <div>
     <Video :title="$store.state.title" @x5-enter-fullscreen="x5EnterFullscreen" @x5-exit-fullscreen="x5ExitFullscreen">
       <!-- 广告条开始 -->
-      <div class="ad-bar" v-if="showAdBar">
-        <img src="https://goss1.vcg.com/creative/vcg/800/version23/VCG21gic6409708.jpg" />
+      <div class="ad-bar" v-if="adBar.showAdBar">
+        <img v-lazy="adBar.content" />
       </div>
       <!-- 广告条结束 -->
 
@@ -130,7 +130,7 @@
 
       <!-- 视频中的悬浮按钮开始 -->
       <div class="iconfont icon-home home-button com-flex-center" @click="goHome"></div>
-      <div class="live-state com-flex-center"><img v-lazy="'http://xmt.soukong.cn/newmedia/pages/mobile/MicroWebsite/livebroadcast/img/play.gif'" />直播中</div>
+      <div class="live-state com-flex-center" v-if="$store.state.isLive"><img v-lazy="'http://xmt.soukong.cn/newmedia/pages/mobile/MicroWebsite/livebroadcast/img/play.gif'" />直播中</div>
       <div class="iconfont icon-chakan looked com-flex-center">{{ watched }}人</div>
       <!-- 视频中的悬浮按钮结束 -->
 
@@ -163,7 +163,7 @@ export default {
         // { id: 4, typeId: '10', text: '自定义' },
       ],
       swiperHeight: '', //swiper高度
-      showAdBar: false, //是否展示广告条
+      adBar: { id: '', showAdBar: false, content: ''},
       inputWord: "请输入内容213", //输入框占位符
       inputWidth: "2.5rem", //输入框宽度
       interactionList: [ //互动列表数据
@@ -376,7 +376,7 @@ export default {
     font-size: 12px;
     display: inline;
     position: absolute;
-    top: -65px;
+    top: -62px;
     right: 10px;
     background-color: rgba(0, 0, 0, 0.3)
   }

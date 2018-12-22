@@ -39,7 +39,7 @@ let productID = '';
 export default {
   async mounted() {
     let that = this;
-        await this.$utils.waitTask(this, 'initFag'); //等待初始化任务完成后继续执行下面代码
+    await this.$utils.waitTask(this, 'initFag'); //等待初始化任务完成后继续执行下面代码
     let getProductDetail = {
       ShopNumber: that.$store.state.shopNumber,
       ProductID: that.$store.state.productId,

@@ -15,19 +15,20 @@ const controlsBarH = '0.9rem';
 
 export default {
   name: 'Video',
-  mounted() {
+  async mounted() {
     const that = this;
     let sureFullScreen = false; //是否需要进入全屏逻辑处理
     let isPlay = false; //是否开始播放
+    await this.$utils.waitTask(this, 'initFag'); //等待初始化任务完成后继续执行下面代码
     let player = new tcPlayer.TcPlayer.TcPlayer('video-container', {
       // mp4: 'http://vjs.zencdn.net/v/oceans.mp4',
-      mp4: 'http://1256993030.vod2.myqcloud.com/d520582dvodtransgzp1256993030/7732bd367447398157015849771/v.f40.mp4',
-      // m3u8: 'https://logos-channel.scaleengine.net/logos-channel/live/biblescreen-ad-free/playlist.m3u8',
+      // mp4: 'http://1256993030.vod2.myqcloud.com/d520582dvodtransgzp1256993030/7732bd367447398157015849771/v.f40.mp4',
+      m3u8: that.$store.state.videoSource,
       // coverpic: 'https://goss1.vcg.com/creative/vcg/veer/800/new/VCG41N672909176.jpg',
-      coverpic: 'https://goss1.vcg.com/creative/vcg/800/version23/VCG21gic6409708.jpg',
+      coverpic: that.$store.state.videoCoverpic,
       // coverpic: 'https://goss2.vcg.com/creative/vcg/800/version23/VCG21gic18454706.jpg',
       autoplay: false,
-      live: false,
+      live: that.$store.state.isLive,
       width: window.screen.width,
       height: window.screen.height - 72,
       x5_type: 'h5',
