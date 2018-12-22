@@ -67,19 +67,19 @@
                 lock-x
                 height="100%">
                 <template v-if="item.typeId == 3">
-                  <div v-html='$store.state.productDetail'>
-                    详情
-                  </div>
+                  <div v-html='$store.state.productDetail'>详情</div>
                 </template>
                 <template v-if="item.typeId == 2">
-                  <div>
-                    简介
-                  </div>
+                  <div v-html='summaryContent'>简介</div>
                 </template>
                 <template v-if="item.typeId == 10">
-                  <div>
-                    自定义
-                  </div>
+                  <div v-html='customContent1'>自定义1</div>
+                </template>
+                <template v-if="item.typeId == 11">
+                  <div v-html='customContent2'>自定义2</div>
+                </template>
+                <template v-if="item.typeId == 12">
+                  <div v-html='customContent3'>自定义3</div>
                 </template>
               </Scroller>
             </template>
@@ -164,6 +164,10 @@ export default {
       ],
       swiperHeight: '', //swiper高度
       adBar: { id: '', showAdBar: false, content: ''},
+      summaryContent: '', //tab栏简介内容
+      customContent1: '', //tab栏自定义1内容
+      customContent2: '', //tab栏自定义2内容
+      customContent3: '', //tab栏自定义3内容
       inputWord: "请输入内容213", //输入框占位符
       inputWidth: "2.5rem", //输入框宽度
       interactionList: [ //互动列表数据

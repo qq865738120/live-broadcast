@@ -121,6 +121,20 @@ const init = async function(that) {
   if (context.showAdBar) { //如果需要显示广告条
     context.adBar.content = getTabContent(context.adBarId);
   }
+  for (let item of context.tabItems) {
+    if (item.typeId == 2) { //如果需要获取简介内容
+      context.summaryContent = getTabContent(item.id);
+    }
+    if (item.typeId == 10) { //如果需要获取自定义1内容
+      context.customContent1 = getTabContent(item.id);
+    }
+    if (item.typeId == 11) { //如果需要获取自定义2内容
+      context.customContent2 = getTabContent(item.id);
+    }
+    if (item.typeId == 12) { //如果需要获取自定义3内容
+      context.customContent3 = getTabContent(item.id);
+    }
+  }
   if (context.$store.state.productId == "") { //没有绑定产品
     context.isShowBuyButton = false;
     context.inputWidth = '7.4rem'
@@ -137,7 +151,7 @@ const init = async function(that) {
 参数：height1 adBar显示时候的高度 height2 adBar隐藏时的高度
 */
 const setSwiperHeight = function(height1, height2) {
-  context.swiperHeight = context.showAdBar ? height1 : height2;
+  context.swiperHeight = context.adBar.showAdBar ? height1 : height2;
 }
 
 /*
@@ -266,6 +280,7 @@ const getLiveWatched = function() {
       if (res.data.status == 100) {
         context.watched = res.data.data.accessTotal;
       }
+      resolve();
     })
   })
 }
@@ -277,7 +292,7 @@ const getLiveWatched = function() {
 */
 const getTabContent = function(id) {
   return new Promise(resolve => {
-    context.$axios.get('/newmedia/mobile/live/getLiveSwitchCountent.action', { params: { switchId: id } }).then(res => {
+    context.$axios.get('/api/newmedia/mobile/live/getLiveSwitchCountent.action', { params: { switchId: id } }).then(res => {
       console.log('获取tab内容', res.data);
       if (res.data.status == 100) {
         resolve(res.data.data.content)
