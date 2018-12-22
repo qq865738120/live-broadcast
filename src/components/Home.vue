@@ -130,6 +130,8 @@
 
       <!-- 视频中的悬浮按钮开始 -->
       <div class="iconfont icon-home home-button com-flex-center" @click="goHome"></div>
+      <div class="live-state com-flex-center"><img v-lazy="'http://xmt.soukong.cn/newmedia/pages/mobile/MicroWebsite/livebroadcast/img/play.gif'" />直播中</div>
+      <div class="iconfont icon-chakan looked com-flex-center">{{ watched }}人</div>
       <!-- 视频中的悬浮按钮结束 -->
 
     </Video>
@@ -185,7 +187,8 @@ export default {
         menu1: '分享二维码',
         menu2: '分享链接',
       },
-      orderList: []
+      orderList: [],
+      watched: ''
     }
   },
   components: {
@@ -348,5 +351,33 @@ export default {
     left: 10px;
     border-radius: 50%;
     font-size: 18px;
+  }
+  .live-state {
+    width: 70px;
+    height: 23px;
+    color: white;
+    border-radius: 20px;
+    border: 1px solid white;
+    background-color: #F80114;
+    position: absolute;
+    top: -190px;
+    right: 10px;
+  }
+  .live-state img {
+    width: 10px;
+    height: 10px;
+    margin-right: 5px;
+  }
+  .looked {
+    padding: 4px 7px;
+    color: white;
+    border-radius: 20px;
+    border: 1px solid white;
+    font-size: 12px;
+    display: inline;
+    position: absolute;
+    top: -65px;
+    right: 10px;
+    background-color: rgba(0, 0, 0, 0.3)
   }
 </style>

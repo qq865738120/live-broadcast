@@ -40,11 +40,11 @@ html {
 /* 阿里图标库引入 */
 @font-face {
   font-family: 'iconfont';  /* project id 962415 */
-  src: url('//at.alicdn.com/t/font_962415_lj3ciwot4w.eot');
-  src: url('//at.alicdn.com/t/font_962415_lj3ciwot4w.eot?#iefix') format('embedded-opentype'),
-  url('//at.alicdn.com/t/font_962415_lj3ciwot4w.woff') format('woff'),
-  url('//at.alicdn.com/t/font_962415_lj3ciwot4w.ttf') format('truetype'),
-  url('//at.alicdn.com/t/font_962415_lj3ciwot4w.svg#iconfont') format('svg');
+  src: url('//at.alicdn.com/t/font_962415_4u0vt0j74c2.eot');
+  src: url('//at.alicdn.com/t/font_962415_4u0vt0j74c2.eot?#iefix') format('embedded-opentype'),
+  url('//at.alicdn.com/t/font_962415_4u0vt0j74c2.woff') format('woff'),
+  url('//at.alicdn.com/t/font_962415_4u0vt0j74c2.ttf') format('truetype'),
+  url('//at.alicdn.com/t/font_962415_4u0vt0j74c2.svg#iconfont') format('svg');
 }
 
 .iconfont {
@@ -63,3 +63,4 @@ html {
 .icon-yonghu:before { content: "\e638"; }
 .icon-dianhua:before { content: "\e6f9"; }
 .icon-home:before { content: "\e616"; }
+.icon-chakan:before { content: "\e64d"; }

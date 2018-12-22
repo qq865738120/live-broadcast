@@ -101,6 +101,7 @@ const _liveInit = async function() {
 */
 const init = async function(that) {
   context = that;
+  getLiveWatched(); //获取直播访问人数
   await _liveInit();
   getInteractionList({ //获取互动列表
     curMaxId: "",
@@ -130,7 +131,6 @@ const init = async function(that) {
 */
 const setSwiperHeight = function(height1, height2) {
   context.swiperHeight = context.showAdBar ? height1 : height2;
-  console.log('context.swiperHeight', context.swiperHeight);
 }
 
 /*
@@ -248,11 +248,23 @@ const getTab = function() {
   })
 }
 
+const getLiveWatched = function() {
+  return new Promise(resolve => {
+    context.$axios.get('/api/newmedia/mobile/live/getAccessTotal.action', { params: { liveTitleId: context.$store.state.liveTitleId } }).then(res => {
+      console.log('直播访问人数', res.data);
+      if (res.data.status == 100) {
+        context.watched = res.data.data.accessTotal;
+      }
+    })
+  })
+}
+
 export default {
   init,
   setSwiperHeight,
   getInteractionList,
   getInteractionHistoryList,
   refreshInteraction,
-  refreshOrder
+  refreshOrder,
+  getLiveWatched
 }
