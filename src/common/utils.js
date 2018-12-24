@@ -81,11 +81,37 @@ function timeStemp2DateArr(difference) {
   return [years, month, days, hours, minutes, seconds];
 }
 
+/*
+格式化金额
+参数：val 金额
+     isCut Boolean 是否需要逗号分隔，不传默认不使用分割符
+*/
+function formateMoney(val, isCut) {
+  val = val.toString().replace(/\$|\,/g,'');
+  if(isNaN(val)) {
+    val = "0";
+  }
+  let sign = (val == (val = Math.abs(val)));
+  val = Math.floor(val*100+0.50000000001);
+  let cents = val%100;
+  val = Math.floor(val/100).toString();
+  if(cents<10) {
+    cents = "0" + cents
+  }
+  if (isCut) {
+    for (var i = 0; i < Math.floor((val.length-(1+i))/3); i++) {
+      val = val.substring(0,val.length-(4*i+3))+',' + val.substring(val.length-(4*i+3));
+    }
+  }
+  return (((sign)?'':'-') + val + '.' + cents);
+}
+
 export default {
   driverType,
   getParam,
   waitTask,
   string2Date,
   timeDifference,
-  timeStemp2DateArr
+  timeStemp2DateArr,
+  formateMoney
 }

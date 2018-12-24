@@ -3,16 +3,17 @@
     <div class="content">
       <div class="input-bar">
         <span>金额（元）</span>
-        <input placeholder="填写金额(1-200元)"/>
+        <input v-model="sum" type="number" placeholder="填写金额(1-200元)" @change="onSumChange"/>
       </div>
       <div class="input-bar">
         <span>数量（个）</span>
-        <input placeholder="不小于个数*0.3元"/>
+        <input v-model="count" type="number" :disabled="sum != '' && sum > 0 ? false : true" placeholder="不小于个数*0.3元" @keyup="onCountKeyup"/>
       </div>
       <p class="tip">
         <span>因微信限制，每个红包不小于0.3元</span><br />
         <span>若红包未领完，3日后自动返回到微信钱包</span>
       </p>
+      <div class="pay-button com-flex-center" :style="payStyle" @click="onPay">支付 {{ pay }}元</div>
     </div>
   </div>
 </template>
@@ -25,7 +26,52 @@ export default {
   },
   data() {
     return {
-
+      isDisabled: true,
+      sum: '',
+      count: '',
+      pay: '0.00',
+      payStyle: {
+        color: '#FFF5DB',
+        background: '#FFBE8B'
+      }
+    }
+  },
+  methods: {
+    onSumChange() {
+      let sum = this.$utils.formateMoney(this.sum);
+      if (sum > 200) sum = 200.00
+      else if (sum < 1) sum = 1
+      this.sum =  sum;
+      this.pay = (this.sum * 1.02).toFixed(2)
+    },
+    onCountKeyup() {
+      let count = Math.floor(this.sum / 0.3)
+      if (this.count > count) this.count = count;
+      else if (this.count <= 0) this.count = 1
+      this.pay = (this.sum * 1.02).toFixed(2);
+      this.payStyle.color = '#ffffff';
+      this.payStyle.background = '#ED7E00';
+    },
+    onPay() {
+      if (this.count != '' && this.sum != '') {
+        let that = this;
+        const data = {
+          openId: that.$store.state.openId,
+          readAmount: that.sum,
+          numberCount: that.count,
+          objType: 1,
+          objId: that.$store.state.liveTitleId
+        }
+        this.$vux.confirm.show({
+          title: '提示',
+          content: '确认发送红包吗？',
+          onConfirm () {
+            that.$axios.get('/api/newmedia/mobile/redpackageactivity/modify.action', { params: data }).then(res => {
+              console.log('创建红包', res.data);
+            })
+          }
+        })
+      }
     }
   }
 }
@@ -63,5 +109,14 @@ export default {
   width: 244px;
   padding-left: 20px;
   text-align: center;
+}
+.pay-button {
+  width: 230px;
+  height: 44px;
+  color: white;
+  background-color: $--main-color;
+  border-radius: 22px;
+  font-size: 16px;
+  margin: 10px auto;
 }
 </style>

@@ -29,6 +29,7 @@ export default new Vuex.Store({
     isLive: '', //是否是直播
     videoSource: '', //视频源
     videoCoverpic: '', //视频首图
+    redOrderNo: '', //红包订单
   },
   mutations: {
     switchInitFag(state) {
@@ -105,6 +106,9 @@ export default new Vuex.Store({
     },
     setVideoCoverpic(state, value) {
       state.videoCoverpic = value;
+    },
+    setRedOrderNo(state, value) {
+      state.redOrderNo = value;
     }
   }
 })

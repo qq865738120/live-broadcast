@@ -18,7 +18,9 @@ import {
   Actionsheet,
   XDialog,
   Qrcode,
-  Popup
+  Popup,
+  AlertPlugin,
+  ConfirmPlugin
 } from 'vux'
 Vue.component('Toast', Toast)
 Vue.component('Tab', Tab)
@@ -37,5 +39,7 @@ Vue.component('Actionsheet', Actionsheet)
 Vue.component('XDialog', XDialog)
 Vue.component('Qrcode', Qrcode)
 Vue.component('Popup', Popup)
+Vue.use(AlertPlugin)
+Vue.use(ConfirmPlugin)
 
 Vue.use(ToastPlugin,  {position: 'middle', width: '4rem'})
