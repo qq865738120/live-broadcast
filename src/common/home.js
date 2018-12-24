@@ -247,7 +247,7 @@ const getTabProp = function() {
     context.$axios.get('/api//newmedia/mobile/live/getLiveSwitch.action', { params: { liveTitleId: context.$store.state.liveTitleId } }).then(res => {
       console.log('获取栏目配置', res.data);
       if (res.data.status == 100) {
-        context.$store.commit('setTapProp', res.data.data); //将配置信息存入状态仓库，方便其他组件使用
+        context.$store.commit('setTabProp', res.data.data); //将配置信息存入状态仓库，方便其他组件使用
         const tabItem = [1, 2, 3, 5 ,10 ,11 ,12] //tab栏switchType
         for (let item of res.data.data) {
           for (let tab of tabItem) { //tab栏配置

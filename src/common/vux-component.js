@@ -20,7 +20,8 @@ import {
   Qrcode,
   Popup,
   AlertPlugin,
-  ConfirmPlugin
+  ConfirmPlugin,
+  Icon
 } from 'vux'
 Vue.component('Toast', Toast)
 Vue.component('Tab', Tab)
@@ -41,5 +42,6 @@ Vue.component('Qrcode', Qrcode)
 Vue.component('Popup', Popup)
 Vue.use(AlertPlugin)
 Vue.use(ConfirmPlugin)
+Vue.component('Icon', Icon)
 
 Vue.use(ToastPlugin,  {position: 'middle', width: '4rem'})

@@ -68,6 +68,14 @@ export default {
           onConfirm () {
             that.$axios.get('/api/newmedia/mobile/redpackageactivity/modify.action', { params: data }).then(res => {
               console.log('创建红包', res.data);
+              if (res.data.status == 100) {
+                that.$store.commit('setRedOrderNo', res.data.data.orderNo);
+                let par = '?liveTitleId='+ that.$store.state.liveTitleId +'&openId='+ that.$store.state.openId +'&cmpyId=' + that.$store.state.cmpyId;
+                let successUrl = escape('/#/pay/success' + par);
+                let failUrl = escape('/#/pay/fail' + par);
+                let url = '/newmedia/pages/mobile/MicroWebsite/wechatpay/pay.html?openId='+ that.$store.state.openId +'&cmpyId='+ that.$store.state.cmpyId +'&orderNo='+ that.$store.state.redOrderNo +'&successUrl='+ successUrl +'&failurl=' + failUrl
+                window.location.href = url;
+              }
             })
           }
         })

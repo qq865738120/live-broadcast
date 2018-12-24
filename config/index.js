@@ -10,7 +10,7 @@ module.exports = {
     // Paths
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
-    proxyTable: {
+    proxyTable: { // 配置代理
       '/api': {
         target: 'http://xmt.soukong.cn',
         changeOrigin: true,
@@ -53,6 +53,15 @@ module.exports = {
     assetsRoot: path.resolve(__dirname, '../dist'),
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
+    proxyTable: { // 配置代理
+      '/api': {
+        target: 'http://xmt.soukong.cn',
+        changeOrigin: true,
+        pathRewrite: {
+          '^/api': ''
+        }
+      }
+    },
 
     /**
      * Source Maps

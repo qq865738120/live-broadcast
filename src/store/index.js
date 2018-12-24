@@ -25,7 +25,7 @@ export default new Vuex.Store({
     redActivityId: '', //红包id
     orderPage: 1, //表示订单列表目前刷新到第几页
     productDetail: '没有产品', //产品详情富文本
-    tapProp: '', //tab栏配置
+    tabProp: '', //tab栏配置
     isLive: '', //是否是直播
     videoSource: '', //视频源
     videoCoverpic: '', //视频首图
@@ -95,8 +95,8 @@ export default new Vuex.Store({
     setProductDetail(state, value) {
       state.productDetail = value;
     },
-    setTapProp(state, value) {
-      state.tapProp = value;
+    setTabProp(state, value) {
+      state.tabProp = value;
     },
     setIsLive(state, value) {
       state.isLive = value;

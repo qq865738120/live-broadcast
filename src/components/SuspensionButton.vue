@@ -11,13 +11,13 @@
     <transition
       enter-active-class="animated slideInUp faster"
       leave-active-class="animated slideOutDown faster">
-      <img class="button margin-top" v-show="isShowSub" @click="onPersonal" v-lazy="personalImg"/>
+      <img class="button margin-top" v-if='isShowPersonal' v-show="isShowSub" @click="onPersonal" v-lazy="personalImg"/>
     </transition>
 
     <transition
       enter-active-class="animated slideInUp faster"
       leave-active-class="animated slideOutDown faster">
-      <img class="button margin-top" v-show="isShowSub" @click="onFollow" v-lazy="followImg"/>
+      <img class="button margin-top" v-if='isShowFollow' v-show="isShowSub" @click="onFollow" v-lazy="followImg"/>
     </transition>
 
     <transition
@@ -62,8 +62,9 @@
 </template>
 
 <script>
+let timerId = ''
 export default {
-  mounted() {
+  async mounted() {
     let that = this;
     this.$axios.get('/api/newmedia/mobile/wechatAccount/getCmpyWechatQecode.action', { params: { cmpyId: that.$store.state.cmpyId } }).then(res => {
       console.log('获取企业二维码', res.data);
@@ -71,7 +72,7 @@ export default {
         that.qCode = res.data.data.qrcode;
       }
     })
-    setInterval(() => {
+    timerId = setInterval(() => {
       that.$axios.get('/api//newmedia/mobile/live/getRedActivity.action', { params: { liveTitelId: that.$store.state.liveTitleId } }).then((res) => {
         console.log('获取红包', res.data);
         if (res.data.status == '100') {
@@ -82,6 +83,17 @@ export default {
         }
       })
     }, 6000)
+    await this.$utils.waitTask(this, 'initFag')
+    let tabProp = this.$store.state.tabProp
+    console.log('tabProp', tabProp);
+    for (let item of tabProp) {
+      if (item.switchType == 8) {
+        this.isShowPersonal = item.switchStatus == 1 ? true : false;
+      }
+      if (item.switchType == 9) {
+        this.isShowFollow = item.switchStatus == 1 ? true : false;
+      }
+    }
   },
   data() {
     return {
@@ -104,7 +116,9 @@ export default {
       },
       redImgIndex: 'success',
       showDialogRed: false,
-      amount: ''
+      amount: '',
+      isShowPersonal: true,
+      isShowFollow: true
     }
   },
   methods: {
@@ -143,6 +157,7 @@ export default {
       this.showPopup = !this.showPopup;
     },
     onPersonal() { //个人按钮
+      clearInterval(timerId);
       let that = this;
       let redirectUri = "http%3A%2F%2Fxmt.soukong.cn%2Fwechatservice%2Fsns%2FsookingBaseSimpleAuthorize.action%3FreturnUrl%3Dhttp%253A%252F%252Fxmt.soukong.cn%252Fnewmedia%252Fpages%252Fmobile%252FMicroWebsite%252FPersonalCenter%252FpersonelIndex.html%253FcmpyId%253D"+ that.$store.state.cmpyId +"%26cmpyId%3D" + that.$store.state.cmpyId
       let url = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${that.$store.state.appid}&scope=snsapi_base&redirect_uri=${redirectUri}&response_type=code&state=1&connect_redirect=1#wechat_redirect`
