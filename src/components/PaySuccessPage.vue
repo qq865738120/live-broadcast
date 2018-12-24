@@ -10,6 +10,8 @@ export default {
   name: 'PaySuccessPage',
   mounted() {
     this.$store.commit('setTitle', '支付成功')
+    if (!this.$store.state.initFag)
+      this.$store.commit('switchInitFag')
     let that = this;
     let id = setInterval(() => {
       that.count--

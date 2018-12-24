@@ -53,6 +53,9 @@ new Vue({
   created() {
     this.init();
   },
+  mounted() {
+    console.log(this);
+  },
   methods: {
     /* 初始化函数 */
     init() {

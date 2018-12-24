@@ -23,6 +23,8 @@ export default {
   name: 'RedPacketPage',
   mounted() {
     this.$store.commit('setTitle', '发红包')
+    if (!this.$store.state.initFag)
+      this.$store.commit('switchInitFag')
   },
   data() {
     return {
