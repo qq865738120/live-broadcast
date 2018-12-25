@@ -176,7 +176,6 @@ export default {
   }
   .content {
     position: relative;
-    background-color: red;
     width: 100%;
   }
 </style>

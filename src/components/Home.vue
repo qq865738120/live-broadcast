@@ -245,13 +245,19 @@ export default {
     },
 
     onSheet(menuKey) { //分享按钮弹出框选择触发事件
-      console.log(this.$wx);
-      console.log(menuKey);
+      let that = this;
       switch(menuKey) {
         case 'menu1':
 
           break;
         case 'menu2':
+          console.log('分享');
+          that.$wx.updateAppMessageShareData({
+            title: '111', // 分享标题
+            desc: '222', // 分享描述
+            link: that.$store.state.host+'/wechatservice/sns/sookingBaseSimpleAuthorize.action?returnUrl='+encodeURIComponent(window.location.href)+'&cmpyId='+that.$store.state.cmpyId, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+            imgUrl: '', // 分享图标
+          })
           break;
       }
     },

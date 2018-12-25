@@ -14,6 +14,29 @@ let interactionFag = 0 //互动消息标志，接口返回数据应进行自减�
 let currentTime = 0 //当前定时器时间
 
 /*
+tab栏以及广告条配置项数据格式化并填充界面。
+此方法需要等待初始化完成后进行。
+*/
+const _formateTabData = function() {
+  const tabItem = [1, 2, 3, 5 ,10 ,11 ,12] //tab栏switchType
+  for (let item of context.$store.state.tabProp) {
+    for (let tab of tabItem) { //tab栏配置
+      if (item.switchType == tab && item.switchStatus == 1) {
+        context.tabItems.push({
+          id: item.id,
+          typeId: item.switchType,
+          text: item.switchName
+        })
+      }
+    }
+    if (item.switchType == 4 && item.switchStatus == 1) { //广告条配置
+      context.adBar.showAdBar = true
+      context.adBar.adBarId = item.id
+    }
+  }
+}
+
+/*
 格式化互动列表信息，将接口中的数据转换成视图可用格式
 参数：data 数据
 返回：视图数据数组
@@ -76,29 +99,6 @@ const _IntelligenceInteractionTimer = function(hasData) {
 }
 
 /*
-初始化直播相关数据
-*/
-const _liveInit = async function() {
-  await context.$axios.get('/api/newmedia/mobile/live/getLive.action', { params: { liveTitleId: context.$utils.getParam('liveTitleId') } }).then(res => {
-    console.log('主页相关参数', res.data);
-    if (res.data.status == 'Y') {
-      context.$store.commit('setTitle', res.data.row.title);
-      context.$store.commit('setShopNumber', res.data.shopNumber);
-      context.$store.commit('setProductId', res.data.row.productId != undefined ? res.data.row.productId : '');
-      context.$store.commit('setIsLive', res.data.row.playback == 0 ? true : false);
-      context.$store.commit('setVideoSource', context.$store.state.isLive ? res.data.row.receiveHlsStreamUrl : !res.data.row.otherPalybackUrl ? res.data.row.palybackUrl : res.data.row.otherPalybackUrl);
-      context.$store.commit('setVideoCoverpic', res.data.row.logo);
-    }
-  })
-  await context.$axios.get('/api/newmedia/mobile/cmpySetting/selectCompanyInFo.action', { params: { cmpyId: context.$store.state.cmpyId } }).then(res => {
-    console.log('企业相关参数', res.data);
-    context.$store.commit('setCmpyName', res.data.cmpyName);
-    context.$store.commit('setLogoUrl', res.data.logoUrl);
-    context.$store.commit('setTelephone', res.data.telephone);
-  })
-}
-
-/*
 初始化home页，该函数为异步函数，严格按照初始化顺序执行，不得随意更换初始化顺序，
 否则会发生意外的结果
 参数：that 页面this引用
@@ -106,7 +106,7 @@ const _liveInit = async function() {
 const init = async function(that) {
   context = that;
   getLiveWatched(); //获取直播访问人数
-  await _liveInit();
+  // await _liveInit();
   getInteractionList({ //获取互动列表
     curMaxId: "",
     rows: 4,
@@ -117,7 +117,8 @@ const init = async function(that) {
     page: context.$store.state.orderPage,
     rows: 10
   }, true);
-  await getTabProp(); //获取tab栏配置信息
+  await context.$utils.waitTask(context, 'initFag'); //等待初始化任务完成后继续执行下面代码
+  _formateTabData();
   if (context.showAdBar) { //如果需要显示广告条
     context.adBar.content = getTabContent(context.adBarId);
   }
@@ -143,7 +144,7 @@ const init = async function(that) {
     context.inputWidth = '2.5rem'
   }
   setSwiperHeight('6.78rem', '7.98rem');
-  context.$store.commit('switchInitFag'); //将初始化标志置位true
+  // context.$store.commit('switchInitFag'); //将初始化标志置位true
 }
 
 /*
@@ -239,38 +240,6 @@ const refreshOrder = function(parameter, isReset) {
 }
 
 /*
-获取tab栏配置信息，在其他组件中使用状态仓库中的配置变量tapProp时，如果是在组件created或者mounted中使用，
-则需要使用utils中的waitTask方法进行阻塞。传入initFag，因为该标志为true则表示所有初始化工作已经完成。
-*/
-const getTabProp = function() {
-  return new Promise(resolve => {
-    context.$axios.get('/api//newmedia/mobile/live/getLiveSwitch.action', { params: { liveTitleId: context.$store.state.liveTitleId } }).then(res => {
-      console.log('获取栏目配置', res.data);
-      if (res.data.status == 100) {
-        context.$store.commit('setTabProp', res.data.data); //将配置信息存入状态仓库，方便其他组件使用
-        const tabItem = [1, 2, 3, 5 ,10 ,11 ,12] //tab栏switchType
-        for (let item of res.data.data) {
-          for (let tab of tabItem) { //tab栏配置
-            if (item.switchType == tab && item.switchStatus == 1) {
-              context.tabItems.push({
-                id: item.id,
-                typeId: item.switchType,
-                text: item.switchName
-              })
-            }
-          }
-          if (item.switchType == 4 && item.switchStatus == 1) { //广告条配置
-            context.adBar.showAdBar = true
-            context.adBar.adBarId = item.id
-          }
-        }
-      }
-      resolve();
-    })
-  })
-}
-
-/*
 获取直播访问人数
 */
 const getLiveWatched = function() {
@@ -308,7 +277,6 @@ export default {
   getInteractionHistoryList,
   refreshInteraction,
   refreshOrder,
-  getTabProp,
   getLiveWatched,
   getTabContent
 }

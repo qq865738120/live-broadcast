@@ -50,16 +50,13 @@ new Vue({
   store,
   components: { App },
   template: `<App v-wechat-title="$store.state.title"/>`,
-  created() {
-    this.init();
-  },
   mounted() {
-    console.log(this);
+    this.init();
+    this.config();
   },
   methods: {
     /* 初始化函数 */
     init() {
-      let liveTitleId = this.$utils.getParam('liveTitleId');
       this.$store.commit('setLiveTitleId', this.$utils.getParam('liveTitleId'));
       this.$store.commit('setOpenId', this.$utils.getParam('openId'));
       this.$store.commit('setCmpyId', this.$utils.getParam('cmpyId'));
@@ -67,6 +64,9 @@ new Vue({
       console.log('openId =', this.$store.state.openId);
       console.log('cmpyId =', this.$store.state.cmpyId);
     },
-
+    /* 配置 */
+    config() {
+      this.$store.commit('setHost', 'http://xmt.soukong.cn')
+    }
   }
 })

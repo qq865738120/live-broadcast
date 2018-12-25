@@ -11,8 +11,6 @@ export default {
   mounted() {
     let that = this;
     this.$store.commit('setTitle', '支付失败')
-    if (!this.$store.state.initFag)
-      this.$store.commit('switchInitFag')
     let id = setInterval(() => {
       that.count--
     }, 1000);

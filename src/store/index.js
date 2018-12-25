@@ -5,6 +5,9 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
+
+    host: '', //域名配置
+
     appid: 'wxfb8665f40c96d92c',
     initFag: false, //初始化完成标志，false表示未完成程序的初始化操作
     liveTitleId: '',
@@ -32,6 +35,9 @@ export default new Vuex.Store({
     redOrderNo: '', //红包订单
   },
   mutations: {
+    setHost(state, value) {
+      state.host = value
+    },
     switchInitFag(state) {
       state.initFag = !state.initFag;
     },

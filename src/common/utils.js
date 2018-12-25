@@ -37,7 +37,7 @@ function waitTask(context, valueName) {
         clearInterval(id)
         resolve()
       }
-    }, 50);
+    }, 100);
   })
 }
 

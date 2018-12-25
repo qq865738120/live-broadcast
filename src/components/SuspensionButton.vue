@@ -85,7 +85,6 @@ export default {
     }, 6000)
     await this.$utils.waitTask(this, 'initFag')
     let tabProp = this.$store.state.tabProp
-    console.log('tabProp', tabProp);
     for (let item of tabProp) {
       if (item.switchType == 8) {
         this.isShowPersonal = item.switchStatus == 1 ? true : false;
