@@ -162,7 +162,7 @@ const setSwiperHeight = function(height1, height2) {
 const getInteractionList = function(parameter) {
   context.$store.commit('switchRequestInteraction');
   return new Promise(resolve => {
-    context.$axios.get('/api/newmedia/mobile/liveMessage/getLeaveMessageNewPass.action', { params: parameter }).then(res => {
+    context.$axios.get(context.$store.state.host + context.$store.state.path + '/newmedia/mobile/liveMessage/getLeaveMessageNewPass.action', { params: parameter }).then(res => {
       console.log('互动列表刷新', res.data);
       if (res.data.status == 'Y') {
         context.interactionList.push(..._formateInteractionList(res.data.rows));
@@ -185,7 +185,7 @@ const getInteractionList = function(parameter) {
 const getInteractionHistoryList = function(parameter) {
   context.$store.commit('switchRequestInteraction');
   return new Promise(resolve => {
-    context.$axios.get('/api/newmedia/mobile/liveMessage/getLeaveMessageOldPass.action', { params: parameter }).then(res => {
+    context.$axios.get(context.$store.state.host + context.$store.state.path + '/newmedia/mobile/liveMessage/getLeaveMessageOldPass.action', { params: parameter }).then(res => {
       console.log('互动列表历史', res.data);
       if (res.data.status == 'Y') {
         let arr = _formateInteractionList(res.data.rows);
@@ -218,7 +218,7 @@ const refreshInteraction = function() {
 */
 const refreshOrder = function(parameter, isReset) {
   return new Promise(resolve => {
-    context.$axios.get('/api/newmedia/mobile/live/getOrderList.action', { params: parameter }).then(res => {
+    context.$axios.get(context.$store.state.host + context.$store.state.path + '/newmedia/mobile/live/getOrderList.action', { params: parameter }).then(res => {
       console.log('获取成交列表', res.data);
       if (res.data.status == 'Y') {
         if (isReset) {
@@ -244,7 +244,7 @@ const refreshOrder = function(parameter, isReset) {
 */
 const getLiveWatched = function() {
   return new Promise(resolve => {
-    context.$axios.get('/api/newmedia/mobile/live/getAccessTotal.action', { params: { liveTitleId: context.$store.state.liveTitleId } }).then(res => {
+    context.$axios.get(context.$store.state.host + context.$store.state.path + '/newmedia/mobile/live/getAccessTotal.action', { params: { liveTitleId: context.$store.state.liveTitleId } }).then(res => {
       console.log('直播访问人数', res.data);
       if (res.data.status == 100) {
         context.watched = res.data.data.accessTotal;
@@ -261,7 +261,7 @@ const getLiveWatched = function() {
 */
 const getTabContent = function(id) {
   return new Promise(resolve => {
-    context.$axios.get('/api/newmedia/mobile/live/getLiveSwitchCountent.action', { params: { switchId: id } }).then(res => {
+    context.$axios.get(context.$store.state.host + context.$store.state.path + '/newmedia/mobile/live/getLiveSwitchCountent.action', { params: { switchId: id } }).then(res => {
       console.log('获取tab内容', res.data);
       if (res.data.status == 100) {
         resolve(res.data.data.content)

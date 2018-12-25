@@ -66,7 +66,7 @@ export default {
           title: '提示',
           content: '确认发送红包吗？',
           onConfirm () {
-            that.$axios.get('/api/newmedia/mobile/redpackageactivity/modify.action', { params: data }).then(res => {
+            that.$axios.get(that.$store.state.host + that.$store.state.path + '/newmedia/mobile/redpackageactivity/modify.action', { params: data }).then(res => {
               console.log('创建红包', res.data);
               if (res.data.status == 100) {
                 that.$store.commit('setRedOrderNo', res.data.data.orderNo);

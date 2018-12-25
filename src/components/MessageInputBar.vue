@@ -28,7 +28,7 @@ export default {
     },
     onSend() {
       let that = this;
-      this.$axios.post("/api/newmedia/mobile/liveMessage/addLeaveMessage.action", that.$qs.stringify({
+      this.$axios.post(that.$store.state.host + that.$store.state.path + "/newmedia/mobile/liveMessage/addLeaveMessage.action", that.$qs.stringify({
         openId: that.$store.state.openId,
         liveId: that.$store.state.liveTitleId,
         content: that.message

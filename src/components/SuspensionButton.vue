@@ -66,14 +66,14 @@ let timerId = ''
 export default {
   async mounted() {
     let that = this;
-    this.$axios.get('/api/newmedia/mobile/wechatAccount/getCmpyWechatQecode.action', { params: { cmpyId: that.$store.state.cmpyId } }).then(res => {
+    this.$axios.get(that.$store.state.host + that.$store.state.path + '/newmedia/mobile/wechatAccount/getCmpyWechatQecode.action', { params: { cmpyId: that.$store.state.cmpyId } }).then(res => {
       console.log('获取企业二维码', res.data);
       if (res.data.status == '100') {
         that.qCode = res.data.data.qrcode;
       }
     })
     timerId = setInterval(() => {
-      that.$axios.get('/api//newmedia/mobile/live/getRedActivity.action', { params: { liveTitelId: that.$store.state.liveTitleId } }).then((res) => {
+      that.$axios.get(that.$store.state.host + that.$store.state.path + '/newmedia/mobile/live/getRedActivity.action', { params: { liveTitelId: that.$store.state.liveTitleId } }).then((res) => {
         console.log('获取红包', res.data);
         if (res.data.status == '100') {
            that.isShowRed = res.data.data.exist == 0 ? false : true;
@@ -130,7 +130,7 @@ export default {
         openId: that.$store.state.openId,
         redActivityId: that.$store.state.redActivityId
       }
-      this.$axios.get('/api/newmedia/mobile/redpackageinfo/drawRedPackage.action', { params: data }).then(res => {
+      this.$axios.get(that.$store.state.host + that.$store.state.path + '/newmedia/mobile/redpackageinfo/drawRedPackage.action', { params: data }).then(res => {
         console.log('抢红包接口返回', res.data);
         if (res.data.status == 100) { //抢到红包
           if(res.data.recordStatus == 0) { //第一次抢
@@ -176,7 +176,7 @@ export default {
           phone: that.phone,
           liveTitelId: that.$store.state.liveTitleId
         }
-        this.$axios.get('/api/newmedia/mobile/live/addApplyInfo.action', { params: data }).then((res) => {
+        this.$axios.get(that.$store.state.host + that.$store.state.path + '/newmedia/mobile/live/addApplyInfo.action', { params: data }).then((res) => {
           console.log('提交申请直播', res.data);
           if (res.data.status == '100') {
             this.$vux.toast.show({

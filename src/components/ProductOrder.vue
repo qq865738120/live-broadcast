@@ -45,7 +45,7 @@ export default {
       ProductID: that.$store.state.productId,
       openId: that.$store.state.openId
     }
-    this.$axios.get('/api/newmedia/mobile/shop/indexproduct/getCommodityDetails.action', { params: getProductDetail}).then(res => {
+    this.$axios.get(that.$store.state.host + that.$store.state.path + '/newmedia/mobile/shop/indexproduct/getCommodityDetails.action', { params: getProductDetail}).then(res => {
       console.log('商品详情', res);
       if (res.data.RES == '100') {
         let data = res.data.DATA.Product;

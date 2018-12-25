@@ -168,7 +168,7 @@ export default {
       customContent1: '', //tab栏自定义1内容
       customContent2: '', //tab栏自定义2内容
       customContent3: '', //tab栏自定义3内容
-      inputWord: "请输入内容213", //输入框占位符
+      inputWord: "请输入内容", //输入框占位符
       inputWidth: "2.5rem", //输入框宽度
       interactionList: [ //互动列表数据
         // { id: 0, title: '标题啊标题啊0', time: '1小时', message: '这是一条消息这是一条消息这是一条消息', isMaster: false, icon: 'http://img2.imgtn.bdimg.com/it/u=3197537752,2095789724&fm=26&gp=0.jpg', image: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1544776923060&di=31b3a9fd116050fa5baf6dfbe7231233&imgtype=0&src=http%3A%2F%2Fh.hiphotos.baidu.com%2Fimage%2Fpic%2Fitem%2Ff2deb48f8c5494eec7036a5f20f5e0fe99257e56.jpg' },
@@ -257,6 +257,19 @@ export default {
             desc: '222', // 分享描述
             link: that.$store.state.host+'/wechatservice/sns/sookingBaseSimpleAuthorize.action?returnUrl='+encodeURIComponent(window.location.href)+'&cmpyId='+that.$store.state.cmpyId, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
             imgUrl: '', // 分享图标
+            success: function () {
+              that.$axios.post(that.$store.state.host + that.$store.state.path +'/newmedia/app/appTenologymarketingRecaordLog/pageRecodeShare.action',that.$qs.stringify({
+                'objectId': '1'
+              }))
+              that.$vux.toast.show({
+                text: '分享成功',
+              })
+            },
+            cancel: function () {
+              that.$vux.toast.show({
+                text: '分享失败',
+              })
+            }
           })
           break;
       }

@@ -12,6 +12,7 @@ import '@/assets/style/common.scss'
 import 'lib-flexible/flexible'
 import './common/vux-component.js' //vux按需引入组件
 import utils from './common/utils.js' //全局引入自定义工具类
+import comm from './common/comm.js' //引入公共js
 import './common/filter.js' //全局定义过滤器
 import $ from 'jquery'
 import { listPullLoading } from 'list-pull-loading' //一个第三方的上拉加载下拉刷新列表组件
@@ -22,7 +23,6 @@ var wx = require('weixin-js-sdk'); //引入微信js-sdk
 Vue.config.productionTip = false
 
 Vue.prototype.$axios = axios.create({
-  // baseURL: 'http://fm.soukong.cn',
   timeout: 30000,
   headers: {
     'Content-Type': 'application/x-www-form-urlencoded'
@@ -30,6 +30,7 @@ Vue.prototype.$axios = axios.create({
 });
 Vue.prototype.$qs = Qs;
 Vue.prototype.$utils = utils;
+Vue.prototype.$comm = comm;
 Vue.prototype.$ = $;
 Vue.prototype.$wx = wx;
 
@@ -50,7 +51,7 @@ new Vue({
   store,
   components: { App },
   template: `<App v-wechat-title="$store.state.title"/>`,
-  mounted() {
+  created() {
     this.init();
     this.config();
   },
@@ -66,7 +67,14 @@ new Vue({
     },
     /* 配置 */
     config() {
-      this.$store.commit('setHost', 'http://xmt.soukong.cn')
+      let config = {
+        host: 'http://xmt.soukong.cn', //测试环境
+        path: ''
+        // host: 'http://180.180.180.148', //本地环境
+        // path: '/api'
+      }
+      this.$store.commit('setHost', config.host)
+      this.$store.commit('setPath', config.path)
     }
   }
 })

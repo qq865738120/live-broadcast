@@ -7,6 +7,7 @@ export default new Vuex.Store({
   state: {
 
     host: '', //域名配置
+    path: '', //接口路径前缀
 
     appid: 'wxfb8665f40c96d92c',
     initFag: false, //初始化完成标志，false表示未完成程序的初始化操作
@@ -37,6 +38,9 @@ export default new Vuex.Store({
   mutations: {
     setHost(state, value) {
       state.host = value
+    },
+    setPath(state, value) {
+      state.path = value
     },
     switchInitFag(state) {
       state.initFag = !state.initFag;
