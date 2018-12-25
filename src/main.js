@@ -68,10 +68,10 @@ new Vue({
     /* 配置 */
     config() {
       let config = {
-        host: 'http://xmt.soukong.cn', //测试环境
-        path: ''
-        // host: 'http://180.180.180.148', //本地环境
-        // path: '/api'
+        // host: 'http://xmt.soukong.cn', //测试环境
+        // path: ''
+        host: 'http://180.180.180.148', //本地环境
+        path: '/api'
       }
       this.$store.commit('setHost', config.host)
       this.$store.commit('setPath', config.path)

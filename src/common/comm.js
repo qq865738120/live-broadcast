@@ -1,3 +1,5 @@
+import Vue from 'vue'
+
 //获取连接地址后面的参数
 function SKgetUrlParam(){var args={};var search=decodeURIComponent(location.search.substring(1));var arr=search.split('&');for(var i=0,len=arr.length;i<len;i++){var t=arr[i].split('=');args[t[0]]=t[1]}return args}
 //获取当前不带参数的url
@@ -10,10 +12,10 @@ function SKisWeiXin(){var ua=window.navigator.userAgent.toLowerCase();if(ua.matc
 function SKweixinHideMenu(sysCommon){
 	var configUrl=sysCommon.jsticketUrl;
 	var search=window.location.href.split('#')[0];
-	$(function(){
-		$.get(configUrl,{'url':search,'cmpyId':-1},function(result){
+	Vue.prototype.$(function(){
+		Vue.prototype.$.get(configUrl,{'url':search,'cmpyId':-1},function(result){
 			//初始化js-sdk配置
-			wx.config({
+			Vue.prototype.$wx.config({
 			    debug:false,
 			    appId:result.appId,
 			    timestamp:result.timestamp,
@@ -21,8 +23,8 @@ function SKweixinHideMenu(sysCommon){
 			    signature:result.signature,
 			    jsApiList:[]
 			})
-			wx.ready(function(){
-				wx.hideOptionMenu();
+			Vue.prototype.$wx.ready(function(){
+				Vue.prototype.$wx.hideOptionMenu();
 			})
 		})
 	})
@@ -45,7 +47,7 @@ function SKweixinShare(sysCommon,cmpyId,title,desc,imgUrl){
 	var configUrl=sysCommon.jsticketUrl;  //获取系统url集合中用于微信的action
 	var result={};
 	//同步获取微信验证集
-	$.ajax({
+	Vue.prototype.$.ajax({
 		type:'get',
 		url:configUrl,
 		data:{'url':search,'cmpyId':cmpyId},
@@ -55,7 +57,7 @@ function SKweixinShare(sysCommon,cmpyId,title,desc,imgUrl){
 		}
 	})
 	//注入权限验证配置
-	wx.config({
+	Vue.prototype.$wx.config({
 	    debug:false,  //true 为开启调试模式
 	    appId:result.appId,
 	    timestamp:result.timestamp,
@@ -64,9 +66,9 @@ function SKweixinShare(sysCommon,cmpyId,title,desc,imgUrl){
 	    jsApiList:['checkJsApi','onMenuShareAppMessage','onMenuShareTimeline']
 	})
 	//通过ready接口处理成功验证
-	wx.ready(function(){
+	Vue.prototype.$wx.ready(function(){
        	//分享到朋友圈
-       	wx.onMenuShareTimeline({
+       	Vue.prototype.$wx.onMenuShareTimeline({
           	title:title,
           	link:forwardUrl,
           	imgUrl:imgUrl,
@@ -78,7 +80,7 @@ function SKweixinShare(sysCommon,cmpyId,title,desc,imgUrl){
            	}
       	})
        	//分享到朋友
-       	wx.onMenuShareAppMessage({
+       	Vue.prototype.$wx.onMenuShareAppMessage({
     	  	title:title,
           	desc:desc,
           	link:forwardUrl,
@@ -106,7 +108,8 @@ function SKweixinShare(sysCommon,cmpyId,title,desc,imgUrl){
  * @param communicators 是否是传播者标志  如果URL参数有则赋值，如果调用阅读记录接口后有该字段则再次赋值，否则为空
  * @param type 类型:0->软文,1->活动,2->免费试用,4->产品详情,7->精品导读,8->个人微网首页（有声图）
  **/
-function SKweixinRecord(sysCommon,forwardUrl,cmpyId,mediaId,title,desc,imgUrl,mediaType,readLogId,communicators,type){
+// function SKweixinRecord(sysCommon,forwardUrl,cmpyId,mediaId,title,desc,imgUrl,mediaType,readLogId,communicators,type){
+function SKweixinRecord(forwardUrl,cmpyId,mediaId,title,desc,imgUrl,mediaType,readLogId,communicators,type){
 	var urlParam=SKgetUrlParam();
 	var parentOpenId='0';
 	var openId=urlParam.openId;
@@ -118,32 +121,32 @@ function SKweixinRecord(sysCommon,forwardUrl,cmpyId,mediaId,title,desc,imgUrl,me
 		level=level+1;
 	}
 	var startTime=new Date().getTime();
-	var search=window.location.href.split('#')[0];
-	var configUrl=sysCommon.jsticketUrl;  //获取系统url集合中用于微信的action
-	var result={};
+	// var search=window.location.href.split('#')[0];
+	// var configUrl=sysCommon.jsticketUrl;  //获取系统url集合中用于微信的action
+	// var result={};
 	//同步获取微信验证集
-	$.ajax({
-		type:'get',
-		url:configUrl,
-		data:{'url':search,'cmpyId':cmpyId},
-		async:false,
-		success:function(data){
-			if(data) result=data;
-		}
-	})
+	// Vue.prototype.$.ajax({
+	// 	type:'get',
+	// 	url:configUrl,
+	// 	data:{'url':search,'cmpyId':cmpyId},
+	// 	async:false,
+	// 	success:function(data){
+	// 		if(data) result=data;
+	// 	}
+	// })
 	//注入权限验证配置
-	wx.config({
-	    debug:false,  //true 为开启调试模式
-	    appId:result.appId,
-	    timestamp:result.timestamp,
-	    nonceStr:result.noncestr,
-	    signature:result.signature,
-	    jsApiList:['checkJsApi','onMenuShareAppMessage','onMenuShareTimeline']
-	})
+	// Vue.prototype.$wx.config({
+	//     debug:false,  //true 为开启调试模式
+	//     appId:result.appId,
+	//     timestamp:result.timestamp,
+	//     nonceStr:result.noncestr,
+	//     signature:result.signature,
+	//     jsApiList:['checkJsApi','onMenuShareAppMessage','onMenuShareTimeline']
+	// })
 	//通过ready接口处理成功验证
-	wx.ready(function(){
+	Vue.prototype.$wx.ready(function(){
        	//分享到朋友圈
-       	wx.onMenuShareTimeline({
+       	Vue.prototype.$wx.onMenuShareTimeline({
           	title:title,
           	link:forwardUrl,
           	imgUrl:imgUrl,
@@ -166,7 +169,7 @@ function SKweixinRecord(sysCommon,forwardUrl,cmpyId,mediaId,title,desc,imgUrl,me
 				if(communicators){
 					pageData.communicators=communicators;
 				}
-              	$.ajax({
+              	Vue.prototype.$.ajax({
 					type:'post',
 					contentType:'application/json; charset=utf-8',
 					url:'/newmedia/mobile/forward/to.action',
@@ -183,7 +186,7 @@ function SKweixinRecord(sysCommon,forwardUrl,cmpyId,mediaId,title,desc,imgUrl,me
            	}
       	})
        	//分享到朋友
-       	wx.onMenuShareAppMessage({
+       	Vue.prototype.$wx.onMenuShareAppMessage({
     	  	title:title,
           	desc:desc,
           	link:forwardUrl,

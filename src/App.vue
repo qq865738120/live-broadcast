@@ -28,6 +28,7 @@ export default {
     await this._liveInit()
     await this._getTabProp()
     await this._getWechatConfig()
+    this._optionWeixinShare()
     this.$store.commit('switchInitFag'); //将初始化标志置位true
   },
   components: {
@@ -70,6 +71,7 @@ export default {
     },
     /* 获取微信接口相关配置信息 */
     _getWechatConfig() {
+      console.log('this.$comm.shareRecord', this.$comm.shareRecord());
       let that = this;
       let data = {
         url: window.location.href,
@@ -80,18 +82,23 @@ export default {
           console.log('获取微信配置信息', res.data);
           const result = res.data
           if (!!result.appId) {
+            that.$store.commit('setAppid', result.appId)
             that.$wx.config({
               debug: true,
               appId: result.appId,
               timestamp: result.timestamp,
               nonceStr: result.noncestr,
               signature: result.signature,
-              jsApiList:['updateAppMessageShareData']
+              jsApiList:['updateAppMessageShareData','checkJsApi','onMenuShareAppMessage','onMenuShareTimeline']
             })
           }
           resolve();
         })
       })
+    },
+    /* 配置微信分享 */
+    _optionWeixinShare() {
+      this.$comm.shareRecord();
     }
   }
 }

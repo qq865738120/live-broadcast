@@ -42,6 +42,9 @@ export default new Vuex.Store({
     setPath(state, value) {
       state.path = value
     },
+    setAppid(state, value) {
+      state.appId = value
+    },
     switchInitFag(state) {
       state.initFag = !state.initFag;
     },
