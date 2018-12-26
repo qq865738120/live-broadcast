@@ -27,7 +27,7 @@ export default {
     this.$axios.get(that.$store.state.host + that.$store.state.path + '/newmedia/mobile/live/addAccessTotal.action', { params: { liveTitleId: that.$store.state.liveTitleId } })
     await this._liveInit()
     await this._getTabProp()
-    await this._getWechatConfig()
+    // await this._getWechatConfig()
     this._optionWeixinShare()
     this.$store.commit('switchInitFag'); //将初始化标志置位true
   },
@@ -47,6 +47,7 @@ export default {
           this.$store.commit('setIsLive', res.data.row.playback == 0 ? true : false);
           this.$store.commit('setVideoSource', this.$store.state.isLive ? res.data.row.receiveHlsStreamUrl : !res.data.row.otherPalybackUrl ? res.data.row.palybackUrl : res.data.row.otherPalybackUrl);
           this.$store.commit('setVideoCoverpic', res.data.row.logo);
+          this.$store.commit('setAccountId', res.data.row.soukongAccountId != undefined ? res.data.row.soukongAccountId : '')
         }
       })
       await this.$axios.get(that.$store.state.host + that.$store.state.path + '/newmedia/mobile/cmpySetting/selectCompanyInFo.action', { params: { cmpyId: that.$store.state.cmpyId } }).then(res => {
@@ -70,35 +71,35 @@ export default {
       })
     },
     /* 获取微信接口相关配置信息 */
-    _getWechatConfig() {
-      console.log('this.$comm.shareRecord', this.$comm.shareRecord());
-      let that = this;
-      let data = {
-        url: window.location.href,
-        cmpyId: that.$store.state.cmpyId
-      }
-      return new Promise(resolve => {
-        this.$axios.get(that.$store.state.host + that.$store.state.path + '/wechatservice/ticket/1.action', { params: data }).then(res => {
-          console.log('获取微信配置信息', res.data);
-          const result = res.data
-          if (!!result.appId) {
-            that.$store.commit('setAppid', result.appId)
-            that.$wx.config({
-              debug: true,
-              appId: result.appId,
-              timestamp: result.timestamp,
-              nonceStr: result.noncestr,
-              signature: result.signature,
-              jsApiList:['updateAppMessageShareData','checkJsApi','onMenuShareAppMessage','onMenuShareTimeline']
-            })
-          }
-          resolve();
-        })
-      })
-    },
+    // _getWechatConfig() {
+    //   let that = this;
+    //   let data = {
+    //     url: window.location.href,
+    //     cmpyId: that.$store.state.cmpyId
+    //   }
+    //   return new Promise(resolve => {
+    //     this.$axios.get(that.$store.state.host + that.$store.state.path + '/wechatservice/ticket/1.action', { params: data }).then(res => {
+    //       console.log('获取微信配置信息', res.data);
+    //       const result = res.data
+    //       if (!!result.appId) {
+    //         that.$store.commit('setAppid', result.appId)
+    //         that.$wx.config({
+    //           debug: true,
+    //           appId: result.appId,
+    //           timestamp: result.timestamp,
+    //           nonceStr: result.noncestr,
+    //           signature: result.signature,
+    //           jsApiList:['updateAppMessageShareData','checkJsApi','onMenuShareAppMessage','onMenuShareTimeline']
+    //         })
+    //       }
+    //       resolve();
+    //     })
+    //   })
+    // },
     /* 配置微信分享 */
     _optionWeixinShare() {
-      this.$comm.shareRecord();
+      this.$comm.setContext(this);
+      this.$comm.doShare();
     }
   }
 }

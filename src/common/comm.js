@@ -1,9 +1,31 @@
 import Vue from 'vue'
 
+let context = '';
+
+function setContext(that) {
+	context = that
+}
+
 //获取连接地址后面的参数
-function SKgetUrlParam(){var args={};var search=decodeURIComponent(location.search.substring(1));var arr=search.split('&');for(var i=0,len=arr.length;i<len;i++){var t=arr[i].split('=');args[t[0]]=t[1]}return args}
+function SKgetUrlParam(){
+	var args={};
+	var search=decodeURIComponent(location.href.split('?')[1]);
+	var arr=search.split('&');
+	for(var i=0,len=arr.length;i<len;i++){
+		var t=arr[i].split('=');
+		args[t[0]]=t[1]
+	}
+	return args
+}
 //获取当前不带参数的url
-function SKgetUrlNoParam(){var url=window.location.href;var arr=url.split("?");if(arr.length>0){return url.split("?")[0]}return url}
+function SKgetUrlNoParam(){
+	var url=window.location.href;
+	var arr=url.split("?");
+	if(arr.length>0){
+		return url.split("?")[0]
+	}
+	return url
+}
 
 //**微信相关**//
 //判断是否为微信浏览器 @return Boolean
@@ -94,6 +116,7 @@ function SKweixinShare(sysCommon,cmpyId,title,desc,imgUrl){
         })
     })
 }
+
 /**
  * 微信分享调取接口记录
  * @param sysCommon 获取系统url集合
@@ -108,8 +131,7 @@ function SKweixinShare(sysCommon,cmpyId,title,desc,imgUrl){
  * @param communicators 是否是传播者标志  如果URL参数有则赋值，如果调用阅读记录接口后有该字段则再次赋值，否则为空
  * @param type 类型:0->软文,1->活动,2->免费试用,4->产品详情,7->精品导读,8->个人微网首页（有声图）
  **/
-// function SKweixinRecord(sysCommon,forwardUrl,cmpyId,mediaId,title,desc,imgUrl,mediaType,readLogId,communicators,type){
-function SKweixinRecord(forwardUrl,cmpyId,mediaId,title,desc,imgUrl,mediaType,readLogId,communicators,type){
+async function SKweixinRecord(sysCommon,forwardUrl,cmpyId,mediaId,title,desc,imgUrl,mediaType,readLogId,communicators,type){
 	var urlParam=SKgetUrlParam();
 	var parentOpenId='0';
 	var openId=urlParam.openId;
@@ -121,9 +143,9 @@ function SKweixinRecord(forwardUrl,cmpyId,mediaId,title,desc,imgUrl,mediaType,re
 		level=level+1;
 	}
 	var startTime=new Date().getTime();
-	// var search=window.location.href.split('#')[0];
-	// var configUrl=sysCommon.jsticketUrl;  //获取系统url集合中用于微信的action
-	// var result={};
+	var search=window.location.href.split('#')[0];
+	var configUrl=sysCommon.jsticketUrl;  //获取系统url集合中用于微信的action
+	var result={};
 	//同步获取微信验证集
 	// Vue.prototype.$.ajax({
 	// 	type:'get',
@@ -134,24 +156,27 @@ function SKweixinRecord(forwardUrl,cmpyId,mediaId,title,desc,imgUrl,mediaType,re
 	// 		if(data) result=data;
 	// 	}
 	// })
+	await context.$axios.get(context.$store.state.path + configUrl, { params: {'url':search,'cmpyId':cmpyId} }).then(res => {
+		if(res.data) result = res.data;
+	})
 	//注入权限验证配置
-	// Vue.prototype.$wx.config({
-	//     debug:false,  //true 为开启调试模式
-	//     appId:result.appId,
-	//     timestamp:result.timestamp,
-	//     nonceStr:result.noncestr,
-	//     signature:result.signature,
-	//     jsApiList:['checkJsApi','onMenuShareAppMessage','onMenuShareTimeline']
-	// })
+	Vue.prototype.$wx.config({
+	  debug:true,  //true 为开启调试模式
+	  appId:result.appId,
+	  timestamp:result.timestamp,
+	  nonceStr:result.noncestr,
+	  signature:result.signature,
+	  jsApiList:['checkJsApi','onMenuShareAppMessage','onMenuShareTimeline']
+	})
 	//通过ready接口处理成功验证
 	Vue.prototype.$wx.ready(function(){
-       	//分享到朋友圈
-       	Vue.prototype.$wx.onMenuShareTimeline({
-          	title:title,
-          	link:forwardUrl,
-          	imgUrl:imgUrl,
-          	success:function(){
-          		var pageData={
+	 	//分享到朋友圈
+	 	Vue.prototype.$wx.onMenuShareTimeline({
+	  	title:title,
+	  	link:forwardUrl,
+	  	imgUrl:imgUrl,
+	  	success:function(){
+  			var pageData={
 					'forwardId':parseInt(mediaId),
 					'companyId':parseInt(cmpyId),
 					'level':level,
@@ -169,38 +194,167 @@ function SKweixinRecord(forwardUrl,cmpyId,mediaId,title,desc,imgUrl,mediaType,re
 				if(communicators){
 					pageData.communicators=communicators;
 				}
-              	Vue.prototype.$.ajax({
-					type:'post',
-					contentType:'application/json; charset=utf-8',
-					url:'/newmedia/mobile/forward/to.action',
-					cache:false,
-					data:(JSON.stringify(pageData)),
-					dataType:'json',
-					async:true,
-					success:function(data){}
-				})
-              	mui.toast('分享成功！');
-          	},
-          	cancel:function(){
-          		mui.toast('分享取消！');
-           	}
-      	})
-       	//分享到朋友
-       	Vue.prototype.$wx.onMenuShareAppMessage({
-    	  	title:title,
-          	desc:desc,
-          	link:forwardUrl,
-          	imgUrl:imgUrl,
-          	success:function(){
+	      // Vue.prototype.$.ajax({
+				// 	type:'post',
+				// 	contentType:'application/json; charset=utf-8',
+				// 	url:'/newmedia/mobile/forward/to.action',
+				// 	cache:false,
+				// 	data:(JSON.stringify(pageData)),
+				// 	dataType:'json',
+				// 	async:true,
+				// })
+				context.$axios.post(context.$store.state.host + context.$store.state.path + '/newmedia/mobile/forward/to.action', context.$qs.stringify(pageData))
+	  	}
+		})
+	 	//分享到朋友
+	 	Vue.prototype.$wx.onMenuShareAppMessage({
+	  	title:title,
+    	desc:desc,
+    	link:forwardUrl,
+    	imgUrl:imgUrl,
+	  })
+  })
+}
 
-          	},
-      		cancel:function(){
-      			mui.toast('分享取消！');
-          	}
-        })
-    })
+/**
+ * 同步记录阅读转发
+ * @param mediaId 媒体ID
+ * @param companyId 企业ID
+ * @param type 类型:0->软文,1->活动,2->免费试用,4->产品详情,6->投票,7->精品导读,8->个人微网首页（有声图）
+ * @return data 数据数组
+ **/
+async function SKinsertReadLog(mediaId,companyId,type){
+	var _obj={};
+	var urlParam =  SKgetUrlParam();
+	var parentOpenId='0';
+	if(urlParam.parentOpenId){
+		parentOpenId=urlParam.parentOpenId;
+	}
+	if(urlParam.level){
+		var level=parseInt(urlParam.level);
+	}else{
+		var level=0;
+	}
+	if(urlParam.openId!=urlParam.parentOpenId){
+		level=level+1;
+	}
+	var _data={'mediaId':mediaId,'companyId':companyId,'readOpenId':urlParam.openId,'forwardOpenId':parentOpenId,'level':level,'type':type};
+	if(urlParam.communicators){
+		_data.communicators=urlParam.communicators;
+	}
+	// 如果传播记录Id不为空，将参数传至接口
+	if (urlParam.recordId) {
+		_data.recordId=urlParam.recordId;
+	}
+	// Vue.prototype.$.ajax({
+	// 	type:'post',
+	// 	url:'/newmedia/mobile/media/insertReadLog.action',
+	// 	data:_data,
+	// 	dataType:'json',
+	// 	async:false,
+	// 	success:function(data){
+	// 		if(data){
+	// 			_obj=data;
+	// 		}
+	// 	}
+	// })
+	await context.$axios.post(context.$store.state.host + context.$store.state.path + '/newmedia/mobile/media/insertReadLog.action', context.$qs.stringify(_data)).then(res => {
+		if (res.data) {
+			_obj = res.data
+		}
+	})
+	return _obj;
+}
+
+/**
+ * 同步获取搜空系统链接
+ * @return 数据数组
+ **/
+async function SKAjaxgetSysCommonUrl(){
+	var sysCommon;
+	// Vue.prototype.$.ajax({
+	// 	type:'get',
+	// 	url:'/newmedia/sysCommon/getCommonUrls.action',
+	// 	dataType:'json',
+	// 	async:false,
+	// 	success:function(data){
+	// 		if(data) sysCommon=data;
+	// 	}
+	// })
+	await context.$axios.get(context.$store.state.host + context.$store.state.path + '/newmedia/sysCommon/getCommonUrls.action').then(res => {
+		if(res.data) sysCommon = res.data;
+	})
+	return sysCommon;
+}
+
+/**
+ * 同步获取对应企业的蜂商ID
+ * @param openId 微信openId
+ * @param cmpyId 企业ID
+ * @return 蜂商ID
+ **/
+async function SKAjaxgetSoukongAccountId(openId,cmpyId){
+	var soukongAccountId;
+	// $.ajax({
+	// 	type:'get',
+	// 	url:'/newmedia/mobile/wechatAccount/getSoukongAccountId.action',
+	// 	data:{'openId':openId,'cmpyId':cmpyId},
+	// 	dataType:'json',
+	// 	async:false,
+	// 	success:function(data){
+	// 		if(data) soukongAccountId=data.soukongAccountId;
+	// 	}
+	// })
+	await context.$axios.get(context.$store.state.host + context.$store.state.path + '/newmedia/mobile/wechatAccount/getSoukongAccountId.action', { params: {'openId':openId,'cmpyId':cmpyId} }).then(res => {
+		if(res.data) soukongAccountId = res.data.soukongAccountId;
+	})
+	return soukongAccountId;
+}
+
+async function doShare() {
+	let desc='搜空直播，助力产品营销，让更多的人看到它更生动的一面。';
+  let sysCommon = await SKAjaxgetSysCommonUrl();
+	let urlParam = SKgetUrlParam();
+	let FUID = '';
+	let cmpyId = context.$store.state.cmpyId;
+	let liveTitleId = context.$store.state.liveTitleId;
+	let title = context.$store.state.title;
+  var dataReadLog=SKinsertReadLog(urlParam.liveTitleId, context.$store.state.cmpyId, "9");
+  var mediaInfo =dataReadLog.mediaInfo;
+	var	recordId = dataReadLog.recordId;
+	var	readLogId = dataReadLog.readLogId;
+	var level;
+	let soukongUID = SKAjaxgetSoukongAccountId(urlParam.openId, urlParam.cmpyId);
+	if (soukongUID != 'null') {
+		FUID = soukongUID
+	} else if (context.$store.state.accountId != '') {
+		FUID = context.$store.state.accountId
+	} else if (urlParam.FUID) {
+		FUID = urlParam.FUID;
+	}
+	if(urlParam.parentOpenId){
+		parentOpenId=urlParam.parentOpenId;
+	}
+	if(urlParam.level){
+		level=parseInt(urlParam.level);
+	}else{
+		level=0;
+	}
+	if(urlParam.openId!=urlParam.parentOpenId){
+		level=level+1;
+	}
+	if(dataReadLog.communicators){
+		var currentUrl=SKgetUrlNoParam()+'?FUID='+FUID+'&UID=&cmpyId='+cmpyId+'&liveTitleId='+liveTitleId+'&communicators='+dataReadLog.communicators+"&level="+level+"&parentOpenId="+urlParam.openId+'&recordId='+recordId;
+	}else{
+		var currentUrl=SKgetUrlNoParam()+'?FUID='+FUID+'&UID=&cmpyId='+cmpyId+'&liveTitleId='+liveTitleId+"&level="+level+"&parentOpenId="+urlParam.openId+'&recordId='+recordId;
+	}
+	var redirect_uri_forward=encodeURIComponent(currentUrl);
+	var forwardUrl=sysCommon.silentAuthUrl+'?returnUrl='+redirect_uri_forward+'&cmpyId='+cmpyId;
+  SKweixinRecord(sysCommon,forwardUrl,cmpyId,urlParam.liveTitleId,title,desc,context.$store.state.logoUrl,'',readLogId,urlParam.communicators,'9')
 }
 
 export default {
-  shareRecord: SKweixinRecord
+  // shareRecord: SKweixinRecord,
+	doShare,
+	setContext
 }

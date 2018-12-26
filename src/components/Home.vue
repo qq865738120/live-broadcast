@@ -97,10 +97,10 @@
           </span>
         </div>
         <XButton action-type="button" :gradients="['#ED7E00', '#ED7E00']" v-if="isShowBuyButton"  @click.native="isShowProductOrder = true">立即购买</XButton>
-        <div class="com-icon-button bottom-bar-right" @click="isShowSheet = true">
+        <!-- <div class="com-icon-button bottom-bar-right" @click="isShowSheet = true">
           <div class="iconfont icon-fenxiang"></div>
           <span>分享</span>
-        </div>
+        </div> -->
         <Actionsheet v-model="isShowSheet" :menus="sheetMenus" @on-click-menu="onSheet"></Actionsheet>
       </div>
       <!-- 底部菜单结束 -->

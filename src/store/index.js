@@ -20,6 +20,7 @@ export default new Vuex.Store({
     title: '', //标题
     shopNumber: '', //店铺号
     productId: '', //产品id
+    accountId: '', //分销商id
     maxInteractionId: '', //最大互动消息id
     minInteractionId: '', //最小互动消息id
     isRequestInteraction: false, //是否正在请求互动消息接口
@@ -74,6 +75,9 @@ export default new Vuex.Store({
     },
     setProductId(state, value) {
       state.productId = value
+    },
+    setAccountId(state, value) {
+      state.accountId = value
     },
     setMaxInteractionId(state, value) {
       state.maxInteractionId = value;

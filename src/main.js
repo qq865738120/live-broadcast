@@ -69,8 +69,8 @@ new Vue({
     config() {
       let config = {
         // host: 'http://xmt.soukong.cn', //测试环境
-        // path: ''
-        host: 'http://180.180.180.148', //本地环境
+        // path: '',
+        host: 'http://180.180.180.153', //本地环境
         path: '/api'
       }
       this.$store.commit('setHost', config.host)
