@@ -17,7 +17,11 @@ export default {
     setTimeout(() => {
       let par = '?liveTitleId='+ that.$store.state.liveTitleId +'&openId='+ that.$store.state.openId +'&cmpyId=' + that.$store.state.cmpyId;
       clearInterval(id);
-      window.location.href = '/#/?' + par;
+      if (that.$store.state.environment == 'local') {
+        window.location.href = '/#/?' + par;
+      } else if (that.$store.state.environment == 'online') {
+        window.location.href = '/newmedia/pages/mobile/MicroWebsite/livebroadcast/index.html#/?' + par;
+      }
     }, 5000)
   },
   data() {

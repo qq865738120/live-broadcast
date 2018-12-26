@@ -71,9 +71,16 @@ export default {
               if (res.data.status == 100) {
                 that.$store.commit('setRedOrderNo', res.data.data.orderNo);
                 let par = '?liveTitleId='+ that.$store.state.liveTitleId +'&openId='+ that.$store.state.openId +'&cmpyId=' + that.$store.state.cmpyId;
-                let successUrl = escape('/#/pay/success' + par);
-                let failUrl = escape('/#/pay/fail' + par);
-                let url = '/newmedia/pages/mobile/MicroWebsite/wechatpay/pay.html?openId='+ that.$store.state.openId +'&cmpyId='+ that.$store.state.cmpyId +'&orderNo='+ that.$store.state.redOrderNo +'&successUrl='+ successUrl +'&failurl=' + failUrl
+                let path = '/'
+                if (that.$store.state.environment == "local") {
+                  path = '/'
+                } else if (that.$store.state.environment == "online") {
+                  path = '/newmedia/pages/mobile/MicroWebsite/livebroadcast/index.html'
+                }
+                console.log('that.$store.state.environment', path);
+                let successUrl = escape(that.$store.state.host + path + '#/pay/success' + par);
+                let failUrl = escape(that.$store.state.host + path + '#/pay/fail' + par);
+                let url = that.$store.state.relHost + '/newmedia/pages/mobile/MicroWebsite/wechatpay/pay.html?openId='+ that.$store.state.openId +'&cmpyId='+ that.$store.state.cmpyId +'&orderNo='+ that.$store.state.redOrderNo +'&successUrl='+ successUrl +'&failurl=' + failUrl
                 window.location.href = url;
               }
             })
