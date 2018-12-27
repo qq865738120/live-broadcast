@@ -6,7 +6,7 @@
       <div class="left">
         <div class="left-top">
           <span :class="isMaster ? 'iconfont icon-zhibo' : ''">{{ title }}</span>
-          <span>{{ time }}</span>
+          <span>{{ time | dropLast }}</span>
         </div>
         <p>{{ message }}</p>
         <img class="message-img" v-if="image != undefined && image != ''" v-lazy="image"></img>
@@ -23,6 +23,13 @@
       icon: String,
       image: String,
       isMaster: Boolean //是否展示主播图标
+    },
+    filters: {
+      dropLast: function (value) {
+        if (!value) return ''
+        value = value.toString()
+        return value.split('.')[0]
+      }
     },
     methods: {
       success(src, ele) {

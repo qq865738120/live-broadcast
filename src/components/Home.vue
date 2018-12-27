@@ -17,7 +17,7 @@
       <Swiper v-model="itemIndex" :min-moving-distance="80" :style="{height: swiperHeight}" :show-dots="false">
         <SwiperItem v-for="(item, index) in tabItems" :key="item.id">
           <div class="swiper-content">
-            <template v-if="item.typeId == 1">
+            <template v-if="item.typeId == 1"> <!-- 互动 -->
               <Scroller
                 lock-x
                 height="100%"
@@ -38,7 +38,7 @@
                 </div>
               </Scroller>
             </template>
-            <template v-else-if="item.typeId == 5">
+            <template v-else-if="item.typeId == 5 && hasOrderList"> <!-- 成交 -->
               <Scroller
                 lock-x
                 height="100%"
@@ -63,27 +63,48 @@
               </Scroller>
             </template>
             <template v-else="">
-              <Scroller
-                lock-x
-                height="100%">
-                <template v-if="item.typeId == 3">
+              <template v-if="item.typeId == 3"> <!-- 产品/详情 -->
+                <Scroller
+                  lock-x
+                  height="100%">
                   <div v-html='$store.state.productDetail'>详情</div>
-                </template>
-                <template v-if="item.typeId == 2">
+                </Scroller>
+              </template>
+              <template v-if="item.typeId == 2"> <!-- 简介 -->
+                <Scroller
+                  lock-x
+                  height="100%">
                   <div v-html='summaryContent'>简介</div>
-                </template>
-                <template v-if="item.typeId == 10">
+                </Scroller>
+              </template>
+              <template v-if="item.typeId == 10"> <!-- 自定义 -->
+                <Scroller
+                  lock-x
+                  height="100%">
                   <div v-html='customContent1'>自定义1</div>
-                </template>
-                <template v-if="item.typeId == 11">
+                </Scroller>
+              </template>
+              <template v-if="item.typeId == 11">
+                <Scroller
+                  lock-x
+                  height="100%">
                   <div v-html='customContent2'>自定义2</div>
-                </template>
-                <template v-if="item.typeId == 12">
+                </Scroller>
+              </template>
+              <template v-if="item.typeId == 12">
+                <Scroller
+                  lock-x
+                  height="100%">
                   <div v-html='customContent3'>自定义3</div>
-                </template>
-              </Scroller>
+                </Scroller>
+              </template>
             </template>
-
+            <LoadMore
+              v-if="!hasOrderList"
+              :show-loading="false"
+              tip="暂无数据"
+              background-color="#fbf9fe">
+            </LoadMore>
           </div>
         </SwiperItem>
       </Swiper>
@@ -129,7 +150,7 @@
       <!-- 悬浮按钮结束 -->
 
       <!-- 视频中的悬浮按钮开始 -->
-      <div class="iconfont icon-home home-button com-flex-center" @click="goHome"></div>
+      <div class="iconfont icon-home home-button com-flex-center" v-if="isShowHome" @click="goHome"></div>
       <div class="live-state com-flex-center" v-if="$store.state.isLive"><img v-lazy="'http://xmt.soukong.cn/newmedia/pages/mobile/MicroWebsite/livebroadcast/img/play.gif'" />直播中</div>
       <div class="iconfont icon-chakan looked com-flex-center">{{ watched }}人</div>
       <!-- 视频中的悬浮按钮结束 -->
@@ -192,7 +213,9 @@ export default {
         menu2: '分享链接',
       },
       orderList: [],
-      watched: ''
+      watched: '',
+      hasOrderList: true, // 是否有成交记录，没有则为false，即不显示成交栏目中的scoller
+      isShowHome: false, //是否显示返回首页按钮
     }
   },
   components: {
@@ -301,7 +324,7 @@ export default {
     },
 
     goHome() { //首页按钮事件
-      window.location.href = "/pages/mobile/MicroWebsite/Skinfirst/WebsiteIframe.html?cmpyId="+ this.$store.state.cmpyId +"&openId=" + this.$store.state.openId
+      window.location.href = this.$store.state.relHost + "/newmedia/pages/mobile/MicroWebsite/Skincommon/WebsiteIframe.html?cmpyId="+ this.$store.state.cmpyId +"&openId=" + this.$store.state.openId
     }
   }
 }

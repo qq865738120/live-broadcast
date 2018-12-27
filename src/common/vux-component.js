@@ -21,7 +21,8 @@ import {
   Popup,
   AlertPlugin,
   ConfirmPlugin,
-  Icon
+  Icon,
+  LoadMore
 } from 'vux'
 Vue.component('Toast', Toast)
 Vue.component('Tab', Tab)
@@ -43,5 +44,6 @@ Vue.component('Popup', Popup)
 Vue.use(AlertPlugin)
 Vue.use(ConfirmPlugin)
 Vue.component('Icon', Icon)
+Vue.component('LoadMore', LoadMore)
 
 Vue.use(ToastPlugin,  {position: 'middle', width: '4rem'})

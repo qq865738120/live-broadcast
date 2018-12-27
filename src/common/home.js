@@ -33,6 +33,9 @@ const _formateTabData = function() {
       context.adBar.showAdBar = true
       context.adBar.adBarId = item.id
     }
+    if (item.switchType == 7 && item.switchStatus == 1) { //返回首页配置
+      context.isShowHome = true
+    }
   }
 }
 
@@ -119,21 +122,31 @@ const init = async function(that) {
   }, true);
   await context.$utils.waitTask(context, 'initFag'); //等待初始化任务完成后继续执行下面代码
   _formateTabData();
-  if (context.showAdBar) { //如果需要显示广告条
-    context.adBar.content = getTabContent(context.adBarId);
+  if (context.adBar.showAdBar) { //如果需要显示广告条
+    getTabContent(context.adBar.adBarId).then(result => {
+      context.adBar.content = result
+    });
   }
   for (let item of context.tabItems) {
     if (item.typeId == 2) { //如果需要获取简介内容
-      context.summaryContent = getTabContent(item.id);
+      getTabContent(item.id).then(result => {
+        context.summaryContent = result
+      });
     }
     if (item.typeId == 10) { //如果需要获取自定义1内容
-      context.customContent1 = getTabContent(item.id);
+      getTabContent(item.id).then(result => {
+        context.customContent1 = result
+      });
     }
     if (item.typeId == 11) { //如果需要获取自定义2内容
-      context.customContent2 = getTabContent(item.id);
+      getTabContent(item.id).then(result => {
+        context.customContent2 = result
+      });
     }
     if (item.typeId == 12) { //如果需要获取自定义3内容
-      context.customContent3 = getTabContent(item.id);
+      getTabContent(item.id).then(result => {
+        context.customContent3 = result
+      });
     }
   }
   if (context.$store.state.productId == "") { //没有绑定产品
@@ -224,6 +237,7 @@ const refreshOrder = function(parameter, isReset) {
         if (isReset) {
           context.orderList = new Array();
         }
+        context.hasOrderList = true;
         for (let item of res.data.rows) {
           context.orderList.push({
             src: !item.headImg ? 'http://q.img.soukong.cn/af.png' : item.headImg,
@@ -233,6 +247,8 @@ const refreshOrder = function(parameter, isReset) {
             money: item.amount
           })
         }
+      } else {
+        context.hasOrderList = false;
       }
       resolve(res.data);
     })
@@ -264,7 +280,8 @@ const getTabContent = function(id) {
     context.$axios.get(context.$store.state.host + context.$store.state.path + '/newmedia/mobile/live/getLiveSwitchCountent.action', { params: { switchId: id } }).then(res => {
       console.log('获取tab内容', res.data);
       if (res.data.status == 100) {
-        resolve(res.data.data.content)
+        let result = res.data.data.length > 0 ? res.data.data[0].content : '';
+        resolve(result)
       }
     })
   })
