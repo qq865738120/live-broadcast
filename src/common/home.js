@@ -36,6 +36,9 @@ const _formateTabData = function() {
     if (item.switchType == 7 && item.switchStatus == 1) { //返回首页配置
       context.isShowHome = true
     }
+    if (item.switchType == 1 && item.switchStatus == 1) { //互动栏配置
+      context.hasInteraction = true
+    }
   }
 }
 
@@ -156,7 +159,11 @@ const init = async function(that) {
     context.isShowBuyButton = true;
     context.inputWidth = '2.5rem'
   }
-  setSwiperHeight('6.78rem', '7.98rem');
+  if (!(context.hasInteraction || context.isShowBuyButton)) {
+    setSwiperHeight('8.01rem', '9.21rem');
+  } else {
+    setSwiperHeight('6.78rem', '7.98rem');
+  }
   // context.$store.commit('switchInitFag'); //将初始化标志置位true
 }
 

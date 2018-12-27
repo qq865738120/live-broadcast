@@ -111,8 +111,8 @@
       <!-- tab内容结束 -->
 
       <!-- 底部菜单开始 -->
-      <div class="bottom-bar">
-        <div class="input">
+      <div class="bottom-bar" v-if="hasInteraction || isShowBuyButton">
+        <div class="input" v-if="hasInteraction">
           <span class="com-over-length" :style="{width: inputWidth}" @click="onInputClick">
             {{ inputWord }}
           </span>
@@ -168,10 +168,13 @@ import SuspensionButton from '@/components/SuspensionButton'
 import OrderListItem from '@/components/OrderListItem'
 import methods from '@/common/home.js'
 
+let isFirstTapInput // 是否是第一次点击底部输入框
+
 export default {
   name: 'Home',
   created() {
     methods.init(this);
+    isFirstTapInput = true;
   },
   data () {
     return {
@@ -216,6 +219,7 @@ export default {
       watched: '',
       hasOrderList: true, // 是否有成交记录，没有则为false，即不显示成交栏目中的scoller
       isShowHome: false, //是否显示返回首页按钮
+      hasInteraction: false, //是否有互动栏
     }
   },
   components: {
@@ -253,6 +257,19 @@ export default {
 
     onInputClick() { //输入框点击事件
       let that = this;
+
+      if (isFirstTapInput) {
+        that.$axios.get(that.$store.state.host + that.$store.state.path + '/newmedia/mobile/wechatuserinfo/getWchatInfoByOpenId.action', { params: { openId: that.$store.state.openId } }).then(res => {
+          console.log('获取用户信息', res.data);
+          isFirstTapInput = false;
+          if(res.data.isSilent == 1) {
+  					var search = encodeURIComponent(window.location.href.split('#')[0]);
+            var search = encodeURIComponent(window.location.href);
+  					window.location.href = 'http://xmt.soukong.cn/wechatservice/sns/sookingBaseAuthorize.action'+"?returnUrl="+search +"&cmpyId="+that.$store.state.cmpyId;
+  				}
+        })
+      }
+
       if (this.$store.state.interactionTime == 0) { //interactionTime为0则表示可以发送消息
         this.$store.commit('switchInteractionInputing');
       } else {
