@@ -117,12 +117,12 @@
             {{ inputWord }}
           </span>
         </div>
-        <XButton action-type="button" :gradients="['#ED7E00', '#ED7E00']" v-if="isShowBuyButton"  @click.native="isShowProductOrder = true">立即购买</XButton>
+        <XButton action-type="button" :gradients="['#ED7E00', '#ED7E00']" v-if="isShowBuyButton"  @click.native="onClickBuyButton">立即购买</XButton>
         <!-- <div class="com-icon-button bottom-bar-right" @click="isShowSheet = true">
           <div class="iconfont icon-fenxiang"></div>
           <span>分享</span>
         </div> -->
-        <Actionsheet v-model="isShowSheet" :menus="sheetMenus" @on-click-menu="onSheet"></Actionsheet>
+        <!-- <Actionsheet v-model="isShowSheet" :menus="sheetMenus" @on-click-menu="onSheet"></Actionsheet> -->
       </div>
       <!-- 底部菜单结束 -->
 
@@ -137,6 +137,10 @@
       </transition>
       <!-- 消息输入框结束 -->
 
+      <!-- 悬浮按钮开始 -->
+      <SuspensionButton></SuspensionButton>
+      <!-- 悬浮按钮结束 -->
+
       <!-- 产品提交订单开始 -->
       <transition
         enter-active-class="animated slideInUp faster"
@@ -144,10 +148,6 @@
         <ProductOrder v-show="isShowProductOrder" @on-close="isShowProductOrder = false"></ProductOrder>
       </transition>
       <!-- 产品提交订单结束 -->
-
-      <!-- 悬浮按钮开始 -->
-      <SuspensionButton></SuspensionButton>
-      <!-- 悬浮按钮结束 -->
 
       <!-- 视频中的悬浮按钮开始 -->
       <div class="iconfont icon-home home-button com-flex-center" v-if="isShowHome" @click="goHome"></div>
@@ -175,6 +175,17 @@ export default {
   created() {
     methods.init(this);
     isFirstTapInput = true;
+  },
+  mounted() {
+    let that = this;
+    let lastBodyResize = document.body.clientHeight // 最后一次窗口高度改变的值
+    window.onresize = function () { // 解决安卓键盘手动隐藏的问题。ios不会生效
+      console.log(lastBodyResize);
+      if (lastBodyResize < 500) {
+        that.$store.commit('setInteractionInputing', false)
+      }
+      lastBodyResize = document.body.clientHeight;
+    }
   },
   data () {
     return {
@@ -211,6 +222,7 @@ export default {
       isShowProductOrder: false, //是否展示产品提交订单组件
       isShowBuyButton: true, //是否显示立即购买按钮
       isShowSheet: false,
+      isShowSuspension: true, //是否展示悬浮按钮
       sheetMenus: {
         menu1: '分享二维码',
         menu2: '分享链接',
@@ -241,6 +253,10 @@ export default {
 
     x5ExitFullscreen() { //安卓机退出x5同层播放触发事件函数
       methods.setSwiperHeight('6.78rem', '7.98rem');
+    },
+
+    onClickBuyButton() {
+      this.isShowProductOrder = true;
     },
 
     async loadingHistoryInteraction() { //下拉更新历史记录事件函数
@@ -341,7 +357,7 @@ export default {
     },
 
     goHome() { //首页按钮事件
-      window.location.href = this.$store.state.relHost + "/newmedia/pages/mobile/MicroWebsite/Skincommon/WebsiteIframe.html?cmpyId="+ this.$store.state.cmpyId +"&openId=" + this.$store.state.openId
+      window.location.href = this.$store.state.relHost + "/newmedia/pages/mobile/MicroWebsite/Skinfirst/WebsiteIframe.html?cmpyId="+ this.$store.state.cmpyId +"&openId=" + this.$store.state.openId
     }
   }
 }

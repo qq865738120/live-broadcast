@@ -102,6 +102,9 @@ export default new Vuex.Store({
     switchInteractionInputing(state) {
       state.isInteractionInputing = !state.isInteractionInputing
     },
+    setInteractionInputing(state, value) {
+      state.isInteractionInputing = value
+    },
     addInteractionTime(state) {
       state.interactionTime++
     },

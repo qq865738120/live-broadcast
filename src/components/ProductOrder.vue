@@ -57,7 +57,7 @@ export default {
           if (item.ApproveStatus == 1) {
             checkerArr.push({
               id: item.SkuID,
-              value: item.SkuName,
+              value: unescape(item.SkuName),
               price: item.Price,
               expressPrice: item.Kdyj,
               autonomyPrice: item.ztyj
@@ -65,7 +65,7 @@ export default {
           }
         }
         this.checkerArr = checkerArr;
-        this.$store.commit('setProductDetail', unescape(data.FullDesc));
+        this.$store.commit('setProductDetail', unescape(data.FullDesc).replace('src', 'data').replace('data-lazyload', 'src'));
       }
     })
   },

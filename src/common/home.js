@@ -39,6 +39,13 @@ const _formateTabData = function() {
     if (item.switchType == 1 && item.switchStatus == 1) { //互动栏配置
       context.hasInteraction = true
     }
+    if ((item.switchType == 3 && item.switchStatus == 1) && (item.switchType == 6 && item.switchStatus == 1)) { //立即购买按钮配置，只有当后台的立即购买开关和产品开关同时打开才显示
+      context.isShowBuyButton = true;
+      context.inputWidth = '2.5rem'
+    } else {
+      context.isShowBuyButton = false;
+      context.inputWidth = '7.4rem';
+    }
   }
 }
 
@@ -99,7 +106,7 @@ const _IntelligenceInteractionTimer = function(hasData) {
         curMaxId: context.$store.state.maxInteractionId,
         rows: 3,
         liveId: context.$store.state.liveTitleId
-      })
+      }, false)
     }
   }, time)
 }
@@ -117,7 +124,7 @@ const init = async function(that) {
     curMaxId: "",
     rows: 4,
     liveId: context.$store.state.liveTitleId
-  });
+  }, true);
   refreshOrder({ //获取成交订单列表
     autoObjectId: that.$store.state.liveTitleId,
     page: context.$store.state.orderPage,
@@ -152,13 +159,6 @@ const init = async function(that) {
       });
     }
   }
-  if (context.$store.state.productId == "") { //没有绑定产品
-    context.isShowBuyButton = false;
-    context.inputWidth = '7.4rem'
-  } else {
-    context.isShowBuyButton = true;
-    context.inputWidth = '2.5rem'
-  }
   if (!(context.hasInteraction || context.isShowBuyButton)) {
     setSwiperHeight('8.01rem', '9.21rem');
   } else {
@@ -178,15 +178,18 @@ const setSwiperHeight = function(height1, height2) {
 /*
 获取互动初始列表，以及列表刷新
 参数：parameter Object 接口所需参数
+     isFirst Boolean 初始化时候调用传true，之后调用传false
 */
-const getInteractionList = function(parameter) {
+const getInteractionList = function(parameter, isFirst) {
   context.$store.commit('switchRequestInteraction');
   return new Promise(resolve => {
     context.$axios.get(context.$store.state.host + context.$store.state.path + '/newmedia/mobile/liveMessage/getLeaveMessageNewPass.action', { params: parameter }).then(res => {
       console.log('互动列表刷新', res.data);
       if (res.data.status == 'Y') {
         context.interactionList.push(..._formateInteractionList(res.data.rows));
-        context.$store.commit('setMinInteractionId', res.data.rows[0].id);
+        if (isFirst) { //如果是第一次调用，则将minInteractionId初始化
+          context.$store.commit('setMinInteractionId', res.data.rows[0].id);
+        }
         context.$store.commit('setMaxInteractionId', res.data.rows[res.data.rows.length - 1].id);
         _IntelligenceInteractionTimer(true);
       } else {
@@ -228,7 +231,7 @@ const refreshInteraction = function() {
     curMaxId: context.$store.state.maxInteractionId,
     rows: 1,
     liveId: context.$store.state.liveTitleId
-  })
+  }, false)
 }
 
 /*

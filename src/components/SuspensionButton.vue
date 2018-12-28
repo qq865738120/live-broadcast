@@ -133,7 +133,7 @@ export default {
       this.$axios.get(that.$store.state.host + that.$store.state.path + '/newmedia/mobile/redpackageinfo/drawRedPackage.action', { params: data }).then(res => {
         console.log('抢红包接口返回', res.data);
         if (res.data.status == 100) { //抢到红包
-          if(res.data.recordStatus == 0) { //第一次抢
+          if(res.data.data.recordStatus == 0) { //第一次抢
             that.redImgIndex = 'success'
             that.amount = res.data.data.amount;
           } else { //重复抢
