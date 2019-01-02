@@ -156,9 +156,8 @@ async function SKweixinRecord(sysCommon,forwardUrl,cmpyId,mediaId,title,desc,img
 	// 		if(data) result=data;
 	// 	}
 	// })
-	await context.$axios.get(context.$store.state.path + configUrl, { params: {'url':search,'cmpyId':cmpyId} }).then(res => {
-		if(res.data) result = res.data;
-	})
+	result = await context.$axios.get(context.$store.state.path + configUrl, { params: {'url':search,'cmpyId':cmpyId} })
+	result = result.data;
 	//注入权限验证配置
 	Vue.prototype.$wx.config({
 	  debug:true,  //true 为开启调试模式
@@ -258,12 +257,8 @@ async function SKinsertReadLog(mediaId,companyId,type){
 	// 		}
 	// 	}
 	// })
-	await context.$axios.post(context.$store.state.host + context.$store.state.path + '/newmedia/mobile/media/insertReadLog.action', context.$qs.stringify(_data)).then(res => {
-		if (res.data) {
-			_obj = res.data
-		}
-	})
-	return _obj;
+	_obj = await context.$axios.post(context.$store.state.host + context.$store.state.path + '/newmedia/mobile/media/insertReadLog.action', context.$qs.stringify(_data))
+	return _obj.data;
 }
 
 /**
@@ -281,10 +276,8 @@ async function SKAjaxgetSysCommonUrl(){
 	// 		if(data) sysCommon=data;
 	// 	}
 	// })
-	await context.$axios.get(context.$store.state.host + context.$store.state.path + '/newmedia/sysCommon/getCommonUrls.action').then(res => {
-		if(res.data) sysCommon = res.data;
-	})
-	return sysCommon;
+	sysCommon = await context.$axios.get(context.$store.state.host + context.$store.state.path + '/newmedia/sysCommon/getCommonUrls.action')
+	return sysCommon.data;
 }
 
 /**
@@ -305,10 +298,8 @@ async function SKAjaxgetSoukongAccountId(openId,cmpyId){
 	// 		if(data) soukongAccountId=data.soukongAccountId;
 	// 	}
 	// })
-	await context.$axios.get(context.$store.state.host + context.$store.state.path + '/newmedia/mobile/wechatAccount/getSoukongAccountId.action', { params: {'openId':openId,'cmpyId':cmpyId} }).then(res => {
-		if(res.data) soukongAccountId = res.data.soukongAccountId;
-	})
-	return soukongAccountId;
+	soukongAccountId = await context.$axios.get(context.$store.state.host + context.$store.state.path + '/newmedia/mobile/wechatAccount/getSoukongAccountId.action', { params: {'openId':openId,'cmpyId':cmpyId} })
+	return soukongAccountId.data.soukongAccountId;
 }
 
 async function doShare() {

@@ -55,6 +55,7 @@
   }
   .header-icon {
     width: 45px;
+    height: 45px;
     border-radius: 50%;
   }
   .left {

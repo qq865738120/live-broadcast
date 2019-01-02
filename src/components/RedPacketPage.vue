@@ -45,12 +45,22 @@ export default {
       this.pay = (this.sum * 1.02).toFixed(2)
     },
     onCountKeyup() {
+      console.log('count', this.sum);
       let count = Math.floor(this.sum / 0.3)
+      console.log('count', count);
       if (this.count > count) this.count = count;
-      else if (this.count <= 0) this.count = 1
-      this.pay = (this.sum * 1.02).toFixed(2);
-      this.payStyle.color = '#ffffff';
-      this.payStyle.background = '#ED7E00';
+      else if (this.count < 0) this.count = 0;
+      else this.count = this.count.toString().replace(/\b(0+)/gi,"")
+      if (this.count != '' && this.count != 0) {
+        this.pay = (this.sum * 1.02).toFixed(2);
+        this.payStyle.color = '#ffffff';
+        this.payStyle.background = '#ED7E00';
+      } else {
+        this.pay = (this.sum * 1.02).toFixed(2);
+        this.payStyle.color = '#FFF5DB';
+        this.payStyle.background = '#FFBE8B';
+      }
+
     },
     onPay() {
       if (this.count != '' && this.sum != '') {
