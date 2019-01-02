@@ -19,6 +19,8 @@ tab栏以及广告条配置项数据格式化并填充界面。
 */
 const _formateTabData = function() {
   const tabItem = [1, 2, 3, 5 ,10 ,11 ,12] //tab栏switchType
+  let onProduct = false; // 是否打产品开关switchType为3
+  let onBuyButton = false; // 是否打产品开关switchType为6
   for (let item of context.$store.state.tabProp) {
     for (let tab of tabItem) { //tab栏配置
       if (item.switchType == tab && item.switchStatus == 1) {
@@ -39,13 +41,19 @@ const _formateTabData = function() {
     if (item.switchType == 1 && item.switchStatus == 1) { //互动栏配置
       context.hasInteraction = true
     }
-    if ((item.switchType == 3 && item.switchStatus == 1) && (item.switchType == 6 && item.switchStatus == 1)) { //立即购买按钮配置，只有当后台的立即购买开关和产品开关同时打开才显示
-      context.isShowBuyButton = true;
-      context.inputWidth = '2.5rem'
-    } else {
-      context.isShowBuyButton = false;
-      context.inputWidth = '7.4rem';
+    if(item.switchType == 3 && item.switchStatus == 1) { //开启产品开关
+      onProduct = true
     }
+    if(item.switchType == 6 && item.switchStatus == 1) { //开启购买按钮开关
+      onBuyButton = true
+    }
+  }
+  if (onProduct && onBuyButton) { //立即购买按钮配置，只有当后台的立即购买开关和产品开关同时打开才显示
+    context.isShowBuyButton = true;
+    context.inputWidth = '2.5rem'
+  } else {
+    context.isShowBuyButton = false;
+    context.inputWidth = '7.4rem';
   }
 }
 

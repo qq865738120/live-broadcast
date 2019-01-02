@@ -82,6 +82,11 @@ export default {
                 let failUrl = escape(that.$store.state.host + path + '#/pay/fail' + par);
                 let url = that.$store.state.relHost + '/newmedia/pages/mobile/MicroWebsite/wechatpay/pay.html?openId='+ that.$store.state.openId +'&cmpyId='+ that.$store.state.cmpyId +'&orderNo='+ that.$store.state.redOrderNo +'&successUrl='+ successUrl +'&failurl=' + failUrl
                 window.location.href = url;
+              } else {
+                that.$vux.toast.show({
+                 text: res.data.msg,
+                 type: 'cancel'
+                })
               }
             })
           }
