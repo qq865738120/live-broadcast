@@ -55,6 +55,7 @@ export default {
     this.$('.vcp-poster-pic').css({
       "position": "absolute",
       "width": "100%",
+      "height": "5.38rem"
     });
     this.$('.vcp-controls-panel').css('top', '4.49rem');
     this.$('.vcp-controls-panel').height(controlsBarH);

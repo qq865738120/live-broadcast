@@ -34,6 +34,7 @@ export default new Vuex.Store({
     productDetail: '没有产品', //产品详情富文本
     tabProp: '', //tab栏配置
     isLive: '', //是否是直播
+    isStart: '', //是否开始播放了，开始之后又分为直播还是回看
     videoSource: '', //视频源
     videoCoverpic: '', //视频首图
     redOrderNo: '', //红包订单
@@ -128,6 +129,9 @@ export default new Vuex.Store({
     },
     setIsLive(state, value) {
       state.isLive = value;
+    },
+    setIsStart(state, value) {
+      state.isStart = value
     },
     setVideoSource(state, value) {
       state.videoSource = value

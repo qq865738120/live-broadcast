@@ -160,7 +160,7 @@ async function SKweixinRecord(sysCommon,forwardUrl,cmpyId,mediaId,title,desc,img
 	result = result.data;
 	//注入权限验证配置
 	Vue.prototype.$wx.config({
-	  debug:true,  //true 为开启调试模式
+	  debug:false,  //true 为开启调试模式
 	  appId:result.appId,
 	  timestamp:result.timestamp,
 	  nonceStr:result.noncestr,
@@ -202,7 +202,17 @@ async function SKweixinRecord(sysCommon,forwardUrl,cmpyId,mediaId,title,desc,img
 				// 	dataType:'json',
 				// 	async:true,
 				// })
-				context.$axios.post(context.$store.state.host + context.$store.state.path + '/newmedia/mobile/forward/to.action', context.$qs.stringify(pageData))
+				Vue.prototype.$.ajax({
+					type:'post',
+					contentType:'application/json; charset=utf-8',
+					url: context.$store.state.host + context.$store.state.path + '/newmedia/mobile/forward/to.action',
+					cache:false,
+					data:(JSON.stringify(pageData)),
+					dataType:'json',
+					async:true,
+				})
+				// context.$axios.defaults.headers.post['Content-Type'] = 'application/json';
+				// context.$axios.post(context.$store.state.host + context.$store.state.path + '/newmedia/mobile/forward/to.action', context.$qs.stringify(pageData))
 	  	}
 		})
 	 	//分享到朋友
@@ -245,19 +255,19 @@ async function SKinsertReadLog(mediaId,companyId,type){
 	if (urlParam.recordId) {
 		_data.recordId=urlParam.recordId;
 	}
-	// Vue.prototype.$.ajax({
-	// 	type:'post',
-	// 	url:'/newmedia/mobile/media/insertReadLog.action',
-	// 	data:_data,
-	// 	dataType:'json',
-	// 	async:false,
-	// 	success:function(data){
-	// 		if(data){
-	// 			_obj=data;
-	// 		}
-	// 	}
-	// })
-	_obj = await context.$axios.post(context.$store.state.host + context.$store.state.path + '/newmedia/mobile/media/insertReadLog.action', context.$qs.stringify(_data))
+	Vue.prototype.$.ajax({
+		type:'post',
+		url:context.$store.state.host + context.$store.state.path + '/newmedia/mobile/media/insertReadLog.action',
+		data:_data,
+		dataType:'json',
+		async:false,
+		success:function(data){
+			if(data){
+				_obj=data;
+			}
+		}
+	})
+	// _obj = await context.$axios.post(context.$store.state.host + context.$store.state.path + '/newmedia/mobile/media/insertReadLog.action', context.$qs.stringify(_data))
 	return _obj.data;
 }
 
@@ -315,6 +325,7 @@ async function doShare() {
 	var	recordId = dataReadLog.recordId;
 	var	readLogId = dataReadLog.readLogId;
 	var level;
+	let parentOpenId = ''
 	let soukongUID = SKAjaxgetSoukongAccountId(urlParam.openId, urlParam.cmpyId);
 	if (soukongUID != 'null') {
 		FUID = soukongUID

@@ -159,7 +159,8 @@ export default {
     onPersonal() { //个人按钮
       clearInterval(timerId);
       let that = this;
-      let redirectUri = "http%3A%2F%2Fxmt.soukong.cn%2Fwechatservice%2Fsns%2FsookingBaseSimpleAuthorize.action%3FreturnUrl%3Dhttp%253A%252F%252Fxmt.soukong.cn%252Fnewmedia%252Fpages%252Fmobile%252FMicroWebsite%252FPersonalCenter%252FpersonelIndex.html%253FcmpyId%253D"+ that.$store.state.cmpyId +"%26cmpyId%3D" + that.$store.state.cmpyId
+      let redirectUri = escape(that.$store.state.relHost) + "%2Fwechatservice%2Fsns%2FsookingBaseSimpleAuthorize.action%3FreturnUrl%3D" + escape(that.$store.state.relHost) + "%252Fnewmedia%252Fpages%252Fmobile%252FMicroWebsite%252FPersonalCenter%252FpersonelIndex.html%253FcmpyId%253D"+ that.$store.state.cmpyId +"%26cmpyId%3D" + that.$store.state.cmpyId
+      console.log('redirectUri',redirectUri);
       let url = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${that.$store.state.appid}&scope=snsapi_base&redirect_uri=${redirectUri}&response_type=code&state=1&connect_redirect=1#wechat_redirect`
       window.location.href = url;
     },

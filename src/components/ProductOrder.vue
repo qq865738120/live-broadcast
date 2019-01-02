@@ -89,7 +89,7 @@ export default {
       console.log(currentCheck);
       let value = state.productId+"|"+currentCheck.id+"|"+goodsName+"|"+currentCheck.value+"|"+currentCheck.price +"|"+this.count+"|"+state.shopNumber+"|"+state.cmpyName+"|"+state.logoUrl+"|"+this.headimg;
       localStorage.setItem("shop" + state.shopNumber + "^" + state.openId, value);
-      window.location.href = "/newmedia/pages/mobile/futureStore/sureOrder.html?ShopNumber="+state.shopNumber+"&openId="+state.openId+"&cmpyId="+state.cmpyId+"&ProductID="+productID;
+      window.location.href = this.$store.state.relHost + "/newmedia/pages/mobile/futureStore/sureOrder.html?ShopNumber="+state.shopNumber+"&openId="+state.openId+"&cmpyId="+state.cmpyId+"&ProductID="+productID+'&sourceType=1&sourceId='+state.liveTitleId;
     }
   }
 }
