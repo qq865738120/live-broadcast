@@ -50,7 +50,7 @@
     <XDialog :dialog-style="{'background-color': 'transparent'}" v-model="showDialogRed" hide-on-blur>
       <div class="red-dialog-div">
         <img class="redImgs" v-show="redImgIndex != 'show'" v-lazy="redImgs[redImgIndex]" @click="onOpenRed" />
-        <span v-show="redImgIndex != 'show'">{{ redImgIndex == 'fail' ? '很遗憾与红包擦肩而过' : (redImgIndex == 'success' ? '恭喜你获得1个包' : '') }}</span>
+        <span v-show="redImgIndex != 'show'">{{ redImgIndex == 'fail' ? '很遗憾与红包擦肩而过' : (redImgIndex == 'success' ? '恭喜你获得1个包' : (redImgIndex == 'repeat' ? '您已领过红包啦~' : '')) }}</span>
         <p class="amount" v-show="redImgIndex == 'show'">￥{{ amount }}</p>
         <img class="redImgs" v-show="redImgIndex == 'show'" v-lazy="redImgs.show" />
         <div v-show="redImgIndex == 'show'" class="continue-button" @click="showDialogRed = false">继续观看直播</div>
@@ -111,7 +111,8 @@ export default {
       redImgs: {
         success: 'http://q.img.soukong.cn/hb_chai_01.png',
         fail: 'http://q.img.soukong.cn/tanc.png',
-        show: 'http://q.img.soukong.cn/open_hb.png'
+        show: 'http://q.img.soukong.cn/open_hb.png',
+        repeat: 'http://q.img.soukong.cn/tanc1.png'
       },
       redImgIndex: 'success',
       showDialogRed: false,
@@ -137,7 +138,7 @@ export default {
             that.redImgIndex = 'success'
             that.amount = res.data.data.amount;
           } else { //重复抢
-            that.redImgIndex = 'fail'
+            that.redImgIndex = 'repeat'
             that.isShowRed = false;
           }
         } else { //没有抢到

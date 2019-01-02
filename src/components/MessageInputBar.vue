@@ -51,6 +51,7 @@ export default {
             type: 'cancel'
           })
         }
+        that.message = '' //将消息栏清空
       })
       this.$store.commit('switchInteractionInputing');
     }

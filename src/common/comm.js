@@ -211,7 +211,7 @@ async function SKweixinRecord(sysCommon,forwardUrl,cmpyId,mediaId,title,desc,img
 	  	title:title,
     	desc:desc,
     	link:forwardUrl,
-    	imgUrl:imgUrl,
+    	imgUrl:imgUrl
 	  })
   })
 }

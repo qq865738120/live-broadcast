@@ -73,9 +73,9 @@ new Vue({
         host: 'http://xmt.soukong.cn', //测试环境
         path: '',
         /* 本地开发使用此配置 */
-        // environment: 'local', //本地环境配为local，线上环境配为online
-        // host: 'http://180.180.180.153', //本地环境
-        // path: '/api',
+        environment: 'local', //本地环境配为local，线上环境配为online
+        host: 'http://180.180.180.159', //本地环境
+        path: '/api',
 
         relHost: 'http://xmt.soukong.cn' //实际真实域名，该配置会影响对接老项目的url跳转
       }
