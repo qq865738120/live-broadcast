@@ -74,7 +74,7 @@
                 <Scroller
                   lock-x
                   height="100%">
-                  <div v-html='summaryContent'>简介</div>
+                  <div class="tap-content" v-html='summaryContent'>简介</div>
                 </Scroller>
               </template>
               <template v-if="item.typeId == 10"> <!-- 自定义 -->
@@ -210,6 +210,7 @@ export default {
         // { id: 1, title: '标题啊标题啊0', time: '1小时', message: '这是一条消息这是一条消息这是一条消息', isMaster: false, icon: 'http://img2.imgtn.bdimg.com/it/u=3197537752,2095789724&fm=26&gp=0.jpg', image: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1544776923060&di=31b3a9fd116050fa5baf6dfbe7231233&imgtype=0&src=http%3A%2F%2Fh.hiphotos.baidu.com%2Fimage%2Fpic%2Fitem%2Ff2deb48f8c5494eec7036a5f20f5e0fe99257e56.jpg' }
       ],
       pullupConfig: { //Scroll组件上拉配置
+        content: '上拉加载',
         downContent: '释放刷新',
         upContent: '上拉加载',
         loadingContent: '加载中...',
@@ -339,6 +340,7 @@ export default {
         rows: 10
       }, true);
       this.$nextTick(() => {
+        console.log(this.$refs.scrollerEvent2[0]);
         this.$refs.scrollerEvent2[0].donePulldown(); //下拉刷新数据请求成功后需调用此函数刷新界面
       })
     },
@@ -352,7 +354,7 @@ export default {
         rows: 10
       }, false);
       this.$nextTick(() => {
-        this.$refs.scrollerEvent2[0].donePullup(); //下拉刷新数据请求成功后需调用此函数刷新界面
+        this.$refs.scrollerEvent2[0].donePullup(); //上拉刷新数据请求成功后需调用此函数刷新界面
       })
     },
 

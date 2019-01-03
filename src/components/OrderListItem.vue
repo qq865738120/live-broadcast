@@ -8,7 +8,6 @@
 </template>
 
 <script>
-// + '购买了x' + count
 export default {
   props: {
     src: String,

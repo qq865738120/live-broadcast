@@ -160,7 +160,7 @@ async function SKweixinRecord(sysCommon,forwardUrl,cmpyId,mediaId,title,desc,img
 	result = result.data;
 	//注入权限验证配置
 	Vue.prototype.$wx.config({
-	  debug:false,  //true 为开启调试模式
+	  debug:true,  //true 为开启调试模式
 	  appId:result.appId,
 	  timestamp:result.timestamp,
 	  nonceStr:result.noncestr,
@@ -220,7 +220,11 @@ async function SKweixinRecord(sysCommon,forwardUrl,cmpyId,mediaId,title,desc,img
 	  	title:title,
     	desc:desc,
     	link:forwardUrl,
-    	imgUrl:imgUrl
+    	imgUrl:imgUrl,
+			success:function(){
+				alert(forwardUrl)
+				console.log('forwardUrl', forwardUrl);
+			}
 	  })
   })
 }
@@ -268,7 +272,7 @@ async function SKinsertReadLog(mediaId,companyId,type){
 		}
 	})
 	// _obj = await context.$axios.post(context.$store.state.host + context.$store.state.path + '/newmedia/mobile/media/insertReadLog.action', context.$qs.stringify(_data))
-	return _obj.data;
+	return _obj;
 }
 
 /**
@@ -352,6 +356,7 @@ async function doShare() {
 	}
 	var redirect_uri_forward=encodeURIComponent(currentUrl);
 	var forwardUrl=sysCommon.silentAuthUrl+'?returnUrl='+redirect_uri_forward+'&cmpyId='+cmpyId;
+
   SKweixinRecord(sysCommon,forwardUrl,cmpyId,urlParam.liveTitleId,title,desc,context.$store.state.logoUrl,'',readLogId,urlParam.communicators,'9')
 }
 

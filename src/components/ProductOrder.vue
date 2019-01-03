@@ -65,7 +65,7 @@ export default {
           }
         }
         this.checkerArr = checkerArr;
-        this.$store.commit('setProductDetail', unescape(data.FullDesc).replace('src', 'data').replace('data-lazyload', 'src'));
+        this.$store.commit('setProductDetail', unescape(data.FullDesc).replace(/src/g, 'data').replace(/data-lazyload/g, 'src').replace(/<img/g, '<img style="width: 100%"'));
       }
     })
   },

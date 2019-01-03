@@ -148,22 +148,22 @@ const init = async function(that) {
   for (let item of context.tabItems) {
     if (item.typeId == 2) { //如果需要获取简介内容
       getTabContent(item.id).then(result => {
-        context.summaryContent = result
+        context.summaryContent = result.replace(/<img/g, '<img style="width: 100%"')
       });
     }
     if (item.typeId == 10) { //如果需要获取自定义1内容
       getTabContent(item.id).then(result => {
-        context.customContent1 = result
+        context.customContent1 = result.replace(/<img/g, '<img style="width: 100%"')
       });
     }
     if (item.typeId == 11) { //如果需要获取自定义2内容
       getTabContent(item.id).then(result => {
-        context.customContent2 = result
+        context.customContent2 = result.replace(/<img/g, '<img style="width: 100%"')
       });
     }
     if (item.typeId == 12) { //如果需要获取自定义3内容
       getTabContent(item.id).then(result => {
-        context.customContent3 = result
+        context.customContent3 = result.replace(/<img/g, '<img style="width: 100%"')
       });
     }
   }
@@ -266,11 +266,11 @@ const refreshOrder = function(parameter, isReset) {
             src: !item.headImg ? 'http://q.img.soukong.cn/af.png' : item.headImg,
             nickName: item.userName,
             time: item.createTime,
-            count: item.quantity,
+            count: item.count,
             money: item.amount
           })
         }
-      } else {
+      } else if (0 == context.orderList.length) {
         context.hasOrderList = false;
       }
       resolve(res.data);

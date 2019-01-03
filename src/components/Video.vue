@@ -31,6 +31,7 @@ export default {
       live: that.$store.state.isLive,
       width: window.screen.width,
       height: window.screen.height - 72,
+      systemFullscreen: true,
       x5_type: 'h5',
       x5_fullscreen: 'true',
       listener: function (msg) {
@@ -131,7 +132,15 @@ export default {
     if (this.$utils.driverType() == 1) {
       this.$('.vcp-controls-panel').css('z-index', '1000');
       this.$('.vcp-fullscreen-toggle').on('click', function() {
-        document.getElementsByTagName('video')[0].webkitEnterFullScreen();
+        // alert('ok')
+        // if (fullScreenSwitch) {
+        //
+        // }
+        // alert(player.fullscreen());
+        // player.fullscreen(false)
+        // document.getElementsByTagName('video')[0].webkitExitFullscreen();
+        // document.getElementsByTagName('video')[0].webkitEnterFullScreen();
+        // document.getElementsByTagName('video')[0].webkitEnterFullScreen()
       })
       that.$('.vcp-player').height(window.screen.height - 142)
       that.$('.vcp-player video').height(window.screen.height - 142)
@@ -178,5 +187,6 @@ export default {
   .content {
     position: relative;
     width: 100%;
+    background-color: #f5f5f5;
   }
 </style>
