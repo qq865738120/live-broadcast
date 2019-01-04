@@ -112,7 +112,9 @@ export default {
           sureFullScreen = false;
         }, 100)
       }
-      that.$data.contentHeight = window.screen.height / 37.5 - 6.7 + 'rem'
+      setTimeout(() => {
+        that.$data.contentHeight = window.screen.height / 37.5 - 6.7 + 'rem'
+      }, 120)
       that.$emit('x5-exit-fullscreen')
     })
 

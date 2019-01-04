@@ -168,9 +168,11 @@ const init = async function(that) {
     }
   }
   if (!(context.hasInteraction || context.isShowBuyButton)) {
-    setSwiperHeight('8.01rem', '9.21rem');
+    // setSwiperHeight('8.01rem', '9.21rem');
+    setSwiperHeight('calc(100% - 2.42rem)', 'calc(100% - 1.22rem)');
   } else {
-    setSwiperHeight('6.78rem', '7.98rem');
+    // setSwiperHeight('6.78rem', '7.98rem');
+    setSwiperHeight('calc(100% - 3.65rem)', 'calc(100% - 2.45rem)');
   }
   // context.$store.commit('switchInitFag'); //将初始化标志置位true
 }
@@ -192,7 +194,7 @@ const getInteractionList = function(parameter, isFirst) {
   context.$store.commit('switchRequestInteraction');
   return new Promise(resolve => {
     context.$axios.get(context.$store.state.host + context.$store.state.path + '/newmedia/mobile/liveMessage/getLeaveMessageNewPass.action', { params: parameter }).then(res => {
-      console.log('互动列表刷新', res.data);
+      // console.log('互动列表刷新', res.data);
       if (res.data.status == 'Y') {
         context.interactionList.push(..._formateInteractionList(res.data.rows));
         let count = 0;

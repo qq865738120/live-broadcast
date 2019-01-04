@@ -248,12 +248,24 @@ export default {
       console.log(index);
     },
 
+    setContentHeight() { //设置中间内容组件高度
+      if (!(this.hasInteraction || this.isShowBuyButton)) {
+        // setSwiperHeight('8.01rem', '9.21rem');
+        methods.setSwiperHeight('calc(100% - 1.92rem)', 'calc(100% - 0.72rem)');
+      } else {
+        // setSwiperHeight('6.78rem', '7.98rem');
+        methods.setSwiperHeight('calc(100% - 3.65rem)', 'calc(100% - 2.45rem)');
+      }
+    },
+
     x5EnterFullscreen() { //安卓机进入x5同层播放触发事件函数
-      methods.setSwiperHeight('7.33rem', '8.53rem');
+      // methods.setSwiperHeight('7.33rem', '8.53rem');
+      this.setContentHeight()
     },
 
     x5ExitFullscreen() { //安卓机退出x5同层播放触发事件函数
-      methods.setSwiperHeight('6.78rem', '7.98rem');
+      // methods.setSwiperHeight('6.78rem', '7.98rem');
+      this.setContentHeight()
     },
 
     onClickBuyButton() {
