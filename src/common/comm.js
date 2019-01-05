@@ -160,7 +160,7 @@ async function SKweixinRecord(sysCommon,forwardUrl,cmpyId,mediaId,title,desc,img
 	result = result.data;
 	//注入权限验证配置
 	Vue.prototype.$wx.config({
-	  debug:true,  //true 为开启调试模式
+	  debug:false,  //true 为开启调试模式
 	  appId:result.appId,
 	  timestamp:result.timestamp,
 	  nonceStr:result.noncestr,
