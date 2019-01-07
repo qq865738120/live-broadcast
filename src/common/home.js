@@ -19,6 +19,8 @@ tab栏以及广告条配置项数据格式化并填充界面。
 */
 const _formateTabData = function() {
   const tabItem = [1, 2, 3, 5 ,10 ,11 ,12] //tab栏switchType
+  let onProduct = false; // 是否打产品开关switchType为3
+  let onBuyButton = false; // 是否打产品开关switchType为6
   for (let item of context.$store.state.tabProp) {
     for (let tab of tabItem) { //tab栏配置
       if (item.switchType == tab && item.switchStatus == 1) {
@@ -36,6 +38,22 @@ const _formateTabData = function() {
     if (item.switchType == 7 && item.switchStatus == 1) { //返回首页配置
       context.isShowHome = true
     }
+    if (item.switchType == 1 && item.switchStatus == 1) { //互动栏配置
+      context.hasInteraction = true
+    }
+    if(item.switchType == 3 && item.switchStatus == 1) { //开启产品开关
+      onProduct = true
+    }
+    if(item.switchType == 6 && item.switchStatus == 1) { //开启购买按钮开关
+      onBuyButton = true
+    }
+  }
+  if (onProduct && onBuyButton) { //立即购买按钮配置，只有当后台的立即购买开关和产品开关同时打开才显示
+    context.isShowBuyButton = true;
+    context.inputWidth = '2.5rem'
+  } else {
+    context.isShowBuyButton = false;
+    context.inputWidth = '7.4rem';
   }
 }
 
@@ -96,7 +114,7 @@ const _IntelligenceInteractionTimer = function(hasData) {
         curMaxId: context.$store.state.maxInteractionId,
         rows: 3,
         liveId: context.$store.state.liveTitleId
-      })
+      }, false)
     }
   }, time)
 }
@@ -114,7 +132,7 @@ const init = async function(that) {
     curMaxId: "",
     rows: 4,
     liveId: context.$store.state.liveTitleId
-  });
+  }, true);
   refreshOrder({ //获取成交订单列表
     autoObjectId: that.$store.state.liveTitleId,
     page: context.$store.state.orderPage,
@@ -130,33 +148,32 @@ const init = async function(that) {
   for (let item of context.tabItems) {
     if (item.typeId == 2) { //如果需要获取简介内容
       getTabContent(item.id).then(result => {
-        context.summaryContent = result
+        context.summaryContent = result.replace(/<img/g, '<img style="width: 100%"')
       });
     }
     if (item.typeId == 10) { //如果需要获取自定义1内容
       getTabContent(item.id).then(result => {
-        context.customContent1 = result
+        context.customContent1 = result.replace(/<img/g, '<img style="width: 100%"')
       });
     }
     if (item.typeId == 11) { //如果需要获取自定义2内容
       getTabContent(item.id).then(result => {
-        context.customContent2 = result
+        context.customContent2 = result.replace(/<img/g, '<img style="width: 100%"')
       });
     }
     if (item.typeId == 12) { //如果需要获取自定义3内容
       getTabContent(item.id).then(result => {
-        context.customContent3 = result
+        context.customContent3 = result.replace(/<img/g, '<img style="width: 100%"')
       });
     }
   }
-  if (context.$store.state.productId == "") { //没有绑定产品
-    context.isShowBuyButton = false;
-    context.inputWidth = '7.4rem'
+  if (!(context.hasInteraction || context.isShowBuyButton)) {
+    // setSwiperHeight('8.01rem', '9.21rem');
+    setSwiperHeight('calc(100% - 2.42rem)', 'calc(100% - 1.22rem)');
   } else {
-    context.isShowBuyButton = true;
-    context.inputWidth = '2.5rem'
+    // setSwiperHeight('6.78rem', '7.98rem');
+    setSwiperHeight('calc(100% - 3.65rem)', 'calc(100% - 2.45rem)');
   }
-  setSwiperHeight('6.78rem', '7.98rem');
   // context.$store.commit('switchInitFag'); //将初始化标志置位true
 }
 
@@ -171,15 +188,23 @@ const setSwiperHeight = function(height1, height2) {
 /*
 获取互动初始列表，以及列表刷新
 参数：parameter Object 接口所需参数
+     isFirst Boolean 初始化时候调用传true，之后调用传false
 */
-const getInteractionList = function(parameter) {
+const getInteractionList = function(parameter, isFirst) {
   context.$store.commit('switchRequestInteraction');
   return new Promise(resolve => {
     context.$axios.get(context.$store.state.host + context.$store.state.path + '/newmedia/mobile/liveMessage/getLeaveMessageNewPass.action', { params: parameter }).then(res => {
-      console.log('互动列表刷新', res.data);
+      // console.log('互动列表刷新', res.data);
       if (res.data.status == 'Y') {
         context.interactionList.push(..._formateInteractionList(res.data.rows));
-        context.$store.commit('setMinInteractionId', res.data.rows[0].id);
+        let count = 0;
+        let id = setInterval(() => {
+          if ( count++ > 2 ) clearInterval(id);
+          context.$refs.scrollerEvent[0].reset(); //下拉刷新数据请求成功后需调用此函数刷新界面
+        }, 1000)
+        if (isFirst) { //如果是第一次调用，则将minInteractionId初始化
+          context.$store.commit('setMinInteractionId', res.data.rows[0].id);
+        }
         context.$store.commit('setMaxInteractionId', res.data.rows[res.data.rows.length - 1].id);
         _IntelligenceInteractionTimer(true);
       } else {
@@ -221,7 +246,7 @@ const refreshInteraction = function() {
     curMaxId: context.$store.state.maxInteractionId,
     rows: 1,
     liveId: context.$store.state.liveTitleId
-  })
+  }, false)
 }
 
 /*
@@ -243,11 +268,11 @@ const refreshOrder = function(parameter, isReset) {
             src: !item.headImg ? 'http://q.img.soukong.cn/af.png' : item.headImg,
             nickName: item.userName,
             time: item.createTime,
-            count: item.quantity,
+            count: item.count,
             money: item.amount
           })
         }
-      } else {
+      } else if (0 == context.orderList.length) {
         context.hasOrderList = false;
       }
       resolve(res.data);

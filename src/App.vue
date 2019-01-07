@@ -24,6 +24,13 @@ export default {
   /* 该方法中完成项目的初始化工作 */
   async created() {
     let that = this
+    console.log("this.$store.state.environment == 'online'",this.$store.state.environment == 'online');
+    if (this.$store.state.environment == 'online') {
+      await this.$axios.get(that.$store.state.path + '/newmedia/sysCommon/getCommonUrls.action').then(res => {
+        this.$store.commit('setHost', res.data.serverHostUrl);
+        this.$store.commit('setRelHost', res.data.serverHostUrl);
+      })
+    }
     this.$axios.get(that.$store.state.host + that.$store.state.path + '/newmedia/mobile/live/addAccessTotal.action', { params: { liveTitleId: that.$store.state.liveTitleId } })
     await this._liveInit()
     await this._getTabProp()
@@ -45,6 +52,7 @@ export default {
           this.$store.commit('setShopNumber', res.data.shopNumber);
           this.$store.commit('setProductId', res.data.row.productId != undefined ? res.data.row.productId : '');
           this.$store.commit('setIsLive', res.data.row.playback == 0 ? true : false);
+          this.$store.commit('setIsStart', res.data.row.status == 0 ? false : true);
           this.$store.commit('setVideoSource', this.$store.state.isLive ? res.data.row.receiveHlsStreamUrl : !res.data.row.otherPalybackUrl ? res.data.row.palybackUrl : res.data.row.otherPalybackUrl);
           this.$store.commit('setVideoCoverpic', res.data.row.logo);
           this.$store.commit('setAccountId', res.data.row.soukongAccountId != undefined ? res.data.row.soukongAccountId : '')

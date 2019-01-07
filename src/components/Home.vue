@@ -74,7 +74,7 @@
                 <Scroller
                   lock-x
                   height="100%">
-                  <div v-html='summaryContent'>简介</div>
+                  <div class="tap-content" v-html='summaryContent'>简介</div>
                 </Scroller>
               </template>
               <template v-if="item.typeId == 10"> <!-- 自定义 -->
@@ -111,18 +111,18 @@
       <!-- tab内容结束 -->
 
       <!-- 底部菜单开始 -->
-      <div class="bottom-bar">
-        <div class="input">
+      <div class="bottom-bar" v-if="hasInteraction || isShowBuyButton">
+        <div class="input" v-if="hasInteraction">
           <span class="com-over-length" :style="{width: inputWidth}" @click="onInputClick">
             {{ inputWord }}
           </span>
         </div>
-        <XButton action-type="button" :gradients="['#ED7E00', '#ED7E00']" v-if="isShowBuyButton"  @click.native="isShowProductOrder = true">立即购买</XButton>
+        <XButton action-type="button" :gradients="['#ED7E00', '#ED7E00']" v-if="isShowBuyButton"  @click.native="onClickBuyButton">立即购买</XButton>
         <!-- <div class="com-icon-button bottom-bar-right" @click="isShowSheet = true">
           <div class="iconfont icon-fenxiang"></div>
           <span>分享</span>
         </div> -->
-        <Actionsheet v-model="isShowSheet" :menus="sheetMenus" @on-click-menu="onSheet"></Actionsheet>
+        <!-- <Actionsheet v-model="isShowSheet" :menus="sheetMenus" @on-click-menu="onSheet"></Actionsheet> -->
       </div>
       <!-- 底部菜单结束 -->
 
@@ -137,6 +137,10 @@
       </transition>
       <!-- 消息输入框结束 -->
 
+      <!-- 悬浮按钮开始 -->
+      <SuspensionButton></SuspensionButton>
+      <!-- 悬浮按钮结束 -->
+
       <!-- 产品提交订单开始 -->
       <transition
         enter-active-class="animated slideInUp faster"
@@ -145,13 +149,9 @@
       </transition>
       <!-- 产品提交订单结束 -->
 
-      <!-- 悬浮按钮开始 -->
-      <SuspensionButton></SuspensionButton>
-      <!-- 悬浮按钮结束 -->
-
       <!-- 视频中的悬浮按钮开始 -->
       <div class="iconfont icon-home home-button com-flex-center" v-if="isShowHome" @click="goHome"></div>
-      <div class="live-state com-flex-center" v-if="$store.state.isLive"><img v-lazy="'http://xmt.soukong.cn/newmedia/pages/mobile/MicroWebsite/livebroadcast/img/play.gif'" />直播中</div>
+      <div class="live-state com-flex-center"><img v-lazy="'http://xmt.soukong.cn/newmedia/pages/mobile/MicroWebsite/livebroadcast/img/play.gif'" />{{ $store.state.isStart ? ($store.state.isLive ? '直播中' : '回看') : '未开始' }}</div>
       <div class="iconfont icon-chakan looked com-flex-center">{{ watched }}人</div>
       <!-- 视频中的悬浮按钮结束 -->
 
@@ -168,10 +168,24 @@ import SuspensionButton from '@/components/SuspensionButton'
 import OrderListItem from '@/components/OrderListItem'
 import methods from '@/common/home.js'
 
+let isFirstTapInput // 是否是第一次点击底部输入框
+
 export default {
   name: 'Home',
   created() {
     methods.init(this);
+    isFirstTapInput = true;
+  },
+  mounted() {
+    let that = this;
+    let lastBodyResize = document.body.clientHeight // 最后一次窗口高度改变的值
+    window.onresize = function () { // 解决安卓键盘手动隐藏的问题。ios不会生效
+      console.log(lastBodyResize);
+      if (lastBodyResize < 500) {
+        that.$store.commit('setInteractionInputing', false)
+      }
+      lastBodyResize = document.body.clientHeight;
+    }
   },
   data () {
     return {
@@ -196,6 +210,7 @@ export default {
         // { id: 1, title: '标题啊标题啊0', time: '1小时', message: '这是一条消息这是一条消息这是一条消息', isMaster: false, icon: 'http://img2.imgtn.bdimg.com/it/u=3197537752,2095789724&fm=26&gp=0.jpg', image: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1544776923060&di=31b3a9fd116050fa5baf6dfbe7231233&imgtype=0&src=http%3A%2F%2Fh.hiphotos.baidu.com%2Fimage%2Fpic%2Fitem%2Ff2deb48f8c5494eec7036a5f20f5e0fe99257e56.jpg' }
       ],
       pullupConfig: { //Scroll组件上拉配置
+        content: '上拉加载',
         downContent: '释放刷新',
         upContent: '上拉加载',
         loadingContent: '加载中...',
@@ -208,6 +223,7 @@ export default {
       isShowProductOrder: false, //是否展示产品提交订单组件
       isShowBuyButton: true, //是否显示立即购买按钮
       isShowSheet: false,
+      isShowSuspension: true, //是否展示悬浮按钮
       sheetMenus: {
         menu1: '分享二维码',
         menu2: '分享链接',
@@ -216,6 +232,7 @@ export default {
       watched: '',
       hasOrderList: true, // 是否有成交记录，没有则为false，即不显示成交栏目中的scoller
       isShowHome: false, //是否显示返回首页按钮
+      hasInteraction: false, //是否有互动栏
     }
   },
   components: {
@@ -231,12 +248,28 @@ export default {
       console.log(index);
     },
 
+    setContentHeight() { //设置中间内容组件高度
+      if (!(this.hasInteraction || this.isShowBuyButton)) {
+        // setSwiperHeight('8.01rem', '9.21rem');
+        methods.setSwiperHeight('calc(100% - 1.92rem)', 'calc(100% - 0.72rem)');
+      } else {
+        // setSwiperHeight('6.78rem', '7.98rem');
+        methods.setSwiperHeight('calc(100% - 3.65rem)', 'calc(100% - 2.45rem)');
+      }
+    },
+
     x5EnterFullscreen() { //安卓机进入x5同层播放触发事件函数
-      methods.setSwiperHeight('7.33rem', '8.53rem');
+      // methods.setSwiperHeight('7.33rem', '8.53rem');
+      this.setContentHeight()
     },
 
     x5ExitFullscreen() { //安卓机退出x5同层播放触发事件函数
-      methods.setSwiperHeight('6.78rem', '7.98rem');
+      // methods.setSwiperHeight('6.78rem', '7.98rem');
+      this.setContentHeight()
+    },
+
+    onClickBuyButton() {
+      this.isShowProductOrder = true;
     },
 
     async loadingHistoryInteraction() { //下拉更新历史记录事件函数
@@ -253,6 +286,19 @@ export default {
 
     onInputClick() { //输入框点击事件
       let that = this;
+
+      if (isFirstTapInput) {
+        that.$axios.get(that.$store.state.host + that.$store.state.path + '/newmedia/mobile/wechatuserinfo/getWchatInfoByOpenId.action', { params: { openId: that.$store.state.openId } }).then(res => {
+          console.log('获取用户信息', res.data);
+          isFirstTapInput = false;
+          if(res.data.isSilent == 1) {
+  					var search = encodeURIComponent(window.location.href.split('#')[0]);
+            var search = encodeURIComponent(window.location.href);
+  					window.location.href = 'http://xmt.soukong.cn/wechatservice/sns/sookingBaseAuthorize.action'+"?returnUrl="+search +"&cmpyId="+that.$store.state.cmpyId;
+  				}
+        })
+      }
+
       if (this.$store.state.interactionTime == 0) { //interactionTime为0则表示可以发送消息
         this.$store.commit('switchInteractionInputing');
       } else {
@@ -306,6 +352,7 @@ export default {
         rows: 10
       }, true);
       this.$nextTick(() => {
+        console.log(this.$refs.scrollerEvent2[0]);
         this.$refs.scrollerEvent2[0].donePulldown(); //下拉刷新数据请求成功后需调用此函数刷新界面
       })
     },
@@ -319,12 +366,12 @@ export default {
         rows: 10
       }, false);
       this.$nextTick(() => {
-        this.$refs.scrollerEvent2[0].donePullup(); //下拉刷新数据请求成功后需调用此函数刷新界面
+        this.$refs.scrollerEvent2[0].donePullup(); //上拉刷新数据请求成功后需调用此函数刷新界面
       })
     },
 
     goHome() { //首页按钮事件
-      window.location.href = this.$store.state.relHost + "/newmedia/pages/mobile/MicroWebsite/Skincommon/WebsiteIframe.html?cmpyId="+ this.$store.state.cmpyId +"&openId=" + this.$store.state.openId
+      window.location.href = this.$store.state.relHost + "/newmedia/pages/mobile/MicroWebsite/Skinfirst/WebsiteIframe.html?cmpyId="+ this.$store.state.cmpyId +"&openId=" + this.$store.state.openId
     }
   }
 }

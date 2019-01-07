@@ -57,7 +57,7 @@ export default {
           if (item.ApproveStatus == 1) {
             checkerArr.push({
               id: item.SkuID,
-              value: item.SkuName,
+              value: unescape(item.SkuName),
               price: item.Price,
               expressPrice: item.Kdyj,
               autonomyPrice: item.ztyj
@@ -65,7 +65,7 @@ export default {
           }
         }
         this.checkerArr = checkerArr;
-        this.$store.commit('setProductDetail', unescape(data.FullDesc));
+        this.$store.commit('setProductDetail', unescape(data.FullDesc).replace(/src/g, 'data').replace(/data-lazyload/g, 'src').replace(/<img/g, '<img style="width: 100%"'));
       }
     })
   },
@@ -89,7 +89,7 @@ export default {
       console.log(currentCheck);
       let value = state.productId+"|"+currentCheck.id+"|"+goodsName+"|"+currentCheck.value+"|"+currentCheck.price +"|"+this.count+"|"+state.shopNumber+"|"+state.cmpyName+"|"+state.logoUrl+"|"+this.headimg;
       localStorage.setItem("shop" + state.shopNumber + "^" + state.openId, value);
-      window.location.href = "/newmedia/pages/mobile/futureStore/sureOrder.html?ShopNumber="+state.shopNumber+"&openId="+state.openId+"&cmpyId="+state.cmpyId+"&ProductID="+productID;
+      window.location.href = this.$store.state.relHost + "/newmedia/pages/mobile/futureStore/sureOrder.html?ShopNumber="+state.shopNumber+"&openId="+state.openId+"&cmpyId="+state.cmpyId+"&ProductID="+productID+'&sourceType=1&sourceId='+state.liveTitleId;
     }
   }
 }

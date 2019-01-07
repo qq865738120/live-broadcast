@@ -49,8 +49,9 @@
 
     <XDialog :dialog-style="{'background-color': 'transparent'}" v-model="showDialogRed" hide-on-blur>
       <div class="red-dialog-div">
-        <img class="redImgs" v-show="redImgIndex != 'show'" v-lazy="redImgs[redImgIndex]" @click="onOpenRed" />
-        <span v-show="redImgIndex != 'show'">{{ redImgIndex == 'fail' ? '很遗憾与红包擦肩而过' : (redImgIndex == 'success' ? '恭喜你获得1个包' : '') }}</span>
+        <img class="redImgs" v-show="redImgIndex != 'show' && redImgIndex != 'repeat'" v-lazy="redImgs[redImgIndex]" @click="onOpenRed" />
+        <img class="redImgs" v-show="redImgIndex == 'repeat'" v-lazy="redImgs.repeat" />
+        <span v-show="redImgIndex != 'show'">{{ redImgIndex == 'fail' ? '很遗憾与红包擦肩而过' : (redImgIndex == 'success' ? '恭喜你获得1个包' : (redImgIndex == 'repeat' ? '您已领过红包啦~' : '')) }}</span>
         <p class="amount" v-show="redImgIndex == 'show'">￥{{ amount }}</p>
         <img class="redImgs" v-show="redImgIndex == 'show'" v-lazy="redImgs.show" />
         <div v-show="redImgIndex == 'show'" class="continue-button" @click="showDialogRed = false">继续观看直播</div>
@@ -74,7 +75,7 @@ export default {
     })
     timerId = setInterval(() => {
       that.$axios.get(that.$store.state.host + that.$store.state.path + '/newmedia/mobile/live/getRedActivity.action', { params: { liveTitelId: that.$store.state.liveTitleId } }).then((res) => {
-        console.log('获取红包', res.data);
+        // console.log('获取红包', res.data);
         if (res.data.status == '100') {
            that.isShowRed = res.data.data.exist == 0 ? false : true;
            if (res.data.data.exist != 0) {
@@ -111,7 +112,8 @@ export default {
       redImgs: {
         success: 'http://q.img.soukong.cn/hb_chai_01.png',
         fail: 'http://q.img.soukong.cn/tanc.png',
-        show: 'http://q.img.soukong.cn/open_hb.png'
+        show: 'http://q.img.soukong.cn/open_hb.png',
+        repeat: 'http://q.img.soukong.cn/tanc1.png'
       },
       redImgIndex: 'success',
       showDialogRed: false,
@@ -133,11 +135,11 @@ export default {
       this.$axios.get(that.$store.state.host + that.$store.state.path + '/newmedia/mobile/redpackageinfo/drawRedPackage.action', { params: data }).then(res => {
         console.log('抢红包接口返回', res.data);
         if (res.data.status == 100) { //抢到红包
-          if(res.data.recordStatus == 0) { //第一次抢
+          if(res.data.data.recordStatus == 0) { //第一次抢
             that.redImgIndex = 'success'
             that.amount = res.data.data.amount;
           } else { //重复抢
-            that.redImgIndex = 'fail'
+            that.redImgIndex = 'repeat'
             that.isShowRed = false;
           }
         } else { //没有抢到
@@ -158,9 +160,12 @@ export default {
     onPersonal() { //个人按钮
       clearInterval(timerId);
       let that = this;
-      let redirectUri = "http%3A%2F%2Fxmt.soukong.cn%2Fwechatservice%2Fsns%2FsookingBaseSimpleAuthorize.action%3FreturnUrl%3Dhttp%253A%252F%252Fxmt.soukong.cn%252Fnewmedia%252Fpages%252Fmobile%252FMicroWebsite%252FPersonalCenter%252FpersonelIndex.html%253FcmpyId%253D"+ that.$store.state.cmpyId +"%26cmpyId%3D" + that.$store.state.cmpyId
-      let url = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${that.$store.state.appid}&scope=snsapi_base&redirect_uri=${redirectUri}&response_type=code&state=1&connect_redirect=1#wechat_redirect`
-      window.location.href = url;
+      // let redirectUri = escape(that.$store.state.relHost) + "%2Fwechatservice%2Fsns%2FsookingBaseSimpleAuthorize.action%3FreturnUrl%3D" + escape(that.$store.state.relHost) + "%252Fnewmedia%252Fpages%252Fmobile%252FMicroWebsite%252FPersonalCenter%252FpersonelIndex.html%253FcmpyId%253D"+ that.$store.state.cmpyId +"%26cmpyId%3D" + that.$store.state.cmpyId
+      let redirectUri = that.$store.state.relHost + "/wechatservice/sns/sookingBaseSimpleAuthorize.action?returnUrl=" + escape(that.$store.state.relHost + '/newmedia/pages/mobile/MicroWebsite/PersonalCenter/personelIndex.html?cmpyId=' + that.$store.state.cmpyId) +"&cmpyId=" + that.$store.state.cmpyId
+      console.log('redirectUri',redirectUri);
+      // let url = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${that.$store.state.appid}&scope=snsapi_base&redirect_uri=${redirectUri}&response_type=code&state=1&connect_redirect=1#wechat_redirect`
+      // window.location.href = url;
+      window.location.href = redirectUri;
     },
     onFollow() { //关注按钮
       this.showDialog = !this.showDialog;

@@ -1,7 +1,7 @@
 <template>
   <div class="root">
       <div>
-        <img class="header-icon" v-if="icon != undefined && icon != ''" v-lazy="icon"></XImg>
+        <img class="header-icon" v-if="icon != undefined && icon != ''" :src="icon"></XImg>
       </div>
       <div class="left">
         <div class="left-top">
@@ -9,7 +9,7 @@
           <span>{{ time | dropLast }}</span>
         </div>
         <p>{{ message }}</p>
-        <img class="message-img" v-if="image != undefined && image != ''" v-lazy="image"></img>
+        <img class="message-img" v-if="image != undefined && image != ''" :src="image"></img>
       </div>
   </div>
 </template>
@@ -55,6 +55,7 @@
   }
   .header-icon {
     width: 45px;
+    height: 45px;
     border-radius: 50%;
   }
   .left {

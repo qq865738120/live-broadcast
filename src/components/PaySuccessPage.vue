@@ -15,13 +15,9 @@ export default {
       that.count--
     }, 1000);
     setTimeout(() => {
-      let par = '?liveTitleId='+ that.$store.state.liveTitleId +'&openId='+ that.$store.state.openId +'&cmpyId=' + that.$store.state.cmpyId;
+      let par = '?titleId='+ that.$store.state.liveTitleId +'&openId='+ that.$store.state.openId +'&cmpyId=' + that.$store.state.cmpyId;
       clearInterval(id);
-      if (that.$store.state.environment == 'local') {
-        window.location.href = '/#/?' + par;
-      } else if (that.$store.state.environment == 'online') {
-        window.location.href = '/newmedia/pages/mobile/MicroWebsite/livebroadcast/index.html#/?' + par;
-      }
+      window.location.href = this.$store.state.relHost + '/newmedia/pages/mobile/MicroWebsite/livebroadcast/livebroadCasttable.html' + par;
     }, 5000)
   },
   data() {

@@ -45,12 +45,22 @@ export default {
       this.pay = (this.sum * 1.02).toFixed(2)
     },
     onCountKeyup() {
+      console.log('count', this.sum);
       let count = Math.floor(this.sum / 0.3)
+      console.log('count', count);
       if (this.count > count) this.count = count;
-      else if (this.count <= 0) this.count = 1
-      this.pay = (this.sum * 1.02).toFixed(2);
-      this.payStyle.color = '#ffffff';
-      this.payStyle.background = '#ED7E00';
+      else if (this.count < 0) this.count = 0;
+      else this.count = this.count.toString().replace(/\b(0+)/gi,"")
+      if (this.count != '' && this.count != 0) {
+        this.pay = (this.sum * 1.02).toFixed(2);
+        this.payStyle.color = '#ffffff';
+        this.payStyle.background = '#ED7E00';
+      } else {
+        this.pay = (this.sum * 1.02).toFixed(2);
+        this.payStyle.color = '#FFF5DB';
+        this.payStyle.background = '#FFBE8B';
+      }
+
     },
     onPay() {
       if (this.count != '' && this.sum != '') {
@@ -82,6 +92,11 @@ export default {
                 let failUrl = escape(that.$store.state.host + path + '#/pay/fail' + par);
                 let url = that.$store.state.relHost + '/newmedia/pages/mobile/MicroWebsite/wechatpay/pay.html?openId='+ that.$store.state.openId +'&cmpyId='+ that.$store.state.cmpyId +'&orderNo='+ that.$store.state.redOrderNo +'&successUrl='+ successUrl +'&failurl=' + failUrl
                 window.location.href = url;
+              } else {
+                that.$vux.toast.show({
+                 text: res.data.msg,
+                 type: 'cancel'
+                })
               }
             })
           }

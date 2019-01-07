@@ -156,12 +156,11 @@ async function SKweixinRecord(sysCommon,forwardUrl,cmpyId,mediaId,title,desc,img
 	// 		if(data) result=data;
 	// 	}
 	// })
-	await context.$axios.get(context.$store.state.path + configUrl, { params: {'url':search,'cmpyId':cmpyId} }).then(res => {
-		if(res.data) result = res.data;
-	})
+	result = await context.$axios.get(context.$store.state.path + configUrl, { params: {'url':search,'cmpyId':cmpyId} })
+	result = result.data;
 	//注入权限验证配置
 	Vue.prototype.$wx.config({
-	  debug:true,  //true 为开启调试模式
+	  debug:false,  //true 为开启调试模式
 	  appId:result.appId,
 	  timestamp:result.timestamp,
 	  nonceStr:result.noncestr,
@@ -203,7 +202,17 @@ async function SKweixinRecord(sysCommon,forwardUrl,cmpyId,mediaId,title,desc,img
 				// 	dataType:'json',
 				// 	async:true,
 				// })
-				context.$axios.post(context.$store.state.host + context.$store.state.path + '/newmedia/mobile/forward/to.action', context.$qs.stringify(pageData))
+				Vue.prototype.$.ajax({
+					type:'post',
+					contentType:'application/json; charset=utf-8',
+					url: context.$store.state.host + context.$store.state.path + '/newmedia/mobile/forward/to.action',
+					cache:false,
+					data:(JSON.stringify(pageData)),
+					dataType:'json',
+					async:true,
+				})
+				// context.$axios.defaults.headers.post['Content-Type'] = 'application/json';
+				// context.$axios.post(context.$store.state.host + context.$store.state.path + '/newmedia/mobile/forward/to.action', context.$qs.stringify(pageData))
 	  	}
 		})
 	 	//分享到朋友
@@ -212,6 +221,10 @@ async function SKweixinRecord(sysCommon,forwardUrl,cmpyId,mediaId,title,desc,img
     	desc:desc,
     	link:forwardUrl,
     	imgUrl:imgUrl,
+			success:function(){
+				alert(forwardUrl)
+				console.log('forwardUrl', forwardUrl);
+			}
 	  })
   })
 }
@@ -246,23 +259,19 @@ async function SKinsertReadLog(mediaId,companyId,type){
 	if (urlParam.recordId) {
 		_data.recordId=urlParam.recordId;
 	}
-	// Vue.prototype.$.ajax({
-	// 	type:'post',
-	// 	url:'/newmedia/mobile/media/insertReadLog.action',
-	// 	data:_data,
-	// 	dataType:'json',
-	// 	async:false,
-	// 	success:function(data){
-	// 		if(data){
-	// 			_obj=data;
-	// 		}
-	// 	}
-	// })
-	await context.$axios.post(context.$store.state.host + context.$store.state.path + '/newmedia/mobile/media/insertReadLog.action', context.$qs.stringify(_data)).then(res => {
-		if (res.data) {
-			_obj = res.data
+	Vue.prototype.$.ajax({
+		type:'post',
+		url:context.$store.state.host + context.$store.state.path + '/newmedia/mobile/media/insertReadLog.action',
+		data:_data,
+		dataType:'json',
+		async:false,
+		success:function(data){
+			if(data){
+				_obj=data;
+			}
 		}
 	})
+	// _obj = await context.$axios.post(context.$store.state.host + context.$store.state.path + '/newmedia/mobile/media/insertReadLog.action', context.$qs.stringify(_data))
 	return _obj;
 }
 
@@ -281,10 +290,8 @@ async function SKAjaxgetSysCommonUrl(){
 	// 		if(data) sysCommon=data;
 	// 	}
 	// })
-	await context.$axios.get(context.$store.state.host + context.$store.state.path + '/newmedia/sysCommon/getCommonUrls.action').then(res => {
-		if(res.data) sysCommon = res.data;
-	})
-	return sysCommon;
+	sysCommon = await context.$axios.get(context.$store.state.host + context.$store.state.path + '/newmedia/sysCommon/getCommonUrls.action')
+	return sysCommon.data;
 }
 
 /**
@@ -305,10 +312,8 @@ async function SKAjaxgetSoukongAccountId(openId,cmpyId){
 	// 		if(data) soukongAccountId=data.soukongAccountId;
 	// 	}
 	// })
-	await context.$axios.get(context.$store.state.host + context.$store.state.path + '/newmedia/mobile/wechatAccount/getSoukongAccountId.action', { params: {'openId':openId,'cmpyId':cmpyId} }).then(res => {
-		if(res.data) soukongAccountId = res.data.soukongAccountId;
-	})
-	return soukongAccountId;
+	soukongAccountId = await context.$axios.get(context.$store.state.host + context.$store.state.path + '/newmedia/mobile/wechatAccount/getSoukongAccountId.action', { params: {'openId':openId,'cmpyId':cmpyId} })
+	return soukongAccountId.data.soukongAccountId;
 }
 
 async function doShare() {
@@ -324,6 +329,7 @@ async function doShare() {
 	var	recordId = dataReadLog.recordId;
 	var	readLogId = dataReadLog.readLogId;
 	var level;
+	let parentOpenId = ''
 	let soukongUID = SKAjaxgetSoukongAccountId(urlParam.openId, urlParam.cmpyId);
 	if (soukongUID != 'null') {
 		FUID = soukongUID
@@ -350,6 +356,7 @@ async function doShare() {
 	}
 	var redirect_uri_forward=encodeURIComponent(currentUrl);
 	var forwardUrl=sysCommon.silentAuthUrl+'?returnUrl='+redirect_uri_forward+'&cmpyId='+cmpyId;
+
   SKweixinRecord(sysCommon,forwardUrl,cmpyId,urlParam.liveTitleId,title,desc,context.$store.state.logoUrl,'',readLogId,urlParam.communicators,'9')
 }
 

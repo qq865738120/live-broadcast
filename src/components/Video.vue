@@ -31,6 +31,7 @@ export default {
       live: that.$store.state.isLive,
       width: window.screen.width,
       height: window.screen.height - 72,
+      systemFullscreen: true,
       x5_type: 'h5',
       x5_fullscreen: 'true',
       listener: function (msg) {
@@ -55,6 +56,7 @@ export default {
     this.$('.vcp-poster-pic').css({
       "position": "absolute",
       "width": "100%",
+      "height": "5.38rem"
     });
     this.$('.vcp-controls-panel').css('top', '4.49rem');
     this.$('.vcp-controls-panel').height(controlsBarH);
@@ -110,7 +112,9 @@ export default {
           sureFullScreen = false;
         }, 100)
       }
-      that.$data.contentHeight = window.screen.height / 37.5 - 6.7 + 'rem'
+      setTimeout(() => {
+        that.$data.contentHeight = window.screen.height / 37.5 - 6.7 + 'rem'
+      }, 120)
       that.$emit('x5-exit-fullscreen')
     })
 
@@ -130,7 +134,15 @@ export default {
     if (this.$utils.driverType() == 1) {
       this.$('.vcp-controls-panel').css('z-index', '1000');
       this.$('.vcp-fullscreen-toggle').on('click', function() {
-        document.getElementsByTagName('video')[0].webkitEnterFullScreen();
+        // alert('ok')
+        // if (fullScreenSwitch) {
+        //
+        // }
+        // alert(player.fullscreen());
+        // player.fullscreen(false)
+        // document.getElementsByTagName('video')[0].webkitExitFullscreen();
+        // document.getElementsByTagName('video')[0].webkitEnterFullScreen();
+        // document.getElementsByTagName('video')[0].webkitEnterFullScreen()
       })
       that.$('.vcp-player').height(window.screen.height - 142)
       that.$('.vcp-player video').height(window.screen.height - 142)
@@ -177,5 +189,6 @@ export default {
   .content {
     position: relative;
     width: 100%;
+    background-color: #f5f5f5;
   }
 </style>

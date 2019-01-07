@@ -8,7 +8,6 @@
 </template>
 
 <script>
-// + '购买了x' + count
 export default {
   props: {
     src: String,
@@ -39,7 +38,7 @@ export default {
       } else if(dateArr[5] > 0) {
         str = dateArr[5] + '秒前'
       }
-      return str + '购买了' + this.count + "件商品"
+      return str + '购买了 x' + this.count
     }
   },
   methods: {
