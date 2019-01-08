@@ -169,10 +169,10 @@ const init = async function(that) {
   }
   if (!(context.hasInteraction || context.isShowBuyButton)) {
     // setSwiperHeight('8.01rem', '9.21rem');
-    setSwiperHeight('calc(100% - 2.42rem)', 'calc(100% - 1.22rem)');
+    setSwiperHeight('calc(100% - 2.58rem)', 'calc(100% - 1.38rem)');
   } else {
     // setSwiperHeight('6.78rem', '7.98rem');
-    setSwiperHeight('calc(100% - 3.65rem)', 'calc(100% - 2.45rem)');
+    setSwiperHeight('calc(100% - 3.81rem)', 'calc(100% - 2.61rem)');
   }
   // context.$store.commit('switchInitFag'); //将初始化标志置位true
 }

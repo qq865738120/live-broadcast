@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="root">
     <Video :title="$store.state.title" @x5-enter-fullscreen="x5EnterFullscreen" @x5-exit-fullscreen="x5ExitFullscreen">
       <!-- 广告条开始 -->
       <div class="ad-bar" v-if="adBar.showAdBar">
@@ -8,7 +8,7 @@
       <!-- 广告条结束 -->
 
       <!-- tab栏开始 -->
-      <Tab :line-width=2 active-color='#ED7E00' v-model="itemIndex">
+      <Tab class="tab" :line-width=2 active-color='#ED7E00' v-model="itemIndex">
         <TabItem :selected="itemIndex === item.id" v-for="(item, index) in tabItems" @click="itemIndex = item.id" :key="item.id">{{item.text}}</TabItem>
       </Tab>
       <!-- tab栏结束 -->
@@ -131,7 +131,7 @@
         enter-active-class="animated slideInUp faster"
         leave-active-class="animated slideOutDown faster"
         @enter="messageInputEnter">
-        <div class="message-input" v-show="$store.state.isInteractionInputing">
+        <div class="message-input" :style="{ bottom: '200' }" v-show="$store.state.isInteractionInputing">
           <MessageInputBar ref="messageBar"></MessageInputBar>
         </div>
       </transition>
@@ -141,14 +141,6 @@
       <SuspensionButton></SuspensionButton>
       <!-- 悬浮按钮结束 -->
 
-      <!-- 产品提交订单开始 -->
-      <transition
-        enter-active-class="animated slideInUp faster"
-        leave-active-class="animated slideOutDown faster">
-        <ProductOrder v-show="isShowProductOrder" @on-close="isShowProductOrder = false"></ProductOrder>
-      </transition>
-      <!-- 产品提交订单结束 -->
-
       <!-- 视频中的悬浮按钮开始 -->
       <div class="iconfont icon-home home-button com-flex-center" v-if="isShowHome" @click="goHome"></div>
       <div class="live-state com-flex-center"><img v-lazy="'http://xmt.soukong.cn/newmedia/pages/mobile/MicroWebsite/livebroadcast/img/play.gif'" />{{ $store.state.isStart ? ($store.state.isLive ? '直播中' : '回看') : '未开始' }}</div>
@@ -156,6 +148,13 @@
       <!-- 视频中的悬浮按钮结束 -->
 
     </Video>
+    <!-- 产品提交订单开始 -->
+    <transition
+      enter-active-class="animated slideInUp faster"
+      leave-active-class="animated slideOutDown faster">
+      <ProductOrder v-show="isShowProductOrder" @on-close="isShowProductOrder = false"></ProductOrder>
+    </transition>
+    <!-- 产品提交订单结束 -->
   </div>
 </template>
 
@@ -184,6 +183,7 @@ export default {
       if (lastBodyResize < 500) {
         that.$store.commit('setInteractionInputing', false)
       }
+      console.log('input', document.body.clientHeight - lastBodyResize);
       lastBodyResize = document.body.clientHeight;
     }
   },
@@ -251,10 +251,10 @@ export default {
     setContentHeight() { //设置中间内容组件高度
       if (!(this.hasInteraction || this.isShowBuyButton)) {
         // setSwiperHeight('8.01rem', '9.21rem');
-        methods.setSwiperHeight('calc(100% - 1.92rem)', 'calc(100% - 0.72rem)');
+        methods.setSwiperHeight('calc(100% - 2.08rem)', 'calc(100% - 0.88rem)');
       } else {
         // setSwiperHeight('6.78rem', '7.98rem');
-        methods.setSwiperHeight('calc(100% - 3.65rem)', 'calc(100% - 2.45rem)');
+        methods.setSwiperHeight('calc(100% - 3.81rem)', 'calc(100% - 2.61rem)');
       }
     },
 
@@ -389,6 +389,9 @@ export default {
     width: 100%;
     height: calc(100% + 2px);
   }
+  .tab {
+    margin-bottom: 6px;
+  }
   .bottom-bar {
     width: 100%;
     height: 46px;
@@ -408,8 +411,8 @@ export default {
   .input span {
     padding: 4px 8px;
     border: 1px solid $--color-E9;
-    border-radius: 10px;
-    line-height: 19px;
+    border-radius: 6px;
+    line-height: 25px;
   }
   .bottom-bar-right {
     width: 120px;
@@ -431,7 +434,7 @@ export default {
   }
   .message-input {
     position: absolute;
-    top: 0px;
+    bottom: 256px;
     width: 100%;
   }
   .home-button {

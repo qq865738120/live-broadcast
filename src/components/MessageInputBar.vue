@@ -1,8 +1,9 @@
 <template>
   <div class="root">
-    <Group class="group">
+    <!-- <Group class="group">
       <XInput v-model="message" class="input" title=""  :show-clear="false" ref="inputEvent"></XInput>
-    </Group>
+    </Group> -->
+    <input v-model="message" class="input" ref="inputEvent"/>
     <div class="bottom">
       <XButton class="button" mini :gradients="['#AFA79F', '#AFA79F']" @click.native="onCancle">取消</XButton>
       <XButton class="button" mini :gradients="['#ED7E00', '#ED7E00']" @click.native="onSend">发送</XButton>
@@ -16,6 +17,7 @@ import methods from '@/common/home.js'
 export default {
   mounted() {
     this.$('.weui-cells').css('margin-top', '0');
+    this.$('.input').removeClass('weui-cell:before');
   },
   data() {
     return {
@@ -74,8 +76,25 @@ export default {
 }
 .input {
   background-color: $--color-F5;
+  border-radius: 10px;
+  height: 36px;
+  margin: 20px 14px 12px 14px;
+  width: 343px;
+  border: 0;
+  font-size: 18px;
 }
 .bottom {
-  margin: 0 14px 14px 14px;
+  margin: 0 14px 14px 20px;
+  width: 159px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  margin-left: 16px;
 }
 </style>

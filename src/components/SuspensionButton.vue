@@ -75,7 +75,7 @@ export default {
     })
     timerId = setInterval(() => {
       that.$axios.get(that.$store.state.host + that.$store.state.path + '/newmedia/mobile/live/getRedActivity.action', { params: { liveTitelId: that.$store.state.liveTitleId } }).then((res) => {
-        // console.log('获取红包', res.data);
+        console.log('获取红包', res.data);
         if (res.data.status == '100') {
            that.isShowRed = res.data.data.exist == 0 ? false : true;
            if (res.data.data.exist != 0) {

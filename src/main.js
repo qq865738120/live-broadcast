@@ -74,14 +74,14 @@ new Vue({
         path: '/api',
 
         /* 打包的话使用此配置 */
-        // environment: 'online', //本地环境配为local，线上环境配为online
-        // host: 'http://xmt.soukong.cn', //测试环境
-        // path: '',
+        environment: 'online', //本地环境配为local，线上环境配为online
+        host: 'http://xmt.soukong.cn', //测试环境
+        path: '',
 
         /* 生产环境使用此配置 */
-        environment: 'online', //本地环境配为local，线上环境配为online
+        // environment: 'online', //本地环境配为local，线上环境配为online
         // host: 'http://fm.soukong.cn', //正式环境
-        path: '',
+        // path: '',
 
         // relHost: 'http://xmt.soukong.cn', //实际真实域名，该配置会影响对接老项目的url跳转
         // relHost: 'http://fm.soukong.cn' //实际真实域名，该配置会影响对接老项目的url跳转
