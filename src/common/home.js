@@ -200,7 +200,9 @@ const getInteractionList = function(parameter, isFirst) {
         let count = 0;
         let id = setInterval(() => {
           if ( count++ > 2 ) clearInterval(id);
-          context.$refs.scrollerEvent[0].reset(); //下拉刷新数据请求成功后需调用此函数刷新界面
+          if ( context.$refs != undefined && context.$refs.scrollerEvent != undefined ) {
+            context.$refs.scrollerEvent[0].reset(); //下拉刷新数据请求成功后需调用此函数刷新界面
+          }
         }, 1000)
         if (isFirst) { //如果是第一次调用，则将minInteractionId初始化
           context.$store.commit('setMinInteractionId', res.data.rows[0].id);

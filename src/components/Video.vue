@@ -12,11 +12,22 @@
 var tcPlayer = require('@/common/tc-player.js');
 
 const controlsBarH = '0.9rem';
+let fontSize = 37.5; // html元素font-size属性，音响所有页面的rem单位大小
+let videoHeight = 5.38 // 视频高度，单位rem
 
 export default {
   name: 'Video',
   async mounted() {
     const that = this;
+    fontSize = parseInt(this.$('html').css('font-size').replace('px', ''));
+    videoHeight = window.screen.width / (fontSize * 16) * 9
+    console.log('screen.availHeight', window.screen.availHeight);
+    console.log('screen.height', window.screen.height);
+    console.log('window', window.innerHeight);
+
+    that.$data.contentHeight =  window.innerHeight / fontSize - videoHeight + 'rem';
+    console.log('videoHeight',videoHeight);
+    console.log('fontSize', fontSize);
     let sureFullScreen = false; //是否需要进入全屏逻辑处理
     let isPlay = false; //是否开始播放
     await this.$utils.waitTask(this, 'initFag'); //等待初始化任务完成后继续执行下面代码
@@ -30,7 +41,7 @@ export default {
       autoplay: false,
       live: that.$store.state.isLive,
       width: window.screen.width,
-      height: window.screen.height - 72,
+      height: window.screen.height,
       systemFullscreen: true,
       x5_type: 'h5',
       x5_fullscreen: 'true',
@@ -46,6 +57,8 @@ export default {
       }
     })
 
+    this.$('#video-container').height(videoHeight + 'rem')
+
     /*
     播放器控件样式
     */
@@ -56,9 +69,9 @@ export default {
     this.$('.vcp-poster-pic').css({
       "position": "absolute",
       "width": "100%",
-      "height": "5.38rem"
+      "height": videoHeight + 'rem'
     });
-    this.$('.vcp-controls-panel').css('top', '4.49rem');
+    this.$('.vcp-controls-panel').css('top', videoHeight - 0.9 + 'rem');
     this.$('.vcp-controls-panel').height(controlsBarH);
     this.$('.vcp-playtoggle').width(controlsBarH);
     this.$('.vcp-timelabel').css({
@@ -74,7 +87,7 @@ export default {
       "top": "1.86rem"
     })
     this.$('.vcp-bigplay').css({
-      'height': '5.38rem',
+      'height': videoHeight + 'rem',
       'opacity': '1',
       'font-size': '64px',
       'color': '#f5f5f5',
@@ -92,7 +105,7 @@ export default {
       that.$('.vcp-controls-panel').css('z-index', '1000');
       that.$('.vcp-player').height(window.screen.height)
       that.$('.vcp-player video').height(window.screen.height)
-      that.$data.contentHeight = window.screen.height / 37.5 - 6.05 + 'rem'
+      that.$data.contentHeight = window.innerHeight / fontSize - videoHeight + 0.8 + 'rem'
       that.$emit('x5-enter-fullscreen')
     })
     this.$('.vcp-player video').on("x5videoexitfullscreen", function() {
@@ -113,8 +126,8 @@ export default {
         }, 100)
       }
       setTimeout(() => {
-        that.$data.contentHeight = window.screen.height / 37.5 - 6.7 + 'rem'
-      }, 120)
+        that.$data.contentHeight = window.innerHeight / fontSize - videoHeight + 0.2 + 'rem'
+      }, 140)
       that.$emit('x5-exit-fullscreen')
     })
 
@@ -156,14 +169,8 @@ export default {
       showTitle: false,
       contentTop: '',
       videoBoxHeight: '5.4rem',
-      contentHeight: window.screen.height / 37.5 - 6.7 + 'rem'
+      contentHeight: ''
     }
-  },
-  components: {
-
-  },
-  methods: {
-
   }
 }
 </script>
@@ -172,7 +179,7 @@ export default {
 <style scoped>
   #video-container {
     width: 100%;
-    height: 5.4rem;
+    /* height: 5.4rem; */
   }
   .title-bar {
     position: absolute;

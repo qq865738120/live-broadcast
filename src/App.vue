@@ -9,7 +9,7 @@
       enter-active-class="animated zoomIn faster"
       leave-active-class="animated zoomOut faster">
       <div class="com-flex-center loading" v-show="!$store.state.initFag">
-        <GridLoader color="#ED7E00" size="10"></GridLoader>
+        <GridLoader color="#ED7E00" :size="10"></GridLoader>
         <p>loading...</p>
       </div>
     </transition>

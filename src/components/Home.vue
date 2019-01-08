@@ -65,37 +65,42 @@
             <template v-else="">
               <template v-if="item.typeId == 3"> <!-- 产品/详情 -->
                 <Scroller
+                  style="background: white"
                   lock-x
                   height="100%">
-                  <div v-html='$store.state.productDetail'>详情</div>
+                  <div style="margin: 0 9px" v-html='$store.state.productDetail'>详情</div>
                 </Scroller>
               </template>
               <template v-if="item.typeId == 2"> <!-- 简介 -->
                 <Scroller
+                  style="background: white"
                   lock-x
                   height="100%">
-                  <div class="tap-content" v-html='summaryContent'>简介</div>
+                  <div class="tap-content" style="margin: 0 9px" v-html='summaryContent'>简介</div>
                 </Scroller>
               </template>
               <template v-if="item.typeId == 10"> <!-- 自定义 -->
                 <Scroller
+                  style="background: white"
                   lock-x
                   height="100%">
-                  <div v-html='customContent1'>自定义1</div>
+                  <div  style="margin: 0 9px" v-html='customContent1'>自定义1</div>
                 </Scroller>
               </template>
               <template v-if="item.typeId == 11">
                 <Scroller
+                  style="background: white"
                   lock-x
                   height="100%">
-                  <div v-html='customContent2'>自定义2</div>
+                  <div style="margin: 0 9px" v-html='customContent2'>自定义2</div>
                 </Scroller>
               </template>
               <template v-if="item.typeId == 12">
                 <Scroller
+                  style="background: white"
                   lock-x
                   height="100%">
-                  <div v-html='customContent3'>自定义3</div>
+                  <div style="margin: 0 9px" v-html='customContent3'>自定义3</div>
                 </Scroller>
               </template>
             </template>
@@ -131,7 +136,7 @@
         enter-active-class="animated slideInUp faster"
         leave-active-class="animated slideOutDown faster"
         @enter="messageInputEnter">
-        <div class="message-input" :style="{ bottom: '200' }" v-show="$store.state.isInteractionInputing">
+        <div class="message-input" :style="{ bottom: inputButtom, height: inputHeight }" v-show="$store.state.isInteractionInputing">
           <MessageInputBar ref="messageBar"></MessageInputBar>
         </div>
       </transition>
@@ -168,6 +173,7 @@ import OrderListItem from '@/components/OrderListItem'
 import methods from '@/common/home.js'
 
 let isFirstTapInput // 是否是第一次点击底部输入框
+let fontSize = 37.5 // html元素font-size属性
 
 export default {
   name: 'Home',
@@ -177,6 +183,7 @@ export default {
   },
   mounted() {
     let that = this;
+    fontSize = parseInt(this.$('html').css('font-size').replace('px', ''));
     let lastBodyResize = document.body.clientHeight // 最后一次窗口高度改变的值
     window.onresize = function () { // 解决安卓键盘手动隐藏的问题。ios不会生效
       console.log(lastBodyResize);
@@ -185,6 +192,19 @@ export default {
       }
       console.log('input', document.body.clientHeight - lastBodyResize);
       lastBodyResize = document.body.clientHeight;
+    }
+
+    if (this.$utils.driverType() == 1) { // 兼容ios键盘输入
+      that.$data.inputButtom = 0;
+      that.$data.inputHeight = (126 / fontSize) + 'rem';
+      document.body.addEventListener('focusin', () => {
+          //软键盘弹出的事件处理
+          // that.$('body').scrollTop(0)
+      })
+      document.body.addEventListener('focusout', () => {
+           //软键盘收起的事件处理
+           that.$('body').scrollTop(0)
+       })
     }
   },
   data () {
@@ -233,6 +253,8 @@ export default {
       hasOrderList: true, // 是否有成交记录，没有则为false，即不显示成交栏目中的scoller
       isShowHome: false, //是否显示返回首页按钮
       hasInteraction: false, //是否有互动栏
+      inputButtom: (220 / fontSize) + 'rem',
+      inputHeight: (150 / fontSize) + 'rem'
     }
   },
   components: {
@@ -436,6 +458,7 @@ export default {
     position: absolute;
     bottom: 256px;
     width: 100%;
+    background-color: white;
   }
   .home-button {
     width: 32px;

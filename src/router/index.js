@@ -1,14 +1,14 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-// import Home from '@/components/Home'
-// import RedPacketPage from '@/components/RedPacketPage'
-// import PaySuccessPage from '@/components/PaySuccessPage'
-// import PayFailPage from '@/components/PayFailPage'
+import Home from '@/components/Home'
+import RedPacketPage from '@/components/RedPacketPage'
+import PaySuccessPage from '@/components/PaySuccessPage'
+import PayFailPage from '@/components/PayFailPage'
 
-const Home = () => import('@/components/Home')
-const RedPacketPage = () => import('@/components/RedPacketPage')
-const PaySuccessPage = () => import('@/components/PaySuccessPage')
-const PayFailPage = () => import('@/components/PayFailPage')
+// const Home = () => import('@/components/Home')
+// const RedPacketPage = () => import('@/components/RedPacketPage')
+// const PaySuccessPage = () => import('@/components/PaySuccessPage')
+// const PayFailPage = () => import('@/components/PayFailPage')
 
 Vue.use(Router)
 

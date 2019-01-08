@@ -5,8 +5,8 @@
     </Group> -->
     <input v-model="message" class="input" ref="inputEvent"/>
     <div class="bottom">
-      <XButton class="button" mini :gradients="['#AFA79F', '#AFA79F']" @click.native="onCancle">取消</XButton>
-      <XButton class="button" mini :gradients="['#ED7E00', '#ED7E00']" @click.native="onSend">发送</XButton>
+      <XButton class="button" mini style="margin: 0; margin-left: 16px;" :gradients="['#AFA79F', '#AFA79F']" @click.native="onCancle">取消</XButton>
+      <XButton class="button" mini style="margin: 0; margin-left: 16px;" :gradients="['#ED7E00', '#ED7E00']" @click.native="onSend">发送</XButton>
     </div>
   </div>
 </template>
@@ -94,7 +94,5 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0;
-  margin-left: 16px;
 }
 </style>

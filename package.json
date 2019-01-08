@@ -13,6 +13,7 @@
     "@saeris/vue-spinners": "^1.0.8",
     "animate.css": "^3.7.0",
     "axios": "^0.18.0",
+    "babel-polyfill": "^6.26.0",
     "jquery": "^3.3.1",
     "less": "^3.9.0",
     "less-loader": "^4.1.0",
