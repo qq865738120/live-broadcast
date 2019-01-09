@@ -1,10 +1,10 @@
 <template>
   <div id="app">
-    <!-- <transition
+    <transition
       enter-active-class="animated zoomIn faster"
-      leave-active-class="animated zoomOut faster"> -->
+      leave-active-class="animated zoomOut faster">
       <router-view  v-show="$store.state.initFag"/>
-    <!-- </transition> -->
+    </transition>
     <transition
       enter-active-class="animated zoomIn faster"
       leave-active-class="animated zoomOut faster">

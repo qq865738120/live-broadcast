@@ -24,8 +24,11 @@ export default {
     console.log('screen.availHeight', window.screen.availHeight);
     console.log('screen.height', window.screen.height);
     console.log('window', window.innerHeight);
-
-    that.$data.contentHeight =  window.innerHeight / fontSize - videoHeight + 'rem';
+    if (this.$utils.driverType() == 0) {
+      that.$data.contentHeight =  window.innerHeight / fontSize - videoHeight + 'rem';
+    } else if (this.$utils.driverType() == 1) {
+      that.$data.contentHeight =  window.innerHeight / fontSize - videoHeight - 0.2 + 'rem';
+    }
     console.log('videoHeight',videoHeight);
     console.log('fontSize', fontSize);
     let sureFullScreen = false; //是否需要进入全屏逻辑处理

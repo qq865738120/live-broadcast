@@ -91,5 +91,8 @@ function resolve (dir) {
 
 
 module.exports = vuxLoader.merge(webpackConfig, {
-  plugins: ['vux-ui']
+  plugins: [
+    {name: 'vux-ui'},
+    {name: 'less-theme', path: 'src/assets/style/theme.less'}
+  ]
 })

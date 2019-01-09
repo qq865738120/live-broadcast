@@ -3,7 +3,7 @@
     <!-- <Group class="group">
       <XInput v-model="message" class="input" title=""  :show-clear="false" ref="inputEvent"></XInput>
     </Group> -->
-    <input v-model="message" class="input" ref="inputEvent"/>
+    <input v-model="message" class="input" placeholder="点击输入内容" ref="inputEvent"/>
     <div class="bottom">
       <XButton class="button" mini style="margin: 0; margin-left: 16px;" :gradients="['#AFA79F', '#AFA79F']" @click.native="onCancle">取消</XButton>
       <XButton class="button" mini style="margin: 0; margin-left: 16px;" :gradients="['#ED7E00', '#ED7E00']" @click.native="onSend">发送</XButton>
@@ -79,9 +79,10 @@ export default {
   border-radius: 10px;
   height: 36px;
   margin: 20px 14px 12px 14px;
-  width: 343px;
+  width: 313px;
   border: 0;
   font-size: 18px;
+  padding: 0 15px;
 }
 .bottom {
   margin: 0 14px 14px 20px;

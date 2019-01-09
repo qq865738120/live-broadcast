@@ -222,7 +222,6 @@ async function SKweixinRecord(sysCommon,forwardUrl,cmpyId,mediaId,title,desc,img
     	link:forwardUrl,
     	imgUrl:imgUrl,
 			success:function(){
-				alert(forwardUrl)
 				console.log('forwardUrl', forwardUrl);
 			}
 	  })
@@ -357,7 +356,7 @@ async function doShare() {
 	var redirect_uri_forward=encodeURIComponent(currentUrl);
 	var forwardUrl=sysCommon.silentAuthUrl+'?returnUrl='+redirect_uri_forward+'&cmpyId='+cmpyId;
 
-  SKweixinRecord(sysCommon,forwardUrl,cmpyId,urlParam.liveTitleId,title,desc,context.$store.state.logoUrl,'',readLogId,urlParam.communicators,'9')
+  SKweixinRecord(sysCommon,forwardUrl,cmpyId,urlParam.liveTitleId,title,desc,context.$store.state.videoCoverpic,'',readLogId,urlParam.communicators,'9')
 }
 
 export default {

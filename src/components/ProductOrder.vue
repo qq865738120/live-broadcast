@@ -162,6 +162,9 @@ export default {
   flex-direction: column;
   justify-content: space-between;
 }
+.content>div {
+  margin-top: 15px;
+}
 .content>div>p:first-child {
   font-size: 16px;
   color: $--color-666;

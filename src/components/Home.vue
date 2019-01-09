@@ -9,7 +9,7 @@
 
       <!-- tab栏开始 -->
       <Tab class="tab" :line-width=2 active-color='#ED7E00' v-model="itemIndex">
-        <TabItem :selected="itemIndex === item.id" v-for="(item, index) in tabItems" @click="itemIndex = item.id" :key="item.id">{{item.text}}</TabItem>
+        <TabItem :selected="index == itemIndex" v-for="(item, index) in tabItems" @click="itemIndex = item.id" :key="item.id">{{item.text}}</TabItem>
       </Tab>
       <!-- tab栏结束 -->
 
@@ -206,10 +206,19 @@ export default {
            that.$('body').scrollTop(0)
        })
     }
+    if (this.hasOrderList) { //成交栏相关bug修复
+      setTimeout(() => {
+        this.$('.scroll-pull-container').css({
+          'line-height': '60px',
+          'color': '#999'
+        })
+        that.itemIndex = 0;
+      }, 700)
+    }
   },
   data () {
     return {
-      itemIndex: 0, //tab栏索引，切换tabItem
+      itemIndex: 1, //tab栏索引，切换tabItem
       tabItems: [ //tab栏列表项数据
         // { id: 0, typeId: '1', text: '互动' },
         // { id: 1, typeId: '3', text: '详情' },
@@ -231,14 +240,17 @@ export default {
       ],
       pullupConfig: { //Scroll组件上拉配置
         content: '上拉加载',
+        height: 60,
         downContent: '释放刷新',
         upContent: '上拉加载',
         loadingContent: '加载中...',
+        clsPrefix: 'scroll-pull-'
       },
       pulldownConfig: { //Scroll组件上拉配置
         downContent: '下拉加载',
         upContent: '释放刷新',
         loadingContent: '加载中...',
+        clsPrefix: 'scroll-pull-'
       },
       isShowProductOrder: false, //是否展示产品提交订单组件
       isShowBuyButton: true, //是否显示立即购买按钮
@@ -253,8 +265,8 @@ export default {
       hasOrderList: true, // 是否有成交记录，没有则为false，即不显示成交栏目中的scoller
       isShowHome: false, //是否显示返回首页按钮
       hasInteraction: false, //是否有互动栏
-      inputButtom: (220 / fontSize) + 'rem',
-      inputHeight: (150 / fontSize) + 'rem'
+      inputButtom: (200 / fontSize) + 'rem',
+      inputHeight: (160 / fontSize) + 'rem'
     }
   },
   components: {
@@ -374,7 +386,6 @@ export default {
         rows: 10
       }, true);
       this.$nextTick(() => {
-        console.log(this.$refs.scrollerEvent2[0]);
         this.$refs.scrollerEvent2[0].donePulldown(); //下拉刷新数据请求成功后需调用此函数刷新界面
       })
     },
@@ -389,6 +400,7 @@ export default {
       }, false);
       this.$nextTick(() => {
         this.$refs.scrollerEvent2[0].donePullup(); //上拉刷新数据请求成功后需调用此函数刷新界面
+        this.$refs.scrollerEvent2[0].reset(0);
       })
     },
 

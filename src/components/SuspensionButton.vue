@@ -33,9 +33,9 @@
       <p class="tip">长按关注公众号，了解更多信息。</p>
     </XDialog>
 
-    <Popup v-model="showPopup">
+    <Popup v-model="showPopup" style="border-radius: 15px 15px 0 0;">
       <div class="popup-head">
-        <div class="iconfont icon-plus-close" @click="showPopup = !showPopup"></div>
+        <div class="iconfont icon-plus-close colse-icon" @click="showPopup = !showPopup"></div>
       </div>
       <p class="popup-title">申请信息</p>
       <div class="popup-input com-flex-center iconfont icon-yonghu">
@@ -229,6 +229,10 @@ export default {
 .base-botton {
   background-color: $--main-color;
 }
+.colse-icon {
+  color: $--color-666;
+  font-size: 20px !important;
+}
 .root {
   position: absolute;
   bottom: 80px;
@@ -262,6 +266,7 @@ export default {
   font-size: 21px;
   color: $--color-333;
   text-align: center;
+  margin-block-start: 0;
 }
 .popup-input {
   width: 300px;
