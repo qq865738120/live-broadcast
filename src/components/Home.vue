@@ -301,8 +301,19 @@ export default {
       this.setContentHeight()
     },
 
-    onClickBuyButton() {
+    onClickBuyButton() { //购买按钮点击事件
+      let that = this;
       this.isShowProductOrder = true;
+      let parameter = {
+        openId: that.$store.state.openId,
+        cmpyId: that.$store.state.cmpyId
+      }
+      this.$axios.get(this.$store.state.host + this.$store.state.path + '/newmedia/mobile/wechatAccount/getSoukongAccountIdByOpenIdAndCmpyId.action', { params: parameter }).then(res => {
+        console.log('判断是否注册', res.data);
+        if (res.data.soukongAccountId == '') { //没有注册
+          that.$router.push('register')
+        }
+      })
     },
 
     async loadingHistoryInteraction() { //下拉更新历史记录事件函数
@@ -327,7 +338,7 @@ export default {
           if(res.data.isSilent == 1) {
   					var search = encodeURIComponent(window.location.href.split('#')[0]);
             var search = encodeURIComponent(window.location.href);
-  					window.location.href = 'http://xmt.soukong.cn/wechatservice/sns/sookingBaseAuthorize.action'+"?returnUrl="+search +"&cmpyId="+that.$store.state.cmpyId;
+  					window.location.href = that.$store.state.relHost + '/wechatservice/sns/sookingBaseAuthorize.action'+"?returnUrl="+search +"&cmpyId="+that.$store.state.cmpyId;
   				}
         })
       }

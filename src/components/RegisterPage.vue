@@ -1,0 +1,118 @@
+<template>
+  <div class="root">
+    <div class="content">
+      <div class="input-bar iconfont icon-shouji">
+        <input v-model="phone" type="number" placeholder="请输入手机号"/>
+      </div>
+      <div class="second-row">
+        <div class="input-bar iconfont icon-ecurityCode">
+          <input v-model="code" type="number" placeholder="请输入验证码"/>
+        </div>
+        <div class="button com-flex-center" :style="payStyle" @click="onSend">发送</div>
+      </div>
+      <div class="pay-button com-flex-center" :style="payStyle" @click="onRegister">注册</div>
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  name: 'RegisterPage',
+  mounted() {
+    this.$store.commit('setTitle', '注册')
+  },
+  data() {
+    return {
+      phone: '',
+      code: '',
+      payStyle: ''
+    }
+  },
+  methods: {
+    onRegister() {
+
+    },
+    onSend() {
+      let that = this;
+      if (this.phone == '') {
+        this.$vux.toast.show({
+          text: '手机号不能为空',
+          type: 'text'
+        })
+        return;
+      }
+      this.$axios.get(this.$store.state.host + this.$store.state.path + '/newmedia/mobile/smsClient/sendSmsCode.action', { params: { phoneNo: this.phone } }).then(res => {
+        console.log('发送验证码', res.data);
+        if (res.data.soukongAccountId == '') { //没有注册
+          that.$router.push('register')
+        }
+      })
+    }
+  }
+}
+</script>
+
+<style scoped lang="scss">
+@import '@/assets/style/common.scss';
+
+.root {
+  padding-top: 60px;
+  width: 100%;
+  height: calc(100% - 60px);
+}
+.content {
+  width: 285px;
+  margin: 0 15px 0px 15px;
+  padding: 30px;
+  box-shadow: 0px 0px 29px 0px $--color-ccc;
+}
+.input-bar {
+  font-size: 16px;
+  border-radius: 50px;
+  border: 1px solid $--color-ddd;
+  padding: 6px 10px;
+  margin-bottom: 20px;
+  color: $--color-4F;
+}
+.input-bar input {
+  border: 0;
+  background-color: rgba(0,0,0,0);
+  width: 230px;
+  margin-left: 10px;
+}
+.second-row {
+  display: flex;
+  justify-content: space-between;
+}
+.second-row .input-bar {
+  width: 150px;
+}
+.second-row .input-bar input {
+  width: 120px;
+}
+.button {
+  height: 30px;
+  width: 100px;
+  color: $--main-color;
+  border: 1px solid $--main-color;
+  border-radius: 15px;
+}
+.tip {
+  color: $--color-999;
+  font-size: 13px;
+  line-height: 18px;
+  margin-top: 50px;
+  width: 244px;
+  padding-left: 20px;
+  text-align: center;
+}
+.pay-button {
+  width: 230px;
+  height: 44px;
+  color: white;
+  background-color: $--main-color;
+  border-radius: 22px;
+  font-size: 16px;
+  margin: 10px auto;
+}
+</style>
