@@ -136,7 +136,7 @@
         enter-active-class="animated slideInUp faster"
         leave-active-class="animated slideOutDown faster"
         @enter="messageInputEnter">
-        <div class="message-input" :style="{ bottom: inputButtom, height: inputHeight }" v-show="$store.state.isInteractionInputing">
+        <div class="message-input" :style="{ bottom: inputButtom }" v-show="$store.state.isInteractionInputing">
           <MessageInputBar ref="messageBar"></MessageInputBar>
         </div>
       </transition>
@@ -184,19 +184,19 @@ export default {
   mounted() {
     let that = this;
     fontSize = parseInt(this.$('html').css('font-size').replace('px', ''));
-    let lastBodyResize = document.body.clientHeight // 最后一次窗口高度改变的值
+    let lastBodyResize = window.innerHeight // 最后一次窗口高度改变的值
     window.onresize = function () { // 解决安卓键盘手动隐藏的问题。ios不会生效
       console.log(lastBodyResize);
       if (lastBodyResize < 500) {
         that.$store.commit('setInteractionInputing', false)
       }
-      console.log('input', document.body.clientHeight - lastBodyResize);
-      lastBodyResize = document.body.clientHeight;
+      console.log('input', window.innerHeight - lastBodyResize);
+      that.$data.inputButtom = Math.abs(window.innerHeight - lastBodyResize) + 'px'
+      lastBodyResize = window.innerHeight;
     }
 
     if (this.$utils.driverType() == 1) { // 兼容ios键盘输入
       that.$data.inputButtom = 0;
-      that.$data.inputHeight = (126 / fontSize) + 'rem';
       document.body.addEventListener('focusin', () => {
           //软键盘弹出的事件处理
           // that.$('body').scrollTop(0)
@@ -266,7 +266,6 @@ export default {
       isShowHome: false, //是否显示返回首页按钮
       hasInteraction: false, //是否有互动栏
       inputButtom: (200 / fontSize) + 'rem',
-      inputHeight: (160 / fontSize) + 'rem'
     }
   },
   components: {
