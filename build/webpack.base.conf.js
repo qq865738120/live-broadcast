@@ -24,6 +24,7 @@ const webpackConfig = {
     }
   },
   module: {
+    noParse: [/ali-oss/],
     rules: [
       {
         test: /.sass$/,

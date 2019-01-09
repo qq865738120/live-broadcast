@@ -118,7 +118,14 @@ const webpackConfig = merge(baseWebpackConfig, {
         ignore: ['.*']
       }
     ])
-  ]
+  ],
+
+  externals: {
+    'vue': 'Vue',
+    'vue-lazyload': 'VueLazyload',
+    'jquery': '$',
+    'axios': 'axios'
+  }
 })
 
 if (config.build.productionGzip) {
