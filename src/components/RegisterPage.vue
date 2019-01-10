@@ -30,7 +30,51 @@ export default {
   },
   methods: {
     onRegister() {
-
+      let that = this
+      if (this.phone == '') {
+        this.$vux.toast.show({
+          text: '手机号不能为空',
+          type: 'text'
+        })
+        return
+      }
+      if (this.code == '') {
+        this.$vux.toast.show({
+          text: '验证码不能为空',
+          type: 'text'
+        })
+        return
+      }
+      this.$axios.get(this.$store.state.host + this.$store.state.path + '/newmedia/mobile/baseUserInfo/registerByPhone.action', { params: { phone: this.phone, vcode: this.code } }).then(res => {
+        console.log('发送注册信息', res.data);
+        if (res.data.code == 'ERROR') {
+          this.$vux.toast.show({
+            text: res.data.msg,
+            type: 'cancel'
+          })
+        } else if (res.data.code == 'SUCCESS') {
+          let par = {
+            type: 'OPENID',
+            loginUserName: that.$store.state.openId,
+            baseUserId: res.data.data.baseUserId
+          }
+          this.$axios.get(this.$store.state.host + this.$store.state.path + '/newmedia/mobile/baseUserInfo/addBaseUserLoginInfo.action', { params: par }).then(res => {
+            console.log('添加注册信息', res.data);
+          })
+          this.$vux.toast.show({
+            text: '注册成功',
+            type: 'success'
+          })
+          setTimeout(() => {
+            that.$router.push('/')
+          }, 2400)
+        } else if (res.data.code == 'EXIST') {
+          this.$vux.toast.show({
+            text: res.data.msg,
+            type: 'cancel'
+          })
+        }
+      })
     },
     onSend() {
       let that = this;
@@ -41,10 +85,25 @@ export default {
         })
         return;
       }
+      if (!this.$utils.checkPhone(this.phone)) {
+        this.$vux.toast.show({
+          text: '手机号输入有误',
+          type: 'text'
+        })
+        return;
+      }
       this.$axios.get(this.$store.state.host + this.$store.state.path + '/newmedia/mobile/smsClient/sendSmsCode.action', { params: { phoneNo: this.phone } }).then(res => {
         console.log('发送验证码', res.data);
-        if (res.data.soukongAccountId == '') { //没有注册
-          that.$router.push('register')
+        if (res.data.status == 'ERROR' || res.data.status == 'FAIL') { //没有注册
+          this.$vux.toast.show({
+            text: '发送失败',
+            type: 'cancel'
+          })
+        } else if(res.data.status == 'success') {
+          this.$vux.toast.show({
+            text: '发送成功',
+            type: 'success'
+          })
         }
       })
     }

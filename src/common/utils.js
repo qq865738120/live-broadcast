@@ -1,6 +1,15 @@
 /*工具类*/
 
 /*
+验证手机号
+参数：phone 手机号
+返回值：true表示验证通过，false表示验证失败
+*/
+const checkPhone = function(phone){
+  return /^1[345678]\d{9}$/.test(phone) ? true : false
+}
+
+/*
 判断设备系统类型
 返回值：0表示安卓，1表示ios，2表示其它
 */
@@ -108,6 +117,7 @@ function formateMoney(val, isCut) {
 }
 
 export default {
+  checkPhone,
   driverType,
   getParam,
   waitTask,
