@@ -306,11 +306,11 @@ export default {
       this.isShowProductOrder = true;
       let parameter = {
         openId: that.$store.state.openId,
-        cmpyId: that.$store.state.cmpyId
+        // cmpyId: that.$store.state.cmpyId
       }
-      this.$axios.get(this.$store.state.host + this.$store.state.path + '/newmedia/mobile/wechatAccount/getSoukongAccountIdByOpenIdAndCmpyId.action', { params: parameter }).then(res => {
+      this.$axios.get(this.$store.state.host + this.$store.state.path + '/newmedia/mobile/wechatAccount/getSoukongAccountIdByOpenId.action', { params: parameter }).then(res => {
         console.log('判断是否注册', res.data);
-        if (res.data.soukongAccountId == '') { //没有注册
+        if (res.data.soukongAccountId == 'null') { //没有注册
           that.$router.push('register')
         }
       })

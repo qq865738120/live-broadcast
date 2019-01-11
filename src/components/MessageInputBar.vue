@@ -86,7 +86,7 @@ export default {
 }
 .bottom {
   margin: 0 14px 14px 20px;
-  width: 159px;
+  // width: 159px;
   display: flex;
   align-items: center;
   justify-content: center;

@@ -8,7 +8,7 @@
         <div class="input-bar iconfont icon-ecurityCode">
           <input v-model="code" type="number" placeholder="请输入验证码"/>
         </div>
-        <div class="button com-flex-center" :style="payStyle" @click="onSend">发送</div>
+        <div class="button com-flex-center" :style="payStyle" @click="onSend">{{ sendText }}</div>
       </div>
       <div class="pay-button com-flex-center" :style="payStyle" @click="onRegister">注册</div>
     </div>
@@ -25,7 +25,9 @@ export default {
     return {
       phone: '',
       code: '',
-      payStyle: ''
+      payStyle: '',
+      sendText: '发送',
+      timerId: ''
     }
   },
   methods: {
@@ -78,6 +80,20 @@ export default {
     },
     onSend() {
       let that = this;
+      if (this.timerId != '') {
+        return
+      } else {
+        let count = 60
+        this.timerId = setInterval(() => {
+          that.sendText = count != 0 ? count-- + 's' : ''
+          console.log('count',count);
+          if (count == 0) {
+            clearInterval(that.timerId)
+            that.timerId = ''
+            that.sendText = '发送'
+          }
+        }, 1000)
+      }
       if (this.phone == '') {
         this.$vux.toast.show({
           text: '手机号不能为空',
