@@ -415,7 +415,10 @@ export default {
     },
 
     goHome() { //首页按钮事件
-      window.location.href = this.$store.state.relHost + "/newmedia/pages/mobile/MicroWebsite/Skinfirst/WebsiteIframe.html?cmpyId="+ this.$store.state.cmpyId +"&openId=" + this.$store.state.openId
+      this.$axios.get(this.$store.state.host + this.$store.state.path + '/newmedia/wechatTemplateCompany/findTemplateByCmpyId.action?', { params: { cmpyId: this.$store.state.cmpyId } }).then(res => {
+        console.log('主页路径名', res.data);
+        window.location.href = this.$store.state.relHost + "/newmedia/pages/mobile/MicroWebsite/"+ res.data.row.templateCode +"/WebsiteIframe.html?cmpyId="+ this.$store.state.cmpyId +"&openId=" + this.$store.state.openId
+      })
     }
   }
 }

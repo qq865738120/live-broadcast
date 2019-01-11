@@ -29,7 +29,8 @@
     <div class="button base-botton margin-top com-flex-center iconfont icon-jiantou" :style="{ transform: 'rotate(' + rotate + ')' }" @click="onButtonTap"></div>
 
     <XDialog v-model="showDialog" hide-on-blur>
-      <Qrcode style="margin-top: 0.8rem" :value="qCode" type="img"></Qrcode>
+      <!-- <Qrcode style="margin-top: 0.8rem" :value="qCode" type="img"></Qrcode> -->
+      <img class="qcode" v-lazy='qCode' />
       <p class="tip">长按关注公众号，了解更多信息。</p>
     </XDialog>
 
@@ -169,6 +170,7 @@ export default {
     },
     onFollow() { //关注按钮
       this.showDialog = !this.showDialog;
+
     },
     onPhone() { //电话按钮
 
@@ -303,6 +305,11 @@ export default {
 .redImgs {
   width: 200px;
   height: 250px;
+}
+.qcode {
+  width: 260px;
+  height: 260px;
+  margin-top: 24px;
 }
 .red-dialog-div {
   display: flex;
