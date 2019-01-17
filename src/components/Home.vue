@@ -131,6 +131,10 @@
       </div>
       <!-- 底部菜单结束 -->
 
+      <!-- 悬浮按钮开始 -->
+      <SuspensionButton></SuspensionButton>
+      <!-- 悬浮按钮结束 -->
+
       <!-- 消息输入框开始 -->
       <transition
         enter-active-class="animated slideInUp faster"
@@ -141,10 +145,6 @@
         </div>
       </transition>
       <!-- 消息输入框结束 -->
-
-      <!-- 悬浮按钮开始 -->
-      <SuspensionButton></SuspensionButton>
-      <!-- 悬浮按钮结束 -->
 
       <!-- 视频中的悬浮按钮开始 -->
       <div class="iconfont icon-home home-button com-flex-center" v-if="isShowHome" @click="goHome"></div>
