@@ -31,15 +31,23 @@ export default {
     onSend() {
       let that = this;
 
+      if (this.message == '') {
+        that.$vux.toast.show({
+          text: '消息不能为空',
+          type: 'cancel'
+        })
+        return;
+      }
+
       this.$utils.antiShake(() => {
-        this.$axios.post(that.$store.state.host + that.$store.state.path + "/newmedia/mobile/liveMessage/addLeaveMessage.action", that.$qs.stringify({
+        that.$axios.post(that.$store.state.host + that.$store.state.path + "/newmedia/mobile/liveMessage/addLeaveMessage.action", that.$qs.stringify({
           openId: that.$store.state.openId,
           liveId: that.$store.state.liveTitleId,
           content: that.message
         })).then(res => {
           console.log('消息发送结果', res.data);
           if (res.data.status == 'Y') {
-            this.$vux.toast.show({
+            that.$vux.toast.show({
               text: '发送成功!'
             })
             let timerId = setInterval(() => {
@@ -50,15 +58,17 @@ export default {
               }
             }, 1000)
           } else {
-            this.$vux.toast.show({
+            that.$vux.toast.show({
               text: '发送失败T_T',
               type: 'cancel'
             })
           }
           that.message = '' //将消息栏清空
         })
-        this.$store.commit('switchInteractionInputing');
-      }, 600)
+        if (that.$utils.driverType() == 1) {
+          that.$store.commit('switchInteractionInputing');
+        }
+      }, 800)
     }
   }
 }

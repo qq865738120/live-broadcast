@@ -337,7 +337,7 @@ export default {
           isFirstTapInput = false;
           if(res.data.data.isSilent == 1) {
   					// var search = encodeURIComponent(window.location.href.split('#')[0]);
-            var search = encodeURIComponent(that.$store.state.relHost + window.location.hash);
+            var search = encodeURIComponent(window.location.href);
   					window.location.href = that.$store.state.relHost + '/wechatservice/sns/sookingBaseAuthorize.action'+"?returnUrl="+search +"&cmpyId="+that.$store.state.cmpyId;
   				}
         })

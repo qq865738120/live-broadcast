@@ -179,15 +179,15 @@ export default {
         // window.location.href = url;
         window.location.href = redirectUri;
       } else { // 未注册
-        // that.$axios.get(that.$store.state.host + that.$store.state.path + "/newmedia/mobile/cmpySetting/getCommunicatorDefault.action", { params: { cmpyId: that.$store.state.cmpyId } }).then(res => {
-          // let belongCommunicatorId = res.data.communicatorId;
-          // that.$axios.get(that.$store.state.host + that.$store.state.path + "/newmedia/mobile/communicator/getInviteDyrInfo.action", { params: { openId: that.$store.state.openId, belongCommunicatorId: belongCommunicatorId, falg: 'live' } }).then(res => {
-          //   console.log('跳转注册')
-		      //   var addUrl = '&liveTitleId='+that.$store.state.liveTitleId
-		        // window.location = that.$store.state.relHost + '/newmedia/pages/mobile/propaganda/agreeForwardDY.html?belongCommunicatorId='+belongCommunicatorId+'&cmpyId='+ that.$store.state.cmpyId + '&cmpyName='+ that.$store.state.cmpyName +'&openId='+that.$store.state.openId+'&from=live'+addUrl
-            window.location = that.$store.state.relHost + '/newmedia/pages/mobile/propaganda/agreeForwardDY.html?cmpyId='+ that.$store.state.cmpyId+'&openId='+that.$store.state.openId
-          // })
-        // })
+        that.$axios.get(that.$store.state.host + that.$store.state.path + "/newmedia/mobile/cmpySetting/getCommunicatorDefault.action", { params: { cmpyId: that.$store.state.cmpyId } }).then(res => {
+          let belongCommunicatorId = res.data.communicatorId;
+          that.$axios.get(that.$store.state.host + that.$store.state.path + "/newmedia/mobile/communicator/getInviteDyrInfo.action", { params: { openId: that.$store.state.openId, belongCommunicatorId: belongCommunicatorId, falg: 'live' } }).then(res => {
+            console.log('跳转注册')
+		        // var addUrl = '&liveTitleId='+that.$store.state.liveTitleId
+		        window.location = that.$store.state.relHost + '/newmedia/pages/mobile/propaganda/agreeForwardDY.html?belongCommunicatorId='+belongCommunicatorId+'&cmpyId='+ that.$store.state.cmpyId + '&cmpyName='+ res.data.rows.belongUserName +'&openId='+that.$store.state.openId+'&from=live'
+            // window.location = that.$store.state.relHost + '/newmedia/pages/mobile/propaganda/agreeForwardDY.html?cmpyId='+ that.$store.state.cmpyId+'&openId='+that.$store.state.openId
+          })
+        })
       }
     },
     onFollow() { //关注按钮

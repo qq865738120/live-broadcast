@@ -292,7 +292,7 @@ const refreshOrder = function(parameter, isReset) {
 const getLiveWatched = function() {
   return new Promise(resolve => {
     context.$axios.get(context.$store.state.host + context.$store.state.path + '/newmedia/mobile/live/getAccessTotal.action', { params: { liveTitleId: context.$store.state.liveTitleId } }).then(res => {
-      console.log('直播访问人数', res.data);
+      // console.log('直播访问人数', res.data);
       if (res.data.status == 100) {
         context.watched = res.data.data.accessTotal;
       }
