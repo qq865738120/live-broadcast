@@ -116,6 +116,27 @@ function formateMoney(val, isCut) {
   return (((sign)?'':'-') + val + '.' + cents);
 }
 
+/**
+ * 节流
+ */
+var canRun = true;
+const throttle = function (callback, time) {
+  if (canRun) {
+    canRun = false;
+    setTimeout(callback, time)
+    setTimeout(()=>{canRun = true},time);
+  }
+}
+
+/**
+ * 防抖
+ */
+var timer = false;
+const antiShake = function (callback, time) {
+  clearTimeout(timer);
+  timer = setTimeout(callback, time);
+}
+
 export default {
   checkPhone,
   driverType,
@@ -124,5 +145,7 @@ export default {
   string2Date,
   timeDifference,
   timeStemp2DateArr,
-  formateMoney
+  formateMoney,
+  throttle,
+  antiShake
 }

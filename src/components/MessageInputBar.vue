@@ -30,32 +30,35 @@ export default {
     },
     onSend() {
       let that = this;
-      this.$axios.post(that.$store.state.host + that.$store.state.path + "/newmedia/mobile/liveMessage/addLeaveMessage.action", that.$qs.stringify({
-        openId: that.$store.state.openId,
-        liveId: that.$store.state.liveTitleId,
-        content: that.message
-      })).then(res => {
-        console.log('消息发送结果', res.data);
-        if (res.data.status == 'Y') {
-          this.$vux.toast.show({
-            text: '发送成功!'
-          })
-          let timerId = setInterval(() => {
-            that.$store.commit('addInteractionTime'); //每次执行都将interactionTime自增一下
-            if(that.$store.state.interactionTime == 10) { //如果interactionTime等于10则将interactionTime置零并清除计时器
-              that.$store.commit('resetInteractionTime');
-              clearInterval(timerId);
-            }
-          }, 1000)
-        } else {
-          this.$vux.toast.show({
-            text: '发送失败T_T',
-            type: 'cancel'
-          })
-        }
-        that.message = '' //将消息栏清空
-      })
-      this.$store.commit('switchInteractionInputing');
+
+      this.$utils.antiShake(() => {
+        this.$axios.post(that.$store.state.host + that.$store.state.path + "/newmedia/mobile/liveMessage/addLeaveMessage.action", that.$qs.stringify({
+          openId: that.$store.state.openId,
+          liveId: that.$store.state.liveTitleId,
+          content: that.message
+        })).then(res => {
+          console.log('消息发送结果', res.data);
+          if (res.data.status == 'Y') {
+            this.$vux.toast.show({
+              text: '发送成功!'
+            })
+            let timerId = setInterval(() => {
+              that.$store.commit('addInteractionTime'); //每次执行都将interactionTime自增一下
+              if(that.$store.state.interactionTime == 10) { //如果interactionTime等于10则将interactionTime置零并清除计时器
+                that.$store.commit('resetInteractionTime');
+                clearInterval(timerId);
+              }
+            }, 1000)
+          } else {
+            this.$vux.toast.show({
+              text: '发送失败T_T',
+              type: 'cancel'
+            })
+          }
+          that.message = '' //将消息栏清空
+        })
+        this.$store.commit('switchInteractionInputing');
+      }, 600)
     }
   }
 }

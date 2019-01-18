@@ -335,9 +335,9 @@ export default {
         that.$axios.get(that.$store.state.host + that.$store.state.path + '/newmedia/mobile/wechatuserinfo/getWchatInfoByOpenId.action', { params: { openId: that.$store.state.openId } }).then(res => {
           console.log('获取用户信息', res.data);
           isFirstTapInput = false;
-          if(res.data.isSilent == 1) {
-  					var search = encodeURIComponent(window.location.href.split('#')[0]);
-            var search = encodeURIComponent(window.location.href);
+          if(res.data.data.isSilent == 1) {
+  					// var search = encodeURIComponent(window.location.href.split('#')[0]);
+            var search = encodeURIComponent(that.$store.state.relHost + window.location.hash);
   					window.location.href = that.$store.state.relHost + '/wechatservice/sns/sookingBaseAuthorize.action'+"?returnUrl="+search +"&cmpyId="+that.$store.state.cmpyId;
   				}
         })

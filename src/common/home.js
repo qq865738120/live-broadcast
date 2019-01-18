@@ -127,6 +127,9 @@ const _IntelligenceInteractionTimer = function(hasData) {
 const init = async function(that) {
   context = that;
   getLiveWatched(); //获取直播访问人数
+  setInterval(() => {
+    getLiveWatched(); //60秒实时刷新
+  }, 60000)
   // await _liveInit();
   getInteractionList({ //获取互动列表
     curMaxId: "",

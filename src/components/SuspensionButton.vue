@@ -76,7 +76,7 @@ export default {
     })
     timerId = setInterval(() => {
       that.$axios.get(that.$store.state.host + that.$store.state.path + '/newmedia/mobile/live/getRedActivity.action', { params: { liveTitelId: that.$store.state.liveTitleId } }).then((res) => {
-        console.log('获取红包', res.data);
+        // console.log('获取红包', res.data);
         if (res.data.status == '100') {
            that.isShowRed = res.data.data.exist == 0 ? false : true;
            if (res.data.data.exist != 0) {
@@ -99,11 +99,11 @@ export default {
     /*判断是否注册过，跳转个人中心需要判断*/
     this.$axios.get(that.$store.state.host + that.$store.state.path + '/newmedia/mobile/wechatAccount/getSoukongAccountIdByOpenIdAndCmpyId.action', { params: { openId: that.$store.state.openId, cmpyId: that.$store.state.cmpyId } }).then(res => {
       console.log('判断是否注册', res.data);
-      // if (res.data.communicator == "1") {
-      //   this.hadRegistered = true
-      // } else {
+      if (res.data.communicator == "1") {
+        this.hadRegistered = true
+      } else {
         this.hadRegistered = false
-      // }
+      }
     })
   },
   data() {
@@ -179,14 +179,15 @@ export default {
         // window.location.href = url;
         window.location.href = redirectUri;
       } else { // 未注册
-        that.$axios.get(that.$store.state.host + that.$store.state.path + "/newmedia/mobile/cmpySetting/getCommunicatorDefault.action", { params: { cmpyId: that.$store.state.cmpyId } }).then(res => {
-          let belongCommunicatorId = res.data.communicatorId;
-          that.$axios.get(that.$store.state.host + that.$store.state.path + "/newmedia/mobile/communicator/getInviteDyrInfo.action", { params: { openId: that.$store.state.openId, belongCommunicatorId: belongCommunicatorId, falg: 'live' } }).then(res => {
-            console.log('跳转注册')
-		        var addUrl = '&liveTitleId='+that.$store.state.liveTitleId
-		        window.location = that.$store.state.relHost + '/newmedia/pages/mobile/propaganda/agreeForwardDY.html?belongCommunicatorId='+belongCommunicatorId+'&cmpyId='+ that.$store.state.cmpyId + '&cmpyName='+ that.$store.state.cmpyName +'&openId='+that.$store.state.openId+'&from=live'+addUrl
-          })
-        })
+        // that.$axios.get(that.$store.state.host + that.$store.state.path + "/newmedia/mobile/cmpySetting/getCommunicatorDefault.action", { params: { cmpyId: that.$store.state.cmpyId } }).then(res => {
+          // let belongCommunicatorId = res.data.communicatorId;
+          // that.$axios.get(that.$store.state.host + that.$store.state.path + "/newmedia/mobile/communicator/getInviteDyrInfo.action", { params: { openId: that.$store.state.openId, belongCommunicatorId: belongCommunicatorId, falg: 'live' } }).then(res => {
+          //   console.log('跳转注册')
+		      //   var addUrl = '&liveTitleId='+that.$store.state.liveTitleId
+		        // window.location = that.$store.state.relHost + '/newmedia/pages/mobile/propaganda/agreeForwardDY.html?belongCommunicatorId='+belongCommunicatorId+'&cmpyId='+ that.$store.state.cmpyId + '&cmpyName='+ that.$store.state.cmpyName +'&openId='+that.$store.state.openId+'&from=live'+addUrl
+            window.location = that.$store.state.relHost + '/newmedia/pages/mobile/propaganda/agreeForwardDY.html?cmpyId='+ that.$store.state.cmpyId+'&openId='+that.$store.state.openId
+          // })
+        // })
       }
     },
     onFollow() { //关注按钮
