@@ -7,7 +7,7 @@ const vuxLoader = require('vux-loader')
 const webpackConfig = {
   context: path.resolve(__dirname, '../'),
   entry: {
-    app: './src/main.js'
+    app: ["babel-polyfill", "./src/main.js"]
   },
   output: {
     path: config.build.assetsRoot,
@@ -24,6 +24,7 @@ const webpackConfig = {
     }
   },
   module: {
+    noParse: [/ali-oss/],
     rules: [
       {
         test: /.sass$/,
@@ -90,5 +91,8 @@ function resolve (dir) {
 
 
 module.exports = vuxLoader.merge(webpackConfig, {
-  plugins: ['vux-ui']
+  plugins: [
+    {name: 'vux-ui'},
+    {name: 'less-theme', path: 'src/assets/style/theme.less'}
+  ]
 })

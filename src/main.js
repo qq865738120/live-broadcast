@@ -15,8 +15,8 @@ import utils from './common/utils.js' //全局引入自定义工具类
 import comm from './common/comm.js' //引入公共js
 import './common/filter.js' //全局定义过滤器
 import $ from 'jquery'
-import { listPullLoading } from 'list-pull-loading' //一个第三方的上拉加载下拉刷新列表组件
-import "list-pull-loading/dist/list-pull-loading.css"
+// import { listPullLoading } from 'list-pull-loading' //一个第三方的上拉加载下拉刷新列表组件
+// import "list-pull-loading/dist/list-pull-loading.css"
 import VueLazyload from 'vue-lazyload' //图片懒加载插件
 var wx = require('weixin-js-sdk'); //引入微信js-sdk
 
@@ -34,7 +34,7 @@ Vue.prototype.$comm = comm;
 Vue.prototype.$ = $;
 Vue.prototype.$wx = wx;
 
-Vue.component('ListPullLoading', listPullLoading)
+// Vue.component('ListPullLoading', listPullLoading)
 
 Vue.use(VueLazyload, {
   attempt: 1,
@@ -74,16 +74,16 @@ new Vue({
         path: '/api',
 
         /* 打包的话使用此配置 */
-        // environment: 'online', //本地环境配为local，线上环境配为online
-        // host: 'http://xmt.soukong.cn', //测试环境
-        // path: '',
-
-        /* 生产环境使用此配置 */
         environment: 'online', //本地环境配为local，线上环境配为online
-        // host: 'http://fm.soukong.cn', //正式环境
+        host: 'http://xmt.soukong.cn', //测试环境
         path: '',
 
-        // relHost: 'http://xmt.soukong.cn', //实际真实域名，该配置会影响对接老项目的url跳转
+        /* 生产环境使用此配置 */
+        // environment: 'online', //本地环境配为local，线上环境配为online
+        // host: 'http://fm.soukong.cn', //正式环境
+        // path: '',
+
+        relHost: 'http://xmt.soukong.cn', //实际真实域名，该配置会影响对接老项目的url跳转
         // relHost: 'http://fm.soukong.cn' //实际真实域名，该配置会影响对接老项目的url跳转
       }
       this.$store.commit('setHost', config.host)

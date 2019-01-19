@@ -222,7 +222,6 @@ async function SKweixinRecord(sysCommon,forwardUrl,cmpyId,mediaId,title,desc,img
     	link:forwardUrl,
     	imgUrl:imgUrl,
 			success:function(){
-				alert(forwardUrl)
 				console.log('forwardUrl', forwardUrl);
 			}
 	  })
@@ -324,13 +323,13 @@ async function doShare() {
 	let cmpyId = context.$store.state.cmpyId;
 	let liveTitleId = context.$store.state.liveTitleId;
 	let title = context.$store.state.title;
-  var dataReadLog=SKinsertReadLog(urlParam.liveTitleId, context.$store.state.cmpyId, "9");
+  var dataReadLog= await SKinsertReadLog(urlParam.liveTitleId, context.$store.state.cmpyId, "9");
   var mediaInfo =dataReadLog.mediaInfo;
 	var	recordId = dataReadLog.recordId;
 	var	readLogId = dataReadLog.readLogId;
 	var level;
 	let parentOpenId = ''
-	let soukongUID = SKAjaxgetSoukongAccountId(urlParam.openId, urlParam.cmpyId);
+	let soukongUID = await SKAjaxgetSoukongAccountId(urlParam.openId, urlParam.cmpyId);
 	if (soukongUID != 'null') {
 		FUID = soukongUID
 	} else if (context.$store.state.accountId != '') {
@@ -357,7 +356,7 @@ async function doShare() {
 	var redirect_uri_forward=encodeURIComponent(currentUrl);
 	var forwardUrl=sysCommon.silentAuthUrl+'?returnUrl='+redirect_uri_forward+'&cmpyId='+cmpyId;
 
-  SKweixinRecord(sysCommon,forwardUrl,cmpyId,urlParam.liveTitleId,title,desc,context.$store.state.logoUrl,'',readLogId,urlParam.communicators,'9')
+  SKweixinRecord(sysCommon,forwardUrl,cmpyId,urlParam.liveTitleId,title,desc,context.$store.state.videoCoverpic,'',readLogId,urlParam.communicators,'9')
 }
 
 export default {

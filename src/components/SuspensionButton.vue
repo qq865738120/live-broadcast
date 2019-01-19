@@ -29,13 +29,14 @@
     <div class="button base-botton margin-top com-flex-center iconfont icon-jiantou" :style="{ transform: 'rotate(' + rotate + ')' }" @click="onButtonTap"></div>
 
     <XDialog v-model="showDialog" hide-on-blur>
-      <Qrcode style="margin-top: 0.8rem" :value="qCode" type="img"></Qrcode>
+      <!-- <Qrcode style="margin-top: 0.8rem" :value="qCode" type="img"></Qrcode> -->
+      <img class="qcode" v-lazy='qCode' />
       <p class="tip">长按关注公众号，了解更多信息。</p>
     </XDialog>
 
-    <Popup v-model="showPopup">
+    <Popup v-model="showPopup" style="border-radius: 15px 15px 0 0;">
       <div class="popup-head">
-        <div class="iconfont icon-plus-close" @click="showPopup = !showPopup"></div>
+        <div class="iconfont icon-plus-close colse-icon" @click="showPopup = !showPopup"></div>
       </div>
       <p class="popup-title">申请信息</p>
       <div class="popup-input com-flex-center iconfont icon-yonghu">
@@ -94,6 +95,16 @@ export default {
         this.isShowFollow = item.switchStatus == 1 ? true : false;
       }
     }
+
+    /*判断是否注册过，跳转个人中心需要判断*/
+    this.$axios.get(that.$store.state.host + that.$store.state.path + '/newmedia/mobile/wechatAccount/getSoukongAccountIdByOpenIdAndCmpyId.action', { params: { openId: that.$store.state.openId, cmpyId: that.$store.state.cmpyId } }).then(res => {
+      console.log('判断是否注册', res.data);
+      if (res.data.communicator == "1") {
+        this.hadRegistered = true
+      } else {
+        this.hadRegistered = false
+      }
+    })
   },
   data() {
     return {
@@ -119,7 +130,8 @@ export default {
       showDialogRed: false,
       amount: '',
       isShowPersonal: true,
-      isShowFollow: true
+      isShowFollow: true,
+      hadRegistered: true, // 是否注册过
     }
   },
   methods: {
@@ -160,15 +172,27 @@ export default {
     onPersonal() { //个人按钮
       clearInterval(timerId);
       let that = this;
-      // let redirectUri = escape(that.$store.state.relHost) + "%2Fwechatservice%2Fsns%2FsookingBaseSimpleAuthorize.action%3FreturnUrl%3D" + escape(that.$store.state.relHost) + "%252Fnewmedia%252Fpages%252Fmobile%252FMicroWebsite%252FPersonalCenter%252FpersonelIndex.html%253FcmpyId%253D"+ that.$store.state.cmpyId +"%26cmpyId%3D" + that.$store.state.cmpyId
-      let redirectUri = that.$store.state.relHost + "/wechatservice/sns/sookingBaseSimpleAuthorize.action?returnUrl=" + escape(that.$store.state.relHost + '/newmedia/pages/mobile/MicroWebsite/PersonalCenter/personelIndex.html?cmpyId=' + that.$store.state.cmpyId) +"&cmpyId=" + that.$store.state.cmpyId
-      console.log('redirectUri',redirectUri);
-      // let url = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${that.$store.state.appid}&scope=snsapi_base&redirect_uri=${redirectUri}&response_type=code&state=1&connect_redirect=1#wechat_redirect`
-      // window.location.href = url;
-      window.location.href = redirectUri;
+      if (this.hadRegistered) { // 用户注册过
+        // let redirectUri = escape(that.$store.state.relHost) + "%2Fwechatservice%2Fsns%2FsookingBaseSimpleAuthorize.action%3FreturnUrl%3D" + escape(that.$store.state.relHost) + "%252Fnewmedia%252Fpages%252Fmobile%252FMicroWebsite%252FPersonalCenter%252FpersonelIndex.html%253FcmpyId%253D"+ that.$store.state.cmpyId +"%26cmpyId%3D" + that.$store.state.cmpyId
+        let redirectUri = that.$store.state.relHost + "/wechatservice/sns/sookingBaseSimpleAuthorize.action?returnUrl=" + escape(that.$store.state.relHost + '/newmedia/pages/mobile/MicroWebsite/PersonalCenter/personelIndex.html?cmpyId=' + that.$store.state.cmpyId) +"&cmpyId=" + that.$store.state.cmpyId
+        // let url = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${that.$store.state.appid}&scope=snsapi_base&redirect_uri=${redirectUri}&response_type=code&state=1&connect_redirect=1#wechat_redirect`
+        // window.location.href = url;
+        window.location.href = redirectUri;
+      } else { // 未注册
+        that.$axios.get(that.$store.state.host + that.$store.state.path + "/newmedia/mobile/cmpySetting/getCommunicatorDefault.action", { params: { cmpyId: that.$store.state.cmpyId } }).then(res => {
+          let belongCommunicatorId = res.data.communicatorId;
+          that.$axios.get(that.$store.state.host + that.$store.state.path + "/newmedia/mobile/communicator/getInviteDyrInfo.action", { params: { openId: that.$store.state.openId, belongCommunicatorId: belongCommunicatorId, falg: 'live' } }).then(res => {
+            console.log('跳转注册')
+		        // var addUrl = '&liveTitleId='+that.$store.state.liveTitleId
+		        window.location = that.$store.state.relHost + '/newmedia/pages/mobile/propaganda/agreeForwardDY.html?belongCommunicatorId='+belongCommunicatorId+'&cmpyId='+ that.$store.state.cmpyId + '&cmpyName='+ res.data.rows.belongUserName +'&openId='+that.$store.state.openId+'&from=live'
+            // window.location = that.$store.state.relHost + '/newmedia/pages/mobile/propaganda/agreeForwardDY.html?cmpyId='+ that.$store.state.cmpyId+'&openId='+that.$store.state.openId
+          })
+        })
+      }
     },
     onFollow() { //关注按钮
       this.showDialog = !this.showDialog;
+
     },
     onPhone() { //电话按钮
 
@@ -229,10 +253,14 @@ export default {
 .base-botton {
   background-color: $--main-color;
 }
+.colse-icon {
+  color: $--color-666;
+  font-size: 20px !important;
+}
 .root {
   position: absolute;
   bottom: 80px;
-  right: 20px;
+  right: 6px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -262,6 +290,7 @@ export default {
   font-size: 21px;
   color: $--color-333;
   text-align: center;
+  margin-block-start: 0;
 }
 .popup-input {
   width: 300px;
@@ -298,6 +327,11 @@ export default {
 .redImgs {
   width: 200px;
   height: 250px;
+}
+.qcode {
+  width: 260px;
+  height: 260px;
+  margin-top: 24px;
 }
 .red-dialog-div {
   display: flex;

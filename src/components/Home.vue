@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="root">
     <Video :title="$store.state.title" @x5-enter-fullscreen="x5EnterFullscreen" @x5-exit-fullscreen="x5ExitFullscreen">
       <!-- 广告条开始 -->
       <div class="ad-bar" v-if="adBar.showAdBar">
@@ -8,8 +8,8 @@
       <!-- 广告条结束 -->
 
       <!-- tab栏开始 -->
-      <Tab :line-width=2 active-color='#ED7E00' v-model="itemIndex">
-        <TabItem :selected="itemIndex === item.id" v-for="(item, index) in tabItems" @click="itemIndex = item.id" :key="item.id">{{item.text}}</TabItem>
+      <Tab class="tab" :line-width=2 active-color='#ED7E00' v-model="itemIndex">
+        <TabItem :selected="index == itemIndex" v-for="(item, index) in tabItems" @click="itemIndex = item.id" :key="item.id">{{item.text}}</TabItem>
       </Tab>
       <!-- tab栏结束 -->
 
@@ -65,37 +65,42 @@
             <template v-else="">
               <template v-if="item.typeId == 3"> <!-- 产品/详情 -->
                 <Scroller
+                  style="background: white"
                   lock-x
                   height="100%">
-                  <div v-html='$store.state.productDetail'>详情</div>
+                  <div style="margin: 0 9px" v-html='$store.state.productDetail'>详情</div>
                 </Scroller>
               </template>
               <template v-if="item.typeId == 2"> <!-- 简介 -->
                 <Scroller
+                  style="background: white"
                   lock-x
                   height="100%">
-                  <div class="tap-content" v-html='summaryContent'>简介</div>
+                  <div class="tap-content" style="margin: 0 9px" v-html='summaryContent'>简介</div>
                 </Scroller>
               </template>
               <template v-if="item.typeId == 10"> <!-- 自定义 -->
                 <Scroller
+                  style="background: white"
                   lock-x
                   height="100%">
-                  <div v-html='customContent1'>自定义1</div>
+                  <div  style="margin: 0 9px" v-html='customContent1'>自定义1</div>
                 </Scroller>
               </template>
               <template v-if="item.typeId == 11">
                 <Scroller
+                  style="background: white"
                   lock-x
                   height="100%">
-                  <div v-html='customContent2'>自定义2</div>
+                  <div style="margin: 0 9px" v-html='customContent2'>自定义2</div>
                 </Scroller>
               </template>
               <template v-if="item.typeId == 12">
                 <Scroller
+                  style="background: white"
                   lock-x
                   height="100%">
-                  <div v-html='customContent3'>自定义3</div>
+                  <div style="margin: 0 9px" v-html='customContent3'>自定义3</div>
                 </Scroller>
               </template>
             </template>
@@ -126,28 +131,20 @@
       </div>
       <!-- 底部菜单结束 -->
 
+      <!-- 悬浮按钮开始 -->
+      <SuspensionButton></SuspensionButton>
+      <!-- 悬浮按钮结束 -->
+
       <!-- 消息输入框开始 -->
       <transition
         enter-active-class="animated slideInUp faster"
         leave-active-class="animated slideOutDown faster"
         @enter="messageInputEnter">
-        <div class="message-input" v-show="$store.state.isInteractionInputing">
+        <div class="message-input" :style="{ bottom: inputButtom }" v-show="$store.state.isInteractionInputing">
           <MessageInputBar ref="messageBar"></MessageInputBar>
         </div>
       </transition>
       <!-- 消息输入框结束 -->
-
-      <!-- 悬浮按钮开始 -->
-      <SuspensionButton></SuspensionButton>
-      <!-- 悬浮按钮结束 -->
-
-      <!-- 产品提交订单开始 -->
-      <transition
-        enter-active-class="animated slideInUp faster"
-        leave-active-class="animated slideOutDown faster">
-        <ProductOrder v-show="isShowProductOrder" @on-close="isShowProductOrder = false"></ProductOrder>
-      </transition>
-      <!-- 产品提交订单结束 -->
 
       <!-- 视频中的悬浮按钮开始 -->
       <div class="iconfont icon-home home-button com-flex-center" v-if="isShowHome" @click="goHome"></div>
@@ -156,6 +153,13 @@
       <!-- 视频中的悬浮按钮结束 -->
 
     </Video>
+    <!-- 产品提交订单开始 -->
+    <transition
+      enter-active-class="animated slideInUp faster"
+      leave-active-class="animated slideOutDown faster">
+      <ProductOrder v-show="isShowProductOrder" @on-close="isShowProductOrder = false"></ProductOrder>
+    </transition>
+    <!-- 产品提交订单结束 -->
   </div>
 </template>
 
@@ -169,6 +173,7 @@ import OrderListItem from '@/components/OrderListItem'
 import methods from '@/common/home.js'
 
 let isFirstTapInput // 是否是第一次点击底部输入框
+let fontSize = 37.5 // html元素font-size属性
 
 export default {
   name: 'Home',
@@ -178,18 +183,42 @@ export default {
   },
   mounted() {
     let that = this;
-    let lastBodyResize = document.body.clientHeight // 最后一次窗口高度改变的值
+    fontSize = parseInt(this.$('html').css('font-size').replace('px', ''));
+    let lastBodyResize = window.innerHeight // 最后一次窗口高度改变的值
     window.onresize = function () { // 解决安卓键盘手动隐藏的问题。ios不会生效
       console.log(lastBodyResize);
       if (lastBodyResize < 500) {
         that.$store.commit('setInteractionInputing', false)
       }
-      lastBodyResize = document.body.clientHeight;
+      console.log('input', window.innerHeight - lastBodyResize);
+      that.$data.inputButtom = Math.abs(window.innerHeight - lastBodyResize) + 'px'
+      lastBodyResize = window.innerHeight;
+    }
+
+    if (this.$utils.driverType() == 1) { // 兼容ios键盘输入
+      that.$data.inputButtom = 0;
+      document.body.addEventListener('focusin', () => {
+          //软键盘弹出的事件处理
+          // that.$('body').scrollTop(0)
+      })
+      document.body.addEventListener('focusout', () => {
+           //软键盘收起的事件处理
+           that.$('body').scrollTop(0)
+       })
+    }
+    if (this.hasOrderList) { //成交栏相关bug修复
+      setTimeout(() => {
+        this.$('.scroll-pull-container').css({
+          'line-height': '60px',
+          'color': '#999'
+        })
+        that.itemIndex = 0;
+      }, 700)
     }
   },
   data () {
     return {
-      itemIndex: 0, //tab栏索引，切换tabItem
+      itemIndex: 1, //tab栏索引，切换tabItem
       tabItems: [ //tab栏列表项数据
         // { id: 0, typeId: '1', text: '互动' },
         // { id: 1, typeId: '3', text: '详情' },
@@ -211,14 +240,17 @@ export default {
       ],
       pullupConfig: { //Scroll组件上拉配置
         content: '上拉加载',
+        height: 60,
         downContent: '释放刷新',
         upContent: '上拉加载',
         loadingContent: '加载中...',
+        clsPrefix: 'scroll-pull-'
       },
       pulldownConfig: { //Scroll组件上拉配置
         downContent: '下拉加载',
         upContent: '释放刷新',
         loadingContent: '加载中...',
+        clsPrefix: 'scroll-pull-'
       },
       isShowProductOrder: false, //是否展示产品提交订单组件
       isShowBuyButton: true, //是否显示立即购买按钮
@@ -233,6 +265,7 @@ export default {
       hasOrderList: true, // 是否有成交记录，没有则为false，即不显示成交栏目中的scoller
       isShowHome: false, //是否显示返回首页按钮
       hasInteraction: false, //是否有互动栏
+      inputButtom: (200 / fontSize) + 'rem',
     }
   },
   components: {
@@ -251,10 +284,10 @@ export default {
     setContentHeight() { //设置中间内容组件高度
       if (!(this.hasInteraction || this.isShowBuyButton)) {
         // setSwiperHeight('8.01rem', '9.21rem');
-        methods.setSwiperHeight('calc(100% - 1.92rem)', 'calc(100% - 0.72rem)');
+        methods.setSwiperHeight('calc(100% - 2.08rem)', 'calc(100% - 0.88rem)');
       } else {
         // setSwiperHeight('6.78rem', '7.98rem');
-        methods.setSwiperHeight('calc(100% - 3.65rem)', 'calc(100% - 2.45rem)');
+        methods.setSwiperHeight('calc(100% - 3.81rem)', 'calc(100% - 2.61rem)');
       }
     },
 
@@ -268,8 +301,19 @@ export default {
       this.setContentHeight()
     },
 
-    onClickBuyButton() {
+    onClickBuyButton() { //购买按钮点击事件
+      let that = this;
       this.isShowProductOrder = true;
+      let parameter = {
+        openId: that.$store.state.openId,
+        // cmpyId: that.$store.state.cmpyId
+      }
+      this.$axios.get(this.$store.state.host + this.$store.state.path + '/newmedia/mobile/wechatAccount/getSoukongAccountIdByOpenId.action', { params: parameter }).then(res => {
+        console.log('判断是否注册', res.data);
+        if (res.data.soukongAccountId == 'null') { //没有注册
+          that.$router.push('register')
+        }
+      })
     },
 
     async loadingHistoryInteraction() { //下拉更新历史记录事件函数
@@ -291,10 +335,10 @@ export default {
         that.$axios.get(that.$store.state.host + that.$store.state.path + '/newmedia/mobile/wechatuserinfo/getWchatInfoByOpenId.action', { params: { openId: that.$store.state.openId } }).then(res => {
           console.log('获取用户信息', res.data);
           isFirstTapInput = false;
-          if(res.data.isSilent == 1) {
-  					var search = encodeURIComponent(window.location.href.split('#')[0]);
+          if(res.data.data.isSilent == 1) {
+  					// var search = encodeURIComponent(window.location.href.split('#')[0]);
             var search = encodeURIComponent(window.location.href);
-  					window.location.href = 'http://xmt.soukong.cn/wechatservice/sns/sookingBaseAuthorize.action'+"?returnUrl="+search +"&cmpyId="+that.$store.state.cmpyId;
+  					window.location.href = that.$store.state.relHost + '/wechatservice/sns/sookingBaseAuthorize.action'+"?returnUrl="+search +"&cmpyId="+that.$store.state.cmpyId;
   				}
         })
       }
@@ -352,7 +396,6 @@ export default {
         rows: 10
       }, true);
       this.$nextTick(() => {
-        console.log(this.$refs.scrollerEvent2[0]);
         this.$refs.scrollerEvent2[0].donePulldown(); //下拉刷新数据请求成功后需调用此函数刷新界面
       })
     },
@@ -367,11 +410,15 @@ export default {
       }, false);
       this.$nextTick(() => {
         this.$refs.scrollerEvent2[0].donePullup(); //上拉刷新数据请求成功后需调用此函数刷新界面
+        this.$refs.scrollerEvent2[0].reset(0);
       })
     },
 
     goHome() { //首页按钮事件
-      window.location.href = this.$store.state.relHost + "/newmedia/pages/mobile/MicroWebsite/Skinfirst/WebsiteIframe.html?cmpyId="+ this.$store.state.cmpyId +"&openId=" + this.$store.state.openId
+      this.$axios.get(this.$store.state.host + this.$store.state.path + '/newmedia/wechatTemplateCompany/findTemplateByCmpyId.action?', { params: { cmpyId: this.$store.state.cmpyId } }).then(res => {
+        console.log('主页路径名', res.data);
+        window.location.href = this.$store.state.relHost + "/newmedia/pages/mobile/MicroWebsite/"+ res.data.row.templateCode +"/WebsiteIframe.html?cmpyId="+ this.$store.state.cmpyId +"&openId=" + this.$store.state.openId
+      })
     }
   }
 }
@@ -388,6 +435,9 @@ export default {
   .ad-bar img {
     width: 100%;
     height: calc(100% + 2px);
+  }
+  .tab {
+    margin-bottom: 6px;
   }
   .bottom-bar {
     width: 100%;
@@ -408,8 +458,8 @@ export default {
   .input span {
     padding: 4px 8px;
     border: 1px solid $--color-E9;
-    border-radius: 10px;
-    line-height: 19px;
+    border-radius: 6px;
+    line-height: 25px;
   }
   .bottom-bar-right {
     width: 120px;
@@ -431,8 +481,9 @@ export default {
   }
   .message-input {
     position: absolute;
-    top: 0px;
+    bottom: 256px;
     width: 100%;
+    background-color: white;
   }
   .home-button {
     width: 32px;

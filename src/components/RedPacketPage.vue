@@ -7,7 +7,7 @@
       </div>
       <div class="input-bar">
         <span>数量（个）</span>
-        <input v-model="count" type="number" :disabled="sum != '' && sum > 0 ? false : true" placeholder="不小于个数*0.3元" @keyup="onCountKeyup"/>
+        <input v-model="count" type="number" :disabled="sum != '' && sum > 0 ? false : true" :placeholder="'不能大于'+ parseInt(sum / 0.3 )+'个'" @keyup="onCountKeyup"/>
       </div>
       <p class="tip">
         <span>因微信限制，每个红包不小于0.3元</span><br />

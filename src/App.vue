@@ -9,7 +9,7 @@
       enter-active-class="animated zoomIn faster"
       leave-active-class="animated zoomOut faster">
       <div class="com-flex-center loading" v-show="!$store.state.initFag">
-        <GridLoader color="#ED7E00" size="10"></GridLoader>
+        <GridLoader color="#ED7E00" :size="10"></GridLoader>
         <p>loading...</p>
       </div>
     </transition>
@@ -24,13 +24,13 @@ export default {
   /* 该方法中完成项目的初始化工作 */
   async created() {
     let that = this
-    console.log("this.$store.state.environment == 'online'",this.$store.state.environment == 'online');
-    if (this.$store.state.environment == 'online') {
-      await this.$axios.get(that.$store.state.path + '/newmedia/sysCommon/getCommonUrls.action').then(res => {
-        this.$store.commit('setHost', res.data.serverHostUrl);
-        this.$store.commit('setRelHost', res.data.serverHostUrl);
-      })
-    }
+    // console.log("this.$store.state.environment == 'online'",this.$store.state.environment == 'online');
+    // if (this.$store.state.environment == 'online') {
+    //   await this.$axios.get(that.$store.state.path + '/newmedia/sysCommon/getCommonUrls.action').then(res => {
+    //     this.$store.commit('setHost', res.data.serverHostUrl);
+    //     this.$store.commit('setRelHost', res.data.serverHostUrl);
+    //   })
+    // }
     this.$axios.get(that.$store.state.host + that.$store.state.path + '/newmedia/mobile/live/addAccessTotal.action', { params: { liveTitleId: that.$store.state.liveTitleId } })
     await this._liveInit()
     await this._getTabProp()

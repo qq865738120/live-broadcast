@@ -1,6 +1,15 @@
 /*工具类*/
 
 /*
+验证手机号
+参数：phone 手机号
+返回值：true表示验证通过，false表示验证失败
+*/
+const checkPhone = function(phone){
+  return /^1[345678]\d{9}$/.test(phone) ? true : false
+}
+
+/*
 判断设备系统类型
 返回值：0表示安卓，1表示ios，2表示其它
 */
@@ -107,12 +116,36 @@ function formateMoney(val, isCut) {
   return (((sign)?'':'-') + val + '.' + cents);
 }
 
+/**
+ * 节流
+ */
+var canRun = true;
+const throttle = function (callback, time) {
+  if (canRun) {
+    canRun = false;
+    setTimeout(callback, time)
+    setTimeout(()=>{canRun = true},time);
+  }
+}
+
+/**
+ * 防抖
+ */
+var timer = false;
+const antiShake = function (callback, time) {
+  clearTimeout(timer);
+  timer = setTimeout(callback, time);
+}
+
 export default {
+  checkPhone,
   driverType,
   getParam,
   waitTask,
   string2Date,
   timeDifference,
   timeStemp2DateArr,
-  formateMoney
+  formateMoney,
+  throttle,
+  antiShake
 }

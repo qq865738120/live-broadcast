@@ -127,10 +127,13 @@ const _IntelligenceInteractionTimer = function(hasData) {
 const init = async function(that) {
   context = that;
   getLiveWatched(); //获取直播访问人数
+  setInterval(() => {
+    getLiveWatched(); //60秒实时刷新
+  }, 60000)
   // await _liveInit();
   getInteractionList({ //获取互动列表
     curMaxId: "",
-    rows: 4,
+    rows: 5,
     liveId: context.$store.state.liveTitleId
   }, true);
   refreshOrder({ //获取成交订单列表
@@ -169,10 +172,10 @@ const init = async function(that) {
   }
   if (!(context.hasInteraction || context.isShowBuyButton)) {
     // setSwiperHeight('8.01rem', '9.21rem');
-    setSwiperHeight('calc(100% - 2.42rem)', 'calc(100% - 1.22rem)');
+    setSwiperHeight('calc(100% - 2.58rem)', 'calc(100% - 1.38rem)');
   } else {
     // setSwiperHeight('6.78rem', '7.98rem');
-    setSwiperHeight('calc(100% - 3.65rem)', 'calc(100% - 2.45rem)');
+    setSwiperHeight('calc(100% - 3.81rem)', 'calc(100% - 2.61rem)');
   }
   // context.$store.commit('switchInitFag'); //将初始化标志置位true
 }
@@ -200,7 +203,10 @@ const getInteractionList = function(parameter, isFirst) {
         let count = 0;
         let id = setInterval(() => {
           if ( count++ > 2 ) clearInterval(id);
-          context.$refs.scrollerEvent[0].reset(); //下拉刷新数据请求成功后需调用此函数刷新界面
+          if ( context.$refs != undefined && context.$refs.scrollerEvent != undefined && context.$refs.scrollerEvent[0] != undefined ) {
+            let top = context.$('.xs-container').height() < context.$('.swiper-content').height() ? 0 : context.$('.xs-container').height() - context.$('.swiper-content').height()
+            context.$refs.scrollerEvent[0].reset({top: top}, 400, 'ease-in-out'); //下拉刷新数据请求成功后需调用此函数刷新界面
+          }
         }, 1000)
         if (isFirst) { //如果是第一次调用，则将minInteractionId初始化
           context.$store.commit('setMinInteractionId', res.data.rows[0].id);
@@ -286,7 +292,7 @@ const refreshOrder = function(parameter, isReset) {
 const getLiveWatched = function() {
   return new Promise(resolve => {
     context.$axios.get(context.$store.state.host + context.$store.state.path + '/newmedia/mobile/live/getAccessTotal.action', { params: { liveTitleId: context.$store.state.liveTitleId } }).then(res => {
-      console.log('直播访问人数', res.data);
+      // console.log('直播访问人数', res.data);
       if (res.data.status == 100) {
         context.watched = res.data.data.accessTotal;
       }

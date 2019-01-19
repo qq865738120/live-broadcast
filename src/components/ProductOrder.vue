@@ -1,32 +1,37 @@
 <template>
-  <div class="root">
-    <div class="head">
-      <img v-lazy="headimg"/>
-      <div class="head-right">
-        <div>
-          <p>￥{{ checkerArr[check].price }}</p>
-          <p>快递佣金：￥{{ checkerArr[check].expressPrice }}</p>
-          <p>自提佣金：￥{{ checkerArr[check].autonomyPrice }}</p>
-        </div>
-        <div class="iconfont icon-plus-close colse-icon" @click="onCloseClick"></div>
-      </div>
+  <div>
+    <div class="mask">
+
     </div>
-    <div class="content">
-      <div>
-        <p>规格名称</p>
-        <Checker
-          v-model="check"
-          class="checker"
-          default-item-class="checker-default"
-          selected-item-class="checker-selected"
-          :radio-required="true">
-          <CheckerItem class="checker-item" v-for="(item, index) in checkerArr" :key="item.id" :value="index">{{ item.value }}</CheckerItem>
-        </Checker>
+    <div class="root">
+      <div class="head">
+        <img v-lazy="headimg"/>
+        <div class="head-right">
+          <div>
+            <p>￥{{ checkerArr[check].price }}</p>
+            <p>快递佣金：￥{{ checkerArr[check].expressPrice }}</p>
+            <p>自提佣金：￥{{ checkerArr[check].autonomyPrice }}</p>
+          </div>
+          <div class="iconfont icon-plus-close colse-icon" @click="onCloseClick"></div>
+        </div>
       </div>
-      <group class="number-group">
-        <x-number v-model="count" title="购买数量" :min="1"></x-number>
-      </group>
-      <XButton class="button" @click.native="submit">确认订单</XButton>
+      <div class="content">
+        <div>
+          <p>规格名称</p>
+          <Checker
+            v-model="check"
+            class="checker"
+            default-item-class="checker-default"
+            selected-item-class="checker-selected"
+            :radio-required="true">
+            <CheckerItem class="checker-item" v-for="(item, index) in checkerArr" :key="item.id" :value="index">{{ item.value }}</CheckerItem>
+          </Checker>
+        </div>
+        <group class="number-group">
+          <x-number v-model="count" title="购买数量" :min="1"></x-number>
+        </group>
+        <XButton class="button" @click.native="submit">确认订单</XButton>
+      </div>
     </div>
   </div>
 </template>
@@ -98,6 +103,13 @@ export default {
 <style scoped lang="scss">
 @import '@/assets/style/common.scss';
 
+.mask {
+  width: 100%;
+  height: 550px;
+  background-color: rgba(0, 0, 0, 0.4);
+  position: fixed;
+  top: 0;
+}
 .root {
   width: calc(100% - 24px);
   height: 400px;
@@ -149,6 +161,9 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+}
+.content>div {
+  margin-top: 15px;
 }
 .content>div>p:first-child {
   font-size: 16px;
