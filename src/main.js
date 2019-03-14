@@ -70,7 +70,7 @@ new Vue({
       let config = {
         /* 本地开发使用此配置 */
         environment: 'local', //本地环境配为local，线上环境配为online
-        host: 'http://180.180.180.133', //本地环境
+        host: 'http://180.180.180.108', //本地环境
         path: '/api',
 
         /* 打包的话使用此配置 */
