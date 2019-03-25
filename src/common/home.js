@@ -14,6 +14,13 @@ let interactionFag = 0 //互动消息标志，接口返回数据应进行自减�
 let currentTime = 0 //当前定时器时间
 
 /*
+判断是否是home2页面
+*/
+const _isHome2Page = function() {
+  return context.$route.name == 'Home2' ? true : false
+}
+
+/*
 tab栏以及广告条配置项数据格式化并填充界面。
 此方法需要等待初始化完成后进行。
 */
@@ -50,7 +57,7 @@ const _formateTabData = function() {
   }
   if (onProduct && onBuyButton) { //立即购买按钮配置，只有当后台的立即购买开关和产品开关同时打开才显示
     context.isShowBuyButton = true;
-    context.inputWidth = '2.5rem'
+    context.inputWidth = _isHome2Page() ? '5rem' : '2.5rem'
   } else {
     context.isShowBuyButton = false;
     context.inputWidth = '7.4rem';

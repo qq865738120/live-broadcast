@@ -2,9 +2,9 @@
   <div>
     <div class="title-bar" v-if="showTitle">{{ title }}</div>
     <div id="video-container" :style="{ height: videoBoxHeight }"></div>
-    <div class="content" :style="{ top: contentTop, height: contentHeight }">
+    <!-- <div class="content" :style="{ top: contentTop, height: contentHeight }">
       <slot></slot>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -20,7 +20,7 @@ export default {
   async mounted() {
     const that = this;
     fontSize = parseInt(this.$('html').css('font-size').replace('px', ''));
-    videoHeight = window.screen.width / (fontSize * 16) * 9
+    videoHeight = window.screen.height / fontSize - 1.38;
     console.log('screen.availHeight', window.screen.availHeight);
     console.log('screen.height', window.screen.height);
     console.log('window', window.innerHeight);
@@ -67,14 +67,17 @@ export default {
     */
     this.$('.vcp-player').css("background","#f5f5f5");
     this.$('.vcp-player video').css("background","#f5f5f5");
-    this.$('.vcp-player video').css("object-position","top");
+    this.$('.vcp-player video').css("object-position","center");
     this.$('.vcp-poster-pic').removeClass('default');
     this.$('.vcp-poster-pic').css({
       "position": "absolute",
       "width": "100%",
       "height": videoHeight + 'rem'
     });
-    this.$('.vcp-controls-panel').css('top', videoHeight - 0.9 + 'rem');
+    this.$('.vcp-controls-panel').css({
+      'top': videoHeight - 0.9 + 'rem',
+      'display': 'none'
+    });
     this.$('.vcp-controls-panel').height(controlsBarH);
     this.$('.vcp-playtoggle').width(controlsBarH);
     this.$('.vcp-timelabel').css({
