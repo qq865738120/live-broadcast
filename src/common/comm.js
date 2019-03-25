@@ -311,8 +311,9 @@ async function SKAjaxgetSoukongAccountId(openId,cmpyId){
 	// 		if(data) soukongAccountId=data.soukongAccountId;
 	// 	}
 	// })
-	soukongAccountId = await context.$axios.get(context.$store.state.host + context.$store.state.path + '/newmedia/mobile/wechatAccount/getSoukongAccountId.action', { params: {'openId':openId,'cmpyId':cmpyId} })
-	return soukongAccountId.data.soukongAccountId;
+	soukongAccountId = await context.$axios.get(context.$store.state.host + context.$store.state.path + '/newmedia/mobile/wechatAccount/getSoukongAccountIdByOpenIdAndCmpyId.action', { params: {'openId':openId,'cmpyId':cmpyId} })
+
+	return soukongAccountId.data.communicator == "1" ? soukongAccountId.data.soukongAccountId : '';
 }
 
 async function doShare() {
@@ -330,10 +331,8 @@ async function doShare() {
 	var level;
 	let parentOpenId = ''
 	let soukongUID = await SKAjaxgetSoukongAccountId(urlParam.openId, urlParam.cmpyId);
-	if (soukongUID != 'null') {
+	if (soukongUID) {
 		FUID = soukongUID
-	} else if (context.$store.state.accountId != '') {
-		FUID = context.$store.state.accountId
 	} else if (urlParam.FUID) {
 		FUID = urlParam.FUID;
 	}
