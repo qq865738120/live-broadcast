@@ -48,7 +48,7 @@ export default {
       await this.$axios.get(that.$store.state.host + that.$store.state.path + '/newmedia/mobile/live/getLive.action', { params: { liveTitleId: that.$utils.getParam('liveTitleId') } }).then(res => {
         console.log('主页相关参数', res.data);
         if (res.data.status == 'Y') {
-          this.$store.commit('setTitle', res.data.row.title);
+          this.$store.commit('setTitle', res.data.row.title.length > 13 ? res.data.row.title.substring(0, 12) + '...' : res.data.row.title);
           this.$store.commit('setShopNumber', res.data.shopNumber);
           this.$store.commit('setProductId', res.data.row.productId != undefined ? res.data.row.productId : '');
           this.$store.commit('setIsLive', res.data.row.playback == 0 ? true : false);

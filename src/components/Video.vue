@@ -2,6 +2,7 @@
   <div>
     <div class="title-bar" v-if="showTitle">{{ title }}</div>
     <div id="video-container" :style="{ height: videoBoxHeight }"></div>
+    <img class="cover" v-if="!$store.state.isStart" v-lazy="$store.state.videoCoverpic" />
     <div class="content" :style="{ top: contentTop, height: contentHeight }">
       <slot></slot>
     </div>
@@ -200,5 +201,11 @@ export default {
     position: relative;
     width: 100%;
     background-color: #f5f5f5;
+  }
+  .cover {
+    width: 100%;
+    height: 215px;
+    position: absolute;
+    top: 0;
   }
 </style>
