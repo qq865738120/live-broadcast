@@ -6,6 +6,7 @@ import Router from 'vue-router'
 // import PayFailPage from '@/components/PayFailPage'
 
 const Home = () => import('@/components/Home')
+const Home2 = () => import('@/components/Home2')
 const RedPacketPage = () => import('@/components/RedPacketPage')
 const PaySuccessPage = () => import('@/components/PaySuccessPage')
 const PayFailPage = () => import('@/components/PayFailPage')
@@ -19,6 +20,11 @@ export default new Router({
       path: '/',
       name: 'Home',
       component: Home
+    },
+    { // 竖屏模式主页
+      path: '/home2',
+      name: 'Home2',
+      component: Home2
     },
     { // 发红包页面
       path: '/red',
