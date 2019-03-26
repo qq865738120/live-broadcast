@@ -204,15 +204,16 @@ const getInteractionList = function(parameter, isFirst) {
   context.$store.commit('switchRequestInteraction');
   return new Promise(resolve => {
     context.$axios.get(context.$store.state.host + context.$store.state.path + '/newmedia/mobile/liveMessage/getLeaveMessageNewPass.action', { params: parameter }).then(res => {
-      // console.log('互动列表刷新', res.data);
+      console.log('互动列表刷新', res.data);
       if (res.data.status == 'Y') {
         context.interactionList.push(..._formateInteractionList(res.data.rows));
         let count = 0;
+        let event = _isHome2Page() ? context.$refs.scrollerEvent : context.$refs.scrollerEvent[0];
         let id = setInterval(() => {
           if ( count++ > 2 ) clearInterval(id);
-          if ( context.$refs != undefined && context.$refs.scrollerEvent != undefined && context.$refs.scrollerEvent[0] != undefined ) {
+          if ( context.$refs != undefined && context.$refs.scrollerEvent != undefined && event != undefined ) {
             let top = context.$('.xs-container').height() < context.$('.swiper-content').height() ? 0 : context.$('.xs-container').height() - context.$('.swiper-content').height()
-            context.$refs.scrollerEvent[0].reset({top: top}, 400, 'ease-in-out'); //下拉刷新数据请求成功后需调用此函数刷新界面
+            event.reset({top: top}, 400, 'ease-in-out'); //下拉刷新数据请求成功后需调用此函数刷新界面
           }
         }, 1000)
         if (isFirst) { //如果是第一次调用，则将minInteractionId初始化

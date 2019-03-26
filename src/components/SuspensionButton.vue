@@ -258,9 +258,6 @@ export default {
   font-size: 20px !important;
 }
 .root {
-  position: absolute;
-  bottom: 80px;
-  right: 6px;
   display: flex;
   flex-direction: column;
   align-items: center;

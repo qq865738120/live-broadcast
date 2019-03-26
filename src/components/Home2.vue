@@ -15,8 +15,30 @@
     <!-- 底部菜单结束 -->
 
     <!-- 悬浮按钮开始 -->
-    <SuspensionButton></SuspensionButton>
+    <div class="suspension">
+      <SuspensionButton></SuspensionButton>
+      <SuspensionTabs :introduction="summaryContent" :cus1="customContent1" :cus2="customContent2" :cus3="customContent3"></SuspensionTabs>
+    </div>
     <!-- 悬浮按钮结束 -->
+
+    <!-- 互动开始 -->
+    <div class="interaction">
+      <Scroller
+        lock-x
+        height="100%"
+        ref="scrollerEvent"
+        use-pulldown
+        :pulldown-config="pulldownConfig"
+        @on-pulldown-loading="loadingHistoryInteraction">
+        <div>
+          <div class="interaction-item" v-for="item in interactionList">
+            <img v-lazy="item.icon"/>
+            <span class="com-over-length">{{ item.message }}</span>
+          </div>
+        </div>
+      </Scroller>
+    </div>
+    <!-- 互动结束 -->
 
     <!-- 消息输入框开始 -->
     <transition
@@ -39,10 +61,9 @@
     <transition
       enter-active-class="animated slideInUp faster"
       leave-active-class="animated slideOutDown faster">
-      <div>
-        <ProductOrder v-show="isShowProductOrder" @on-close="isShowProductOrder = false"></ProductOrder>
+      <div class="product-order">
+        <ProductOrder class="product-order-com" v-show="isShowProductOrder" @on-close="isShowProductOrder = false"></ProductOrder>
       </div>
-      
     </transition>
     <!-- 产品提交订单结束 -->
   </div>
@@ -55,6 +76,7 @@ import MessageInputBar from '@/components/MessageInputBar'
 import ProductOrder from '@/components/ProductOrder'
 import SuspensionButton from '@/components/SuspensionButton'
 import OrderListItem from '@/components/OrderListItem'
+import SuspensionTabs from '@/components/SuspensionTabs'
 import methods from '@/common/home.js'
 
 let isFirstTapInput // 是否是第一次点击底部输入框
@@ -124,14 +146,6 @@ export default {
         // { id: 0, title: '标题啊标题啊0', time: '1小时', message: '这是一条消息这是一条消息这是一条消息', isMaster: false, icon: 'http://img2.imgtn.bdimg.com/it/u=3197537752,2095789724&fm=26&gp=0.jpg', image: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1544776923060&di=31b3a9fd116050fa5baf6dfbe7231233&imgtype=0&src=http%3A%2F%2Fh.hiphotos.baidu.com%2Fimage%2Fpic%2Fitem%2Ff2deb48f8c5494eec7036a5f20f5e0fe99257e56.jpg' },
         // { id: 1, title: '标题啊标题啊0', time: '1小时', message: '这是一条消息这是一条消息这是一条消息', isMaster: false, icon: 'http://img2.imgtn.bdimg.com/it/u=3197537752,2095789724&fm=26&gp=0.jpg', image: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1544776923060&di=31b3a9fd116050fa5baf6dfbe7231233&imgtype=0&src=http%3A%2F%2Fh.hiphotos.baidu.com%2Fimage%2Fpic%2Fitem%2Ff2deb48f8c5494eec7036a5f20f5e0fe99257e56.jpg' }
       ],
-      pullupConfig: { //Scroll组件上拉配置
-        content: '上拉加载',
-        height: 60,
-        downContent: '释放刷新',
-        upContent: '上拉加载',
-        loadingContent: '加载中...',
-        clsPrefix: 'scroll-pull-'
-      },
       pulldownConfig: { //Scroll组件上拉配置
         downContent: '下拉加载',
         upContent: '释放刷新',
@@ -160,7 +174,8 @@ export default {
     MessageInputBar,
     ProductOrder,
     SuspensionButton,
-    OrderListItem
+    OrderListItem,
+    SuspensionTabs
   },
   methods: {
     switchTabBody(index) {
@@ -210,7 +225,7 @@ export default {
         liveId: that.$store.state.liveTitleId
       });
       this.$nextTick(() => {
-        this.$refs.scrollerEvent[0].donePulldown(); //下拉刷新数据请求成功后需调用此函数刷新界面
+        this.$refs.scrollerEvent.donePulldown(); //下拉刷新数据请求成功后需调用此函数刷新界面
       })
     },
 
@@ -272,32 +287,6 @@ export default {
           })
           break;
       }
-    },
-
-    async refreshOrder() { //刷新订单列表
-      let that = this;
-      await methods.refreshOrder({
-        autoObjectId: that.$store.state.liveTitleId,
-        page: that.$store.state.orderPage,
-        rows: 10
-      }, true);
-      this.$nextTick(() => {
-        this.$refs.scrollerEvent2[0].donePulldown(); //下拉刷新数据请求成功后需调用此函数刷新界面
-      })
-    },
-
-    async loadingMoreOrder() { //加载更多订单列表
-      let that = this;
-      that.$store.commit('addOrderPage');
-      await methods.refreshOrder({
-        autoObjectId: that.$store.state.liveTitleId,
-        page: that.$store.state.orderPage,
-        rows: 10
-      }, false);
-      this.$nextTick(() => {
-        this.$refs.scrollerEvent2[0].donePullup(); //上拉刷新数据请求成功后需调用此函数刷新界面
-        this.$refs.scrollerEvent2[0].reset(0);
-      })
     },
 
     goHome() { //首页按钮事件
@@ -421,7 +410,41 @@ export default {
     background-color: rgba(0, 0, 0, 0.3)
   }
   .product-order {
-    position: relative;
-
+    position: absolute;
+    width: 100%;
+    bottom: -424px;
+  }
+  .suspension {
+    position: absolute;
+    bottom: 80px;
+    right: 6px;
+  }
+  .interaction {
+    width: 200px;
+    height: 200px;
+    position: absolute;
+    bottom: 50px;
+    left: 10px;
+  }
+  .interaction-item {
+    background-color: rgba(0, 0, 0, 0.4);
+    padding: 2px;
+    border-radius: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    margin-bottom: 6px;
+    width: fit-content;
+  }
+  .interaction-item img {
+    width: 30px;
+    height: 30px;
+    border-radius: 20px;
+  }
+  .interaction-item span {
+    font-size: 16px;
+    color: white;
+    padding: 0 10px;
+    max-width: 146px;
   }
 </style>

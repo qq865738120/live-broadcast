@@ -132,7 +132,9 @@
       <!-- 底部菜单结束 -->
 
       <!-- 悬浮按钮开始 -->
-      <SuspensionButton></SuspensionButton>
+      <div class="suspension">
+        <SuspensionButton></SuspensionButton>
+      </div>
       <!-- 悬浮按钮结束 -->
 
       <!-- 消息输入框开始 -->
@@ -523,5 +525,10 @@ export default {
     top: -62px;
     right: 10px;
     background-color: rgba(0, 0, 0, 0.3)
+  }
+  .suspension {
+    position: absolute;
+    bottom: 80px;
+    right: 6px;
   }
 </style>
