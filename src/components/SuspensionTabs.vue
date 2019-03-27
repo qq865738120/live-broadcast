@@ -4,7 +4,7 @@
     <transition
       enter-active-class="animated slideInUp faster"
       leave-active-class="animated slideOutDown faster">
-      <div class="button sub-button margin-top" v-if="isIntroduction" v-show="isShowSub" @click="onIntroduction">
+      <div class="button sub-button margin-top" v-if="isIntroduction" v-show="$store.state.isShowSub2" @click="onIntroduction">
         <span>简介</span>
       </div>
     </transition>
@@ -12,7 +12,7 @@
     <transition
       enter-active-class="animated slideInUp faster"
       leave-active-class="animated slideOutDown faster">
-      <div class="button sub-button margin-top" v-if="isDetail" v-show="isShowSub" @click="onDetail">
+      <div class="button sub-button margin-top" v-if="isDetail" v-show="$store.state.isShowSub2" @click="onDetail">
         <span>详情</span>
       </div>
     </transition>
@@ -20,7 +20,7 @@
     <transition
       enter-active-class="animated slideInUp faster"
       leave-active-class="animated slideOutDown faster">
-      <div class="button sub-button margin-top" v-if="isProduct" v-show="isShowSub" @click="onOrder">
+      <div class="button sub-button margin-top" v-if="isProduct" v-show="$store.state.isShowSub2" @click="onOrder">
         <span>成交</span>
       </div>
     </transition>
@@ -28,7 +28,7 @@
     <transition
       enter-active-class="animated slideInUp faster"
       leave-active-class="animated slideOutDown faster">
-      <div class="button sub-button margin-top" v-if="isCus1" v-show="isShowSub" @click="onCus1">
+      <div class="button sub-button margin-top" v-if="isCus1" v-show="$store.state.isShowSub2" @click="onCus1">
         <span class="com-over-length-2">{{ isCus1Text }}</span>
       </div>
     </transition>
@@ -36,7 +36,7 @@
     <transition
       enter-active-class="animated slideInUp faster"
       leave-active-class="animated slideOutDown faster">
-      <div class="button sub-button margin-top com-over-length-2" v-if="isCus2" v-show="isShowSub" @click="onCus2">
+      <div class="button sub-button margin-top com-over-length-2" v-if="isCus2" v-show="$store.state.isShowSub2" @click="onCus2">
         <span class="com-over-length-2">{{ isCus2Text }}</span>
       </div>
     </transition>
@@ -44,7 +44,7 @@
     <transition
       enter-active-class="animated slideInUp faster"
       leave-active-class="animated slideOutDown faster">
-      <div class="button sub-button margin-top com-over-length-2" v-if="isCus3" v-show="isShowSub" @click="onCus3">
+      <div class="button sub-button margin-top com-over-length-2" v-if="isCus3" v-show="$store.state.isShowSub2" @click="onCus3">
         <span class="com-over-length-2">{{ isCus3Text }}</span>
       </div>
     </transition>
@@ -193,7 +193,6 @@ export default {
 
   data() {
     return {
-      isShowSub: false,
       isIntroduction: false,
       showIntroduction: false,
       isDetail: false,
@@ -232,7 +231,8 @@ export default {
   methods: {
 
     onButtonTap() {
-      this.isShowSub = !this.isShowSub;
+      this.$store.commit('switchButtonRotate', 'tabs')
+      this.$store.commit('onSuspensionSwitch', 'tabs')
     },
 
     onClose() {

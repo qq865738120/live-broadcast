@@ -38,6 +38,10 @@ export default new Vuex.Store({
     videoSource: '', //视频源
     videoCoverpic: '', //视频首图
     redOrderNo: '', //红包订单
+    isVertical: false, // 是否是竖屏模式
+    isShowSub1: false, // 是否展开SuspersionButton组件
+    isShowSub2: false, // 是否展开SuspersionTabs组件
+    buttonRotate: '0deg' // SuspersionButton组件中按钮的旋转角度
   },
   mutations: {
     setEnvironment(state, value) {
@@ -141,6 +145,32 @@ export default new Vuex.Store({
     },
     setRedOrderNo(state, value) {
       state.redOrderNo = value;
+    },
+    setIsVertical(state, value) {
+      state.isVertical = value
+    },
+    onSuspensionSwitch(state, value) {
+      if (state.isVertical) {
+        if (value == 'button') {
+          state.isShowSub1 = !state.isShowSub1
+          state.isShowSub2 = false
+        } else if (value == 'tabs') {
+          state.isShowSub1 = false
+          state.isShowSub2 = !state.isShowSub2
+        }
+      } else {
+        if (value == 'button') {
+          state.isShowSub1 = !state.isShowSub1
+        }
+      }
+    },
+    switchButtonRotate(state, value) {
+      if (value == 'tabs') {
+        state.buttonRotate = '0deg'
+      } else {
+        state.buttonRotate = state.buttonRotate == '0deg' ? '180deg' : '0deg';
+      }
     }
+
   }
 })

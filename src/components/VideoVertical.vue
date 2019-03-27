@@ -105,9 +105,9 @@ export default {
     this.$('.vcp-player video').on("x5videoenterfullscreen", function() {
       console.log('进入同层全屏播放')
       that.$data.showTitle = true;
-      that.$('.vcp-player video').css("object-position","center 1.44rem");
+      that.$('.vcp-player video').css("object-position","center");
       that.$('.vcp-controls-panel').css('top', '5.93rem');
-      that.$data.videoBoxHeight = '6.84rem'
+      that.$data.videoBoxHeight = '100%'
       that.$('.vcp-controls-panel').css('z-index', '1000');
       that.$('.vcp-player').height(window.screen.height)
       that.$('.vcp-player video').height(window.screen.height)
@@ -117,9 +117,9 @@ export default {
     this.$('.vcp-player video').on("x5videoexitfullscreen", function() {
       console.log('退出同层全屏播放')
       that.$data.showTitle = false;
-      that.$('.vcp-player video').css("object-position","top");
+      that.$('.vcp-player video').css("object-position","center");
       that.$('.vcp-controls-panel').css('top', '4.49rem');
-      that.$data.videoBoxHeight = '5.4rem'
+      that.$data.videoBoxHeight = '100%'
       that.$('.vcp-bigplay').addClass("iconfont icon-bofang-yuanshijituantubiao com-flex-center");
       that.$('.vcp-controls-panel').css('z-index', '0');
       that.$('.vcp-player').height(window.screen.height - 72)

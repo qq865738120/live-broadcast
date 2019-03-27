@@ -213,6 +213,10 @@ const getInteractionList = function(parameter, isFirst) {
           if ( count++ > 2 ) clearInterval(id);
           if ( context.$refs != undefined && context.$refs.scrollerEvent != undefined && event != undefined ) {
             let top = context.$('.xs-container').height() < context.$('.swiper-content').height() ? 0 : context.$('.xs-container').height() - context.$('.swiper-content').height()
+            if (_isHome2Page()) {
+              top = context.$('.interaction-body').height() < context.$('.interaction').height() ? 0 : context.$('.interaction-body').height() - context.$('.interaction').height()
+            }
+            console.log('top', top);
             event.reset({top: top}, 400, 'ease-in-out'); //下拉刷新数据请求成功后需调用此函数刷新界面
           }
         }, 1000)

@@ -30,7 +30,7 @@
         use-pulldown
         :pulldown-config="pulldownConfig"
         @on-pulldown-loading="loadingHistoryInteraction">
-        <div>
+        <div class="interaction-body">
           <div class="interaction-item" v-for="item in interactionList">
             <img v-lazy="item.icon"/>
             <span class="com-over-length">{{ item.message }}</span>
@@ -52,9 +52,9 @@
     <!-- 消息输入框结束 -->
 
     <!-- 视频中的悬浮按钮开始 -->
-    <div class="iconfont icon-home home-button com-flex-center" v-if="isShowHome" @click="goHome"></div>
-    <div class="live-state com-flex-center"><img v-lazy="'http://xmt.soukong.cn/newmedia/pages/mobile/MicroWebsite/livebroadcast/img/play.gif'" />{{ $store.state.isStart ? ($store.state.isLive ? '直播中' : '回看') : '未开始' }}</div>
-    <div class="iconfont icon-chakan looked com-flex-center">{{ watched }}人</div>
+    <div class="iconfont icon-home home-button com-flex-center" :style="{ top: top + 'rem' }" v-if="isShowHome" @click="goHome"></div>
+    <div class="live-state com-flex-center" :style="{ top: top + 'rem' }"><img v-lazy="'http://xmt.soukong.cn/newmedia/pages/mobile/MicroWebsite/livebroadcast/img/play.gif'" />{{ $store.state.isStart ? ($store.state.isLive ? '直播中' : '回看') : '未开始' }}</div>
+    <div class="iconfont icon-chakan looked com-flex-center" :style="{ top: top + 1 + 'rem' }">{{ watched }}人</div>
     <!-- 视频中的悬浮按钮结束 -->
 
     <!-- 产品提交订单开始 -->
@@ -166,6 +166,7 @@ export default {
       isShowHome: false, //是否显示返回首页按钮
       hasInteraction: false, //是否有互动栏
       inputButtom: (200 / fontSize) + 'rem',
+      top: 10 / fontSize //距离页面顶部的距离
     }
   },
   components: {
@@ -182,24 +183,14 @@ export default {
       console.log(index);
     },
 
-    setContentHeight() { //设置中间内容组件高度
-      if (!(this.hasInteraction || this.isShowBuyButton)) {
-        // setSwiperHeight('8.01rem', '9.21rem');
-        methods.setSwiperHeight('calc(100% - 2.08rem)', 'calc(100% - 0.88rem)');
-      } else {
-        // setSwiperHeight('6.78rem', '7.98rem');
-        methods.setSwiperHeight('calc(100% - 3.81rem)', 'calc(100% - 2.61rem)');
-      }
-    },
-
     x5EnterFullscreen() { //安卓机进入x5同层播放触发事件函数
       // methods.setSwiperHeight('7.33rem', '8.53rem');
-      this.setContentHeight()
+      this.top = 60 / fontSize
     },
 
     x5ExitFullscreen() { //安卓机退出x5同层播放触发事件函数
       // methods.setSwiperHeight('6.78rem', '7.98rem');
-      this.setContentHeight()
+      this.top = 10 / fontSize
     },
 
     onClickBuyButton() { //购买按钮点击事件
@@ -376,7 +367,6 @@ export default {
     background-color: rgba(255, 255, 255, 0.5);
     color: $--main-color;
     position: absolute;
-    top: 60px;
     left: 10px;
     border-radius: 50%;
     font-size: 18px;
@@ -389,7 +379,6 @@ export default {
     border: 1px solid white;
     background-color: #F80114;
     position: absolute;
-    top: 60px;
     right: 10px;
   }
   .live-state img {
@@ -405,7 +394,6 @@ export default {
     font-size: 12px;
     display: inline;
     position: absolute;
-    top: 96px;
     right: 10px;
     background-color: rgba(0, 0, 0, 0.3)
   }

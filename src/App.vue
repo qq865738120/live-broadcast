@@ -54,8 +54,12 @@ export default {
           this.$store.commit('setIsLive', res.data.row.playback == 0 ? true : false);
           this.$store.commit('setIsStart', res.data.row.status == 0 ? false : true);
           this.$store.commit('setVideoSource', this.$store.state.isLive ? res.data.row.receiveHlsStreamUrl : !res.data.row.otherPalybackUrl ? res.data.row.palybackUrl : res.data.row.otherPalybackUrl);
-          this.$store.commit('setVideoCoverpic', res.data.row.logo);
+          this.$store.commit('setVideoCoverpic', res.data.row.screen == 0 ? res.data.row.logo : res.data.row.logo2);
           this.$store.commit('setAccountId', res.data.row.soukongAccountId != undefined ? res.data.row.soukongAccountId : '')
+          this.$store.commit('setIsVertical', res.data.row.screen == 0 ? false : true)
+          if (this.$store.state.isVertical) {
+            this.$router.replace('/home2')
+          }
         }
       })
       await this.$axios.get(that.$store.state.host + that.$store.state.path + '/newmedia/mobile/cmpySetting/selectCompanyInFo.action', { params: { cmpyId: that.$store.state.cmpyId } }).then(res => {
