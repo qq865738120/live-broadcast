@@ -75,10 +75,8 @@ export default {
       "height": videoHeight + 'rem'
     });
     this.$('.vcp-controls-panel').css({
-      'top': videoHeight - 0.9 + 'rem',
       'display': 'none'
     });
-    this.$('.vcp-controls-panel').height(controlsBarH);
     this.$('.vcp-playtoggle').width(controlsBarH);
     this.$('.vcp-timelabel').css({
       'height': controlsBarH,
@@ -99,41 +97,25 @@ export default {
       'color': '#f5f5f5',
     })
     this.$('.vcp-bigplay').addClass("iconfont icon-bofang-yuanshijituantubiao com-flex-center");
-    this.$('.vcp-controls-panel').css('z-index', '0');
 
     /* 安卓同层播放监听 */
     this.$('.vcp-player video').on("x5videoenterfullscreen", function() {
       console.log('进入同层全屏播放')
       that.$data.showTitle = true;
       that.$('.vcp-player video').css("object-position","center");
-      that.$('.vcp-controls-panel').css('top', '5.93rem');
       that.$data.videoBoxHeight = '100%'
-      that.$('.vcp-controls-panel').css('z-index', '1000');
       that.$('.vcp-player').height(window.screen.height)
       that.$('.vcp-player video').height(window.screen.height)
-      that.$data.contentHeight = window.innerHeight / fontSize - videoHeight + 0.8 + 'rem'
       that.$emit('x5-enter-fullscreen')
     })
     this.$('.vcp-player video').on("x5videoexitfullscreen", function() {
       console.log('退出同层全屏播放')
       that.$data.showTitle = false;
       that.$('.vcp-player video').css("object-position","center");
-      that.$('.vcp-controls-panel').css('top', '4.49rem');
       that.$data.videoBoxHeight = '100%'
       that.$('.vcp-bigplay').addClass("iconfont icon-bofang-yuanshijituantubiao com-flex-center");
-      that.$('.vcp-controls-panel').css('z-index', '0');
       that.$('.vcp-player').height(window.screen.height - 72)
       that.$('.vcp-player video').height(window.screen.height - 72)
-      if (sureFullScreen) {
-        setTimeout(function() {
-          that.$('.vcp-player video').show();
-          player.fullscreen(true);
-          sureFullScreen = false;
-        }, 100)
-      }
-      setTimeout(() => {
-        that.$data.contentHeight = window.innerHeight / fontSize - videoHeight + 0.2 + 'rem'
-      }, 140)
       that.$emit('x5-exit-fullscreen')
     })
 
@@ -151,7 +133,6 @@ export default {
     ios兼容性处理
     */
     if (this.$utils.driverType() == 1) {
-      this.$('.vcp-controls-panel').css('z-index', '1000');
       this.$('.vcp-fullscreen-toggle').on('click', function() {
         // alert('ok')
         // if (fullScreenSwitch) {
@@ -163,8 +144,8 @@ export default {
         // document.getElementsByTagName('video')[0].webkitEnterFullScreen();
         // document.getElementsByTagName('video')[0].webkitEnterFullScreen()
       })
-      that.$('.vcp-player').height(window.screen.height - 142)
-      that.$('.vcp-player video').height(window.screen.height - 142)
+      that.$('.vcp-player').height(window.screen.height)
+      that.$('.vcp-player video').height(window.screen.height)
     }
   },
   props: {
@@ -174,7 +155,7 @@ export default {
     return {
       showTitle: false,
       contentTop: '',
-      videoBoxHeight: '5.4rem',
+      videoBoxHeight: '100%',
       contentHeight: ''
     }
   }

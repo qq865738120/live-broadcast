@@ -58,7 +58,9 @@ export default {
           this.$store.commit('setAccountId', res.data.row.soukongAccountId != undefined ? res.data.row.soukongAccountId : '')
           this.$store.commit('setIsVertical', res.data.row.screen == 0 ? false : true)
           if (this.$store.state.isVertical) {
-            this.$router.replace('/home2')
+            this.$router.replace('/home2?' + window.location.href.split('?')[1])
+          } else {
+            this.$router.replace('/home' + window.location.href.split('?')[1])
           }
         }
       })

@@ -5,6 +5,7 @@ import Router from 'vue-router'
 // import PaySuccessPage from '@/components/PaySuccessPage'
 // import PayFailPage from '@/components/PayFailPage'
 
+const Index = () => import('@/components/Index')
 const Home = () => import('@/components/Home')
 const Home2 = () => import('@/components/Home2')
 const RedPacketPage = () => import('@/components/RedPacketPage')
@@ -16,8 +17,13 @@ Vue.use(Router)
 
 export default new Router({
   routes: [
-    { // 主页
+    { // 空白首页
       path: '/',
+      name: 'Index',
+      component: Index
+    },
+    { // 主页
+      path: '/home',
       name: 'Home',
       component: Home
     },
