@@ -37,6 +37,17 @@ export default {
     // await this._getWechatConfig()
     this._optionWeixinShare()
     this.$store.commit('switchInitFag'); //将初始化标志置位true
+    if (this.$utils.driverType() == 1) { // 兼容ios键盘输入
+      that.$data.inputButtom = 0;
+      document.body.addEventListener('focusin', () => {
+          //软键盘弹出的事件处理
+          // that.$('body').scrollTop(0)
+      })
+      document.body.addEventListener('focusout', () => {
+           //软键盘收起的事件处理
+           that.$('body').scrollTop(0)
+       })
+    }
   },
   components: {
     GridLoader
@@ -57,6 +68,7 @@ export default {
           this.$store.commit('setVideoCoverpic', res.data.row.logo);
           this.$store.commit('setAccountId', res.data.row.soukongAccountId != undefined ? res.data.row.soukongAccountId : '')
           this.$store.commit('setIsVertical', res.data.row.screen == 0 ? false : true)
+          if (this.$route.name == 'RedPacketPage') return
           if (this.$store.state.isVertical) {
             this.$router.replace('/home2?' + window.location.href.split('?')[1])
           } else {

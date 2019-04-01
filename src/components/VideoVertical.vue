@@ -2,6 +2,7 @@
   <div>
     <div class="title-bar" v-if="showTitle">{{ title }}</div>
     <div id="video-container" :style="{ height: videoBoxHeight }"></div>
+    <img class="cover" v-if="!$store.state.isStart" v-lazy="$store.state.videoCoverpic" />
     <!-- <div class="content" :style="{ top: contentTop, height: contentHeight }">
       <slot></slot>
     </div> -->
@@ -77,6 +78,7 @@ export default {
     this.$('.vcp-controls-panel').css({
       'display': 'none'
     });
+    this.$('.vcp-error-tips').css({ 'display': 'none', 'z-index': '0' })
     this.$('.vcp-playtoggle').width(controlsBarH);
     this.$('.vcp-timelabel').css({
       'height': controlsBarH,
@@ -87,8 +89,7 @@ export default {
     this.$('.vcp-fullscreen-toggle').height(controlsBarH);
     this.$('.vcp-loading').css({
       "margin-top": "0",
-      "z-index": "10000",
-      "top": "1.86rem"
+      "z-index": "10000"
     })
     this.$('.vcp-bigplay').css({
       'height': videoHeight + 'rem',
@@ -184,5 +185,11 @@ export default {
     position: relative;
     width: 100%;
     background-color: #f5f5f5;
+  }
+  .cover {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
   }
 </style>

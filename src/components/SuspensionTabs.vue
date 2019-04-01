@@ -49,7 +49,7 @@
       </div>
     </transition>
 
-    <div class="button base-botton margin-top com-flex-center iconfont icon-chanpin" @click="onButtonTap"></div>
+    <div class="button base-botton margin-top com-flex-center iconfont icon-chanpin" v-if="isIntroduction || isDetail || isProduct | isCus1 || isCus2 || isCus3" @click="onButtonTap"></div>
 
     <Popup v-model="showPopup" :show-mask="false" :is-transparent="true">
       <div class="popup">
@@ -277,7 +277,7 @@ export default {
 
     async refreshOrder() { //刷新订单列表
       let that = this;
-      await this.refreshOrder({
+      await this._refreshOrder({
         autoObjectId: that.$store.state.liveTitleId,
         page: that.$store.state.orderPage,
         rows: 10
@@ -290,7 +290,7 @@ export default {
     async loadingMoreOrder() { //加载更多订单列表
       let that = this;
       that.$store.commit('addOrderPage');
-      await this.refreshOrder({
+      await this._refreshOrder({
         autoObjectId: that.$store.state.liveTitleId,
         page: that.$store.state.orderPage,
         rows: 10
@@ -307,7 +307,7 @@ export default {
     参数：parameter 接口请求参数
          isReset 是否重置列表中已有信息
     */
-    refreshOrder (parameter, isReset) {
+    _refreshOrder (parameter, isReset) {
       let that = this
       return new Promise(resolve => {
         that.$axios.get(that.$store.state.host + that.$store.state.path + '/newmedia/mobile/live/getOrderList.action', { params: parameter }).then(res => {

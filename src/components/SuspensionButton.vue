@@ -52,7 +52,7 @@
       <div class="red-dialog-div">
         <img class="redImgs" v-show="redImgIndex != 'show' && redImgIndex != 'repeat'" v-lazy="redImgs[redImgIndex]" @click="onOpenRed" />
         <img class="redImgs" v-show="redImgIndex == 'repeat'" v-lazy="redImgs.repeat" />
-        <span v-show="redImgIndex != 'show'">{{ redImgIndex == 'fail' ? '很遗憾与红包擦肩而过' : (redImgIndex == 'success' ? '恭喜你获得1个包' : (redImgIndex == 'repeat' ? '您已领过红包啦~' : '')) }}</span>
+        <span v-show="redImgIndex != 'show'">{{ redImgIndex == 'fail' ? '很遗憾与红包擦肩而过' : (redImgIndex == 'success' ? '恭喜你获得1个红包' : (redImgIndex == 'repeat' ? '您已领过红包啦~' : '')) }}</span>
         <p class="amount" v-show="redImgIndex == 'show'">￥{{ amount }}</p>
         <img class="redImgs" v-show="redImgIndex == 'show'" v-lazy="redImgs.show" />
         <div v-show="redImgIndex == 'show'" class="continue-button" @click="showDialogRed = false">继续观看直播</div>
