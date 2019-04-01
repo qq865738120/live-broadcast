@@ -430,7 +430,7 @@ export default {
     border-radius: 20px;
   }
   .interaction-item span {
-    font-size: 16px;
+    font-size: 12px;
     color: white;
     padding: 0 10px;
     max-width: 146px;

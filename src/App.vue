@@ -38,7 +38,6 @@ export default {
     this._optionWeixinShare()
     this.$store.commit('switchInitFag'); //将初始化标志置位true
     if (this.$utils.driverType() == 1) { // 兼容ios键盘输入
-      that.$data.inputButtom = 0;
       document.body.addEventListener('focusin', () => {
           //软键盘弹出的事件处理
           // that.$('body').scrollTop(0)
@@ -72,7 +71,7 @@ export default {
           if (this.$store.state.isVertical) {
             this.$router.replace('/home2?' + window.location.href.split('?')[1])
           } else {
-            this.$router.replace('/home' + window.location.href.split('?')[1])
+            this.$router.replace('/home?' + window.location.href.split('?')[1])
           }
         }
       })

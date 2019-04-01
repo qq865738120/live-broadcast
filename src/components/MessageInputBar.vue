@@ -98,7 +98,7 @@ export default {
   padding: 0 15px;
 }
 .bottom {
-  margin: 0 14px 14px 20px;
+  margin: 0 14px 20px 20px;
   // width: 159px;
   display: flex;
   align-items: center;

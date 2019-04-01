@@ -197,17 +197,17 @@ export default {
       lastBodyResize = window.innerHeight;
     }
 
-    // if (this.$utils.driverType() == 1) { // 兼容ios键盘输入
-    //   that.$data.inputButtom = 0;
-    //   document.body.addEventListener('focusin', () => {
-    //       //软键盘弹出的事件处理
-    //       // that.$('body').scrollTop(0)
-    //   })
-    //   document.body.addEventListener('focusout', () => {
-    //        //软键盘收起的事件处理
-    //        that.$('body').scrollTop(0)
-    //    })
-    // }
+    if (this.$utils.driverType() == 1) { // 兼容ios键盘输入
+      that.$data.inputButtom = 0;
+      document.body.addEventListener('focusin', () => {
+          //软键盘弹出的事件处理
+          // that.$('body').scrollTop(0)
+      })
+      document.body.addEventListener('focusout', () => {
+           //软键盘收起的事件处理
+           that.$('body').scrollTop(0)
+       })
+    }
     if (this.hasOrderList) { //成交栏相关bug修复
       setTimeout(() => {
         this.$('.scroll-pull-container').css({

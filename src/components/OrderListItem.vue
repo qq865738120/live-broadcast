@@ -58,7 +58,7 @@ export default {
   display: flex;
   align-items: center;
   margin-bottom: 1px;
-  flex-direction: row;
+  flex-direction: row !important;
 }
 .root>img {
   width: 25px;

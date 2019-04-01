@@ -70,7 +70,11 @@ export default {
           }
         }
         this.checkerArr = checkerArr;
-        this.$store.commit('setProductDetail', unescape(data.FullDesc).replace(/src/g, 'data').replace(/data-lazyload/g, 'src').replace(/<img/g, '<img style="width: 100%"'));
+        let productDetail = unescape(data.FullDesc).replace(/src/g, 'data').replace(/data-lazyload/g, 'src').replace(/<img/g, '<img style="width: 100%"');
+        if (this.$route.name == 'Home2') {
+          productDetail = productDetail.replace(/<p/g, '<p style="color: white"')
+        }
+        this.$store.commit('setProductDetail', productDetail);
       }
     })
   },
