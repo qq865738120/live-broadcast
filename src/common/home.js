@@ -158,34 +158,42 @@ const init = async function(that) {
   for (let item of context.tabItems) {
     if (item.typeId == 2) { //如果需要获取简介内容
       getTabContent(item.id).then(result => {
-        context.summaryContent = result.replace(/<img/g, '<img style="width: 100%"')
-        if (_isHome2Page) {
-          context.summaryContent = result.replace(/<p/g, '<p style="color: white"')
+        let res = result
+        res = res.replace(/<img/g, '<img style="width: 100%"')
+        if (_isHome2Page()) {
+          res = res.replace(/<p/g, '<p style="color: white"')
         }
+        context.summaryContent = res
       });
     }
     if (item.typeId == 10) { //如果需要获取自定义1内容
       getTabContent(item.id).then(result => {
-        context.customContent1 = result.replace(/<img/g, '<img style="width: 100%"')
-        if (_isHome2Page) {
-          context.customContent1 = result.replace(/<p/g, '<p style="color: white"')
+        let res = result
+        res = res.replace(/<img/g, '<img style="width: 100%"')
+        if (_isHome2Page()) {
+          res = res.replace(/<p/g, '<p style="color: white"')
         }
+        context.customContent1 = res
       });
     }
     if (item.typeId == 11) { //如果需要获取自定义2内容
       getTabContent(item.id).then(result => {
-        context.customContent2 = result.replace(/<img/g, '<img style="width: 100%"')
-        if (_isHome2Page) {
-          context.customContent2 = result.replace(/<p/g, '<p style="color: white"')
+        let res = result
+        res = res.replace(/<img/g, '<img style="width: 100%"')
+        if (_isHome2Page()) {
+          res = res.replace(/<p/g, '<p style="color: white"')
         }
+        context.customContent2 = res
       });
     }
     if (item.typeId == 12) { //如果需要获取自定义3内容
       getTabContent(item.id).then(result => {
-        context.customContent3 = result.replace(/<img/g, '<img style="width: 100%"')
-        if (_isHome2Page) {
-          context.customContent3 = result.replace(/<p/g, '<p style="color: white"')
+        let res = result
+        res = res.replace(/<img/g, '<img style="width: 100%"')
+        if (_isHome2Page()) {
+          res = res.replace(/<p/g, '<p style="color: white"')
         }
+        context.customContent3 = res
       });
     }
   }
@@ -217,7 +225,13 @@ const getInteractionList = function(parameter, isFirst) {
   return new Promise(resolve => {
     context.$axios.get(context.$store.state.host + context.$store.state.path + '/newmedia/mobile/liveMessage/getLeaveMessageNewPass.action', { params: parameter }).then(res => {
       console.log('互动列表刷新', res.data);
+      console.log("res.data.status", res.data.status);
       if (res.data.status == 'Y') {
+        console.log("isFirst111", isFirst);
+        if (isFirst) { //如果是第一次调用，则将minInteractionId初始化
+          context.$store.commit('setMinInteractionId', res.data.rows[0].id);
+        }
+        context.$store.commit('setMaxInteractionId', res.data.rows[res.data.rows.length - 1].id);
         context.interactionList.push(..._formateInteractionList(res.data.rows));
         let count = 0;
         let event = _isHome2Page() ? context.$refs.scrollerEvent : context.$refs.scrollerEvent[0];
@@ -228,14 +242,9 @@ const getInteractionList = function(parameter, isFirst) {
             if (_isHome2Page()) {
               top = context.$('.interaction-body').height() < context.$('.interaction').height() ? 0 : context.$('.interaction-body').height() - context.$('.interaction').height()
             }
-            console.log('top', top);
             event.reset({top: top}, 400, 'ease-in-out'); //下拉刷新数据请求成功后需调用此函数刷新界面
           }
         }, 1000)
-        if (isFirst) { //如果是第一次调用，则将minInteractionId初始化
-          context.$store.commit('setMinInteractionId', res.data.rows[0].id);
-        }
-        context.$store.commit('setMaxInteractionId', res.data.rows[res.data.rows.length - 1].id);
         _IntelligenceInteractionTimer(true);
       } else {
         _IntelligenceInteractionTimer(false);

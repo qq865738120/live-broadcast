@@ -107,6 +107,7 @@ export default {
       that.$data.videoBoxHeight = '100%'
       that.$('.vcp-player').height(window.screen.height)
       that.$('.vcp-player video').height(window.screen.height)
+      that.$('.vcp-bigplay').css({ "opacity": "0" })
       that.$emit('x5-enter-fullscreen')
     })
     this.$('.vcp-player video').on("x5videoexitfullscreen", function() {
@@ -115,6 +116,7 @@ export default {
       that.$('.vcp-player video').css("object-position","center");
       that.$data.videoBoxHeight = '100%'
       that.$('.vcp-bigplay').addClass("iconfont icon-bofang-yuanshijituantubiao com-flex-center");
+      that.$('.vcp-bigplay').css({ "opacity": "1" })
       that.$('.vcp-player').height(window.screen.height - 72)
       that.$('.vcp-player video').height(window.screen.height - 72)
       that.$emit('x5-exit-fullscreen')

@@ -74,6 +74,7 @@ export default {
         if (this.$route.name == 'Home2') {
           productDetail = productDetail.replace(/<p/g, '<p style="color: white"')
         }
+        productDetail += '<p><br /></p>'
         this.$store.commit('setProductDetail', productDetail);
       }
     })

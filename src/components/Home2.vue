@@ -32,7 +32,7 @@
         @on-pulldown-loading="loadingHistoryInteraction">
         <div class="interaction-body">
           <div class="interaction-item" v-if="item.message" v-for="item in interactionList">
-            <img v-lazy="item.icon"/>
+            <img :src="item.icon"/>
             <span class="com-over-length">{{ item.message }}</span>
           </div>
         </div>

@@ -296,9 +296,14 @@ export default {
         rows: 10
       }, false);
       this.$nextTick(() => {
-        console.log('this.$refs.scrollerEvent3', this.$refs.scrollerEvent3);
         this.$refs.scrollerEvent3.donePullup(); //上拉刷新数据请求成功后需调用此函数刷新界面
         this.$refs.scrollerEvent3.reset(0);
+        console.log("this.$('.popup .xs-container').css", this.$('.popup .xs-container').css('transform'));
+        if (this.orderList.length < 7) {
+          this.$('.popup .xs-container').css({
+            "transform": "translateX(0px) translateY(0px) translateZ(0px) scale(1, 1)"
+          })
+        }
       })
     },
 
