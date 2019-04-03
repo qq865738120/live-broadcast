@@ -5,9 +5,9 @@
   "author": "qq865738120 <zwj865738120@163.com>",
   "private": true,
   "scripts": {
-    "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
-    "start": "npm run dev",
-    "build": "node build/build.js"
+    "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js --env dev",
+    "build-test": "node build/build.js --env test",
+    "build-pro": "node build/build.js --env pro"
   },
   "dependencies": {
     "@saeris/vue-spinners": "^1.0.8",

@@ -132,7 +132,9 @@
       <!-- 底部菜单结束 -->
 
       <!-- 悬浮按钮开始 -->
-      <SuspensionButton></SuspensionButton>
+      <div class="suspension">
+        <SuspensionButton></SuspensionButton>
+      </div>
       <!-- 悬浮按钮结束 -->
 
       <!-- 消息输入框开始 -->
@@ -186,11 +188,9 @@ export default {
     fontSize = parseInt(this.$('html').css('font-size').replace('px', ''));
     let lastBodyResize = window.innerHeight // 最后一次窗口高度改变的值
     window.onresize = function () { // 解决安卓键盘手动隐藏的问题。ios不会生效
-      console.log(lastBodyResize);
       if (lastBodyResize < 500) {
         that.$store.commit('setInteractionInputing', false)
       }
-      console.log('input', window.innerHeight - lastBodyResize);
       that.$data.inputButtom = Math.abs(window.innerHeight - lastBodyResize) + 'px'
       lastBodyResize = window.innerHeight;
     }
@@ -523,5 +523,10 @@ export default {
     top: -62px;
     right: 10px;
     background-color: rgba(0, 0, 0, 0.3)
+  }
+  .suspension {
+    position: absolute;
+    bottom: 80px;
+    right: 6px;
   }
 </style>

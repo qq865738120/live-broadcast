@@ -68,7 +68,7 @@ export default {
             type: 'success'
           })
           setTimeout(() => {
-            that.$router.push('/')
+            this.$router.go(-1)
           }, 2400)
         } else if (res.data.code == 'EXIST') {
           this.$vux.toast.show({

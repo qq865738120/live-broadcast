@@ -5,28 +5,28 @@
     <transition
       enter-active-class="animated slideInUp faster"
       leave-active-class="animated slideOutDown faster">
-      <img class="button margin-top" v-show="isShowSub" @click="onLive" v-lazy="liveImg"/>
+      <img class="button margin-top" v-show="$store.state.isShowSub1" @click="onLive" v-lazy="liveImg"/>
     </transition>
 
     <transition
       enter-active-class="animated slideInUp faster"
       leave-active-class="animated slideOutDown faster">
-      <img class="button margin-top" v-if='isShowPersonal' v-show="isShowSub" @click="onPersonal" v-lazy="personalImg"/>
+      <img class="button margin-top" v-if='isShowPersonal' v-show="$store.state.isShowSub1" @click="onPersonal" v-lazy="personalImg"/>
     </transition>
 
     <transition
       enter-active-class="animated slideInUp faster"
       leave-active-class="animated slideOutDown faster">
-      <img class="button margin-top" v-if='isShowFollow' v-show="isShowSub" @click="onFollow" v-lazy="followImg"/>
+      <img class="button margin-top" v-if='isShowFollow' v-show="$store.state.isShowSub1" @click="onFollow" v-lazy="followImg"/>
     </transition>
 
     <transition
       enter-active-class="animated slideInUp faster"
       leave-active-class="animated slideOutDown faster">
-      <a class="button margin-top phone-button" :href="'tel:' + $store.state.telephone" v-show="isShowSub" @click="onPhone"></a>
+      <a class="button margin-top phone-button" :href="'tel:' + $store.state.telephone" v-show="$store.state.isShowSub1" @click="onPhone"></a>
     </transition>
 
-    <div class="button base-botton margin-top com-flex-center iconfont icon-jiantou" :style="{ transform: 'rotate(' + rotate + ')' }" @click="onButtonTap"></div>
+    <div class="button base-botton margin-top com-flex-center iconfont icon-jiantou" :style="{ transform: 'rotate(' + $store.state.buttonRotate + ')' }" @click="onButtonTap"></div>
 
     <XDialog v-model="showDialog" hide-on-blur>
       <!-- <Qrcode style="margin-top: 0.8rem" :value="qCode" type="img"></Qrcode> -->
@@ -52,7 +52,7 @@
       <div class="red-dialog-div">
         <img class="redImgs" v-show="redImgIndex != 'show' && redImgIndex != 'repeat'" v-lazy="redImgs[redImgIndex]" @click="onOpenRed" />
         <img class="redImgs" v-show="redImgIndex == 'repeat'" v-lazy="redImgs.repeat" />
-        <span v-show="redImgIndex != 'show'">{{ redImgIndex == 'fail' ? '很遗憾与红包擦肩而过' : (redImgIndex == 'success' ? '恭喜你获得1个包' : (redImgIndex == 'repeat' ? '您已领过红包啦~' : '')) }}</span>
+        <span v-show="redImgIndex != 'show'">{{ redImgIndex == 'fail' ? '很遗憾与红包擦肩而过' : (redImgIndex == 'success' ? '恭喜你获得1个红包' : (redImgIndex == 'repeat' ? '您已领过红包啦~' : '')) }}</span>
         <p class="amount" v-show="redImgIndex == 'show'">￥{{ amount }}</p>
         <img class="redImgs" v-show="redImgIndex == 'show'" v-lazy="redImgs.show" />
         <div v-show="redImgIndex == 'show'" class="continue-button" @click="showDialogRed = false">继续观看直播</div>
@@ -113,9 +113,7 @@ export default {
       personalImg: 'http://q.img.soukong.cn/af.png',
       followImg: 'http://q.img.soukong.cn/saoyisao.png',
       qCode: '',
-      isShowSub: false,
       isShowRed: false,
-      rotate: '0deg',
       showDialog: false,
       showPopup: false,
       name: '',
@@ -163,8 +161,8 @@ export default {
       })
     },
     onButtonTap() {
-      this.isShowSub = !this.isShowSub;
-      this.rotate = this.rotate == '0deg' ? '180deg' : '0deg';
+      this.$store.commit('switchButtonRotate')
+      this.$store.commit('onSuspensionSwitch', 'button')
     },
     onLive() { //直播按钮
       this.showPopup = !this.showPopup;
@@ -258,9 +256,6 @@ export default {
   font-size: 20px !important;
 }
 .root {
-  position: absolute;
-  bottom: 80px;
-  right: 6px;
   display: flex;
   flex-direction: column;
   align-items: center;

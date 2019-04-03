@@ -14,6 +14,13 @@ let interactionFag = 0 //互动消息标志，接口返回数据应进行自减�
 let currentTime = 0 //当前定时器时间
 
 /*
+判断是否是home2页面
+*/
+const _isHome2Page = function() {
+  return context.$route.name == 'Home2' ? true : false
+}
+
+/*
 tab栏以及广告条配置项数据格式化并填充界面。
 此方法需要等待初始化完成后进行。
 */
@@ -50,7 +57,7 @@ const _formateTabData = function() {
   }
   if (onProduct && onBuyButton) { //立即购买按钮配置，只有当后台的立即购买开关和产品开关同时打开才显示
     context.isShowBuyButton = true;
-    context.inputWidth = '2.5rem'
+    context.inputWidth = _isHome2Page() ? '5rem' : '2.5rem'
   } else {
     context.isShowBuyButton = false;
     context.inputWidth = '7.4rem';
@@ -151,22 +158,42 @@ const init = async function(that) {
   for (let item of context.tabItems) {
     if (item.typeId == 2) { //如果需要获取简介内容
       getTabContent(item.id).then(result => {
-        context.summaryContent = result.replace(/<img/g, '<img style="width: 100%"')
+        let res = result
+        res = res.replace(/<img/g, '<img style="width: 100%"')
+        if (_isHome2Page()) {
+          res = res.replace(/<p/g, '<p style="color: white"')
+        }
+        context.summaryContent = res
       });
     }
     if (item.typeId == 10) { //如果需要获取自定义1内容
       getTabContent(item.id).then(result => {
-        context.customContent1 = result.replace(/<img/g, '<img style="width: 100%"')
+        let res = result
+        res = res.replace(/<img/g, '<img style="width: 100%"')
+        if (_isHome2Page()) {
+          res = res.replace(/<p/g, '<p style="color: white"')
+        }
+        context.customContent1 = res
       });
     }
     if (item.typeId == 11) { //如果需要获取自定义2内容
       getTabContent(item.id).then(result => {
-        context.customContent2 = result.replace(/<img/g, '<img style="width: 100%"')
+        let res = result
+        res = res.replace(/<img/g, '<img style="width: 100%"')
+        if (_isHome2Page()) {
+          res = res.replace(/<p/g, '<p style="color: white"')
+        }
+        context.customContent2 = res
       });
     }
     if (item.typeId == 12) { //如果需要获取自定义3内容
       getTabContent(item.id).then(result => {
-        context.customContent3 = result.replace(/<img/g, '<img style="width: 100%"')
+        let res = result
+        res = res.replace(/<img/g, '<img style="width: 100%"')
+        if (_isHome2Page()) {
+          res = res.replace(/<p/g, '<p style="color: white"')
+        }
+        context.customContent3 = res
       });
     }
   }
@@ -197,21 +224,27 @@ const getInteractionList = function(parameter, isFirst) {
   context.$store.commit('switchRequestInteraction');
   return new Promise(resolve => {
     context.$axios.get(context.$store.state.host + context.$store.state.path + '/newmedia/mobile/liveMessage/getLeaveMessageNewPass.action', { params: parameter }).then(res => {
-      // console.log('互动列表刷新', res.data);
+      console.log('互动列表刷新', res.data);
+      console.log("res.data.status", res.data.status);
       if (res.data.status == 'Y') {
-        context.interactionList.push(..._formateInteractionList(res.data.rows));
-        let count = 0;
-        let id = setInterval(() => {
-          if ( count++ > 2 ) clearInterval(id);
-          if ( context.$refs != undefined && context.$refs.scrollerEvent != undefined && context.$refs.scrollerEvent[0] != undefined ) {
-            let top = context.$('.xs-container').height() < context.$('.swiper-content').height() ? 0 : context.$('.xs-container').height() - context.$('.swiper-content').height()
-            context.$refs.scrollerEvent[0].reset({top: top}, 400, 'ease-in-out'); //下拉刷新数据请求成功后需调用此函数刷新界面
-          }
-        }, 1000)
+        console.log("isFirst111", isFirst);
         if (isFirst) { //如果是第一次调用，则将minInteractionId初始化
           context.$store.commit('setMinInteractionId', res.data.rows[0].id);
         }
         context.$store.commit('setMaxInteractionId', res.data.rows[res.data.rows.length - 1].id);
+        context.interactionList.push(..._formateInteractionList(res.data.rows));
+        let count = 0;
+        let event = _isHome2Page() ? context.$refs.scrollerEvent : context.$refs.scrollerEvent[0];
+        let id = setInterval(() => {
+          if ( count++ > 2 ) clearInterval(id);
+          if ( context.$refs != undefined && context.$refs.scrollerEvent != undefined && event != undefined ) {
+            let top = context.$('.xs-container').height() < context.$('.swiper-content').height() ? 0 : context.$('.xs-container').height() - context.$('.swiper-content').height()
+            if (_isHome2Page()) {
+              top = context.$('.interaction-body').height() < context.$('.interaction').height() ? 0 : context.$('.interaction-body').height() - context.$('.interaction').height()
+            }
+            event.reset({top: top}, 400, 'ease-in-out'); //下拉刷新数据请求成功后需调用此函数刷新界面
+          }
+        }, 1000)
         _IntelligenceInteractionTimer(true);
       } else {
         _IntelligenceInteractionTimer(false);

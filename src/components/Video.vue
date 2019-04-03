@@ -37,8 +37,8 @@ export default {
     await this.$utils.waitTask(this, 'initFag'); //等待初始化任务完成后继续执行下面代码
     let player = new tcPlayer.TcPlayer.TcPlayer('video-container', {
       // mp4: 'http://vjs.zencdn.net/v/oceans.mp4',
-      // mp4: 'http://1256993030.vod2.myqcloud.com/d520582dvodtransgzp1256993030/7732bd367447398157015849771/v.f40.mp4',
-      m3u8: that.$store.state.videoSource,
+      mp4: 'http://1256993030.vod2.myqcloud.com/d520582dvodtransgzp1256993030/7732bd367447398157015849771/v.f40.mp4',
+      // m3u8: that.$store.state.videoSource,
       // coverpic: 'https://goss1.vcg.com/creative/vcg/veer/800/new/VCG41N672909176.jpg',
       coverpic: that.$store.state.videoCoverpic,
       // coverpic: 'https://goss2.vcg.com/creative/vcg/800/version23/VCG21gic18454706.jpg',
@@ -131,7 +131,7 @@ export default {
       }
       setTimeout(() => {
         that.$data.contentHeight = window.innerHeight / fontSize - videoHeight + 0.2 + 'rem'
-      }, 140)
+      }, 300)
       that.$emit('x5-exit-fullscreen')
     })
 
