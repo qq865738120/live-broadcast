@@ -33,6 +33,7 @@
         <div class="interaction-body">
           <div class="interaction-item" v-if="item.message" v-for="item in interactionList">
             <img :src="item.icon"/>
+            <div class="interaction-badge" v-if="item.isMaster"></div>
             <span class="com-over-length">{{ item.message }}</span>
           </div>
         </div>
@@ -434,5 +435,16 @@ export default {
     color: white;
     padding: 0 10px;
     max-width: 146px;
+  }
+  .interaction-badge {
+    position: absolute;
+  }
+  .interaction-badge:before {
+    content: "主播";
+    position: relative;
+    font-size: 9px;
+    color: #ED7E00;
+    bottom: 10px;
+    left: 17px;
   }
 </style>

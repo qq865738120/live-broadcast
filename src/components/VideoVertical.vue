@@ -61,14 +61,17 @@ export default {
       }
     })
 
-    this.$('#video-container').height(videoHeight + 'rem')
+    // this.$('#video-container').height(videoHeight + 'rem')
 
     /*
     播放器控件样式
     */
     this.$('.vcp-player').css("background","#f5f5f5");
     this.$('.vcp-player video').css("background","#f5f5f5");
-    this.$('.vcp-player video').css("object-position","center");
+    this.$('.vcp-player video').css({
+      "object-fit": "cover",
+      "object-position":"center"
+    });
     this.$('.vcp-poster-pic').removeClass('default');
     this.$('.vcp-poster-pic').css({
       "position": "absolute",
