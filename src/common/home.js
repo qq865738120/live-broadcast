@@ -225,9 +225,7 @@ const getInteractionList = function(parameter, isFirst) {
   return new Promise(resolve => {
     context.$axios.get(context.$store.state.host + context.$store.state.path + '/newmedia/mobile/liveMessage/getLeaveMessageNewPass.action', { params: parameter }).then(res => {
       console.log('互动列表刷新', res.data);
-      console.log("res.data.status", res.data.status);
       if (res.data.status == 'Y') {
-        console.log("isFirst111", isFirst);
         if (isFirst) { //如果是第一次调用，则将minInteractionId初始化
           context.$store.commit('setMinInteractionId', res.data.rows[0].id);
         }

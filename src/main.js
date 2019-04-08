@@ -70,6 +70,7 @@ new Vue({
     },
     /* 配置 */
     config() {
+      console.log('config', config);
       this.$store.commit('setHost', config.host)
       this.$store.commit('setPath', config.path)
       this.$store.commit('setEnvironment', config.environment)

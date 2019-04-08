@@ -23,14 +23,11 @@ npm install
 # 在开发环境上运行项目，开发时使用此命令。默认是在开发环境下接入到测试环境，如果需要在开发环境上接入生产环境来调试生产环境的bug需要将项目中/config/index.js文件中的DEV_TEST变量设为false
 npm run dev
 
-# 构建并打包到测试环境使用此命令。如果需要发包到测试环境，则使用此命令。打包后的文件会放到dist目录下，将dist目录下的所有文件上传到测试服务器即可。
-npm run build-test
+# 构建并打包到使用此命令。如果需要发包到测试或生产环境，则使用此命令。打包后的文件会放到dist目录下，将dist目录下的所有文件上传到服务器即可。
+npm run build
 
-# 构建并打包到生产环境使用此命令。如果需要发包到生产环境，则使用此命令。打包后的文件会放到dist目录下，将dist目录下的所有文件上传到生产服务器即可。
-npm run build-pro
-
-# 构建打包到生产环境并查看捆绑分析器报告
-npm run build-pro --report
+# 构建打包并查看捆绑分析器报告
+npm run build --report
 ```
 
 For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).

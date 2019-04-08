@@ -26,6 +26,7 @@ export default {
   },
   methods: {
     onCancle() {
+      this.message = ''
       this.$store.commit('switchInteractionInputing');
     },
     onSend() {
