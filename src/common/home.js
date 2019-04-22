@@ -57,7 +57,7 @@ const _formateTabData = function() {
   }
   if (onProduct && onBuyButton) { //立即购买按钮配置，只有当后台的立即购买开关和产品开关同时打开才显示
     context.isShowBuyButton = true;
-    context.inputWidth = _isHome2Page() ? '5rem' : '2.5rem'
+    context.inputWidth = _isHome2Page() ? '6rem' : '2.5rem'
   } else {
     context.isShowBuyButton = false;
     context.inputWidth = '7.4rem';

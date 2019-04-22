@@ -14,7 +14,7 @@ const DEV_TEST = false // 如果需要开发环境下调试生产环境的问题
 
 const devConfig = {
   environment: 'local', //本地环境配为local，线上环境配为online
-  host: 'http://180.180.180.170', //本地环境，与本地计算机ip保持一致
+  host: 'http://180.180.180.115', //本地环境，与本地计算机ip保持一致
   path: '/api',
   relHost: 'http://xmt.soukong.cn'
 }

@@ -5,8 +5,8 @@
 
     <!-- 底部菜单开始 -->
     <div class="bottom-bar" v-if="hasInteraction || isShowBuyButton">
-      <div class="input" v-if="hasInteraction">
-        <span class="com-over-length iconfont icon-bianji" :style="{width: inputWidth}" @click="onInputClick">
+      <div class="input" v-if="hasInteraction" style="width: 200px">
+        <span class="iconfont icon-bianji" :style="{width: inputWidth}" @click="onInputClick">
           {{ inputWord }}
         </span>
       </div>
@@ -33,8 +33,7 @@
         <div class="interaction-body">
           <div class="interaction-item" v-if="item.message" v-for="item in interactionList">
             <img :src="item.icon"/>
-            <div class="interaction-badge" v-if="item.isMaster"></div>
-            <span class="com-over-length">{{ item.message }}</span>
+            <span class="com-over-length" :style="{ color: item.isMaster ? '#ffd800' : '#fff' }">{{ item.isMaster ? "主播：" + item.message : item.message }}</span>
           </div>
         </div>
       </Scroller>
@@ -142,7 +141,7 @@ export default {
       customContent2: '', //tab栏自定义2内容
       customContent3: '', //tab栏自定义3内容
       inputWord: "来说几句", //输入框占位符
-      inputWidth: "5rem", //输入框宽度
+      inputWidth: "6rem", //输入框宽度
       interactionList: [ //互动列表数据
         // { id: 0, title: '标题啊标题啊0', time: '1小时', message: '这是一条消息这是一条消息这是一条消息', isMaster: false, icon: 'http://img2.imgtn.bdimg.com/it/u=3197537752,2095789724&fm=26&gp=0.jpg', image: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1544776923060&di=31b3a9fd116050fa5baf6dfbe7231233&imgtype=0&src=http%3A%2F%2Fh.hiphotos.baidu.com%2Fimage%2Fpic%2Fitem%2Ff2deb48f8c5494eec7036a5f20f5e0fe99257e56.jpg' },
         // { id: 1, title: '标题啊标题啊0', time: '1小时', message: '这是一条消息这是一条消息这是一条消息', isMaster: false, icon: 'http://img2.imgtn.bdimg.com/it/u=3197537752,2095789724&fm=26&gp=0.jpg', image: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1544776923060&di=31b3a9fd116050fa5baf6dfbe7231233&imgtype=0&src=http%3A%2F%2Fh.hiphotos.baidu.com%2Fimage%2Fpic%2Fitem%2Ff2deb48f8c5494eec7036a5f20f5e0fe99257e56.jpg' }
@@ -323,15 +322,17 @@ export default {
     padding: 6px 10px;
   }
   .input span {
-    padding: 4px 8px;
+    padding: 8px 10px;
     background-color: rgba(0, 0, 0, 0.35);
     border-radius: 50px;
     line-height: 25px;
     color: white;
     font-weight: 100;
+    font-size: 14px;
+    padding-right: 90px;
   }
   .buy-button {
-    background-color: $--main-color;
+    background-color: #fe4a34;
     border-radius: 50px;
     padding: 8px 30px;
     color: white;
